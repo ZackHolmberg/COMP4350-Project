@@ -1,4 +1,4 @@
-# ![logo](https://github.com/ZackHolmberg/COMP4350-Project/tree/master/assets/logo2.png) BisonCoin
+# ![logo](./assets/logo2.png) BisonCoin
 
 Repo containing documents and code for our COMP 4350 Group Project.
 
