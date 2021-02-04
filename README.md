@@ -1,4 +1,4 @@
-# ![logo](assets/Logo2.png)BisonCoin
+# ![logo](./assets/logo2.png) BisonCoin
 
 Repo containing documents and code for our COMP 4350 Group Project.
 
@@ -32,3 +32,7 @@ Repo containing documents and code for our COMP 4350 Group Project.
 - **Microservices:** `Python, Flask`
 - **Front-end Web app:** `Vue.js & Node.js`
 - **Data Storage:** `MongoDB`
+
+## Additional Notes
+
+- Visit the [wiki](https://github.com/ZackHolmberg/COMP4350-Project/wiki) to view meetings information, user stories and design documentation.
