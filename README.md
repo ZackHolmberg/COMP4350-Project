@@ -1,4 +1,4 @@
-# ![logo](assets/Logo2.png)BisonCoin
+# ![logo](./assets/logo2.png) BisonCoin
 
 Repo containing documents and code for our COMP 4350 Group Project.
 
@@ -17,21 +17,22 @@ Repo containing documents and code for our COMP 4350 Group Project.
   - A front-end web application
   - A collection of microservices
   - A Blockchain, cryptocurrency implementation
-  - Data storage, if needed
+  - Data storage
 
 ## Core Features
 
-- With the BisonCoin app, students will be able to send and receive to their peers, as well as businesses in order to purchase products.
+- Students will be able to send and receive BisonCoin to their peers, as well as businesses in order to purchase products.
 - Students will be able to use the app to view how much BisonCoin they have in their digital wallet, as well as view their transaction history.
 - Students will be able to act as miners on the blockchain network, earning currency as a reward.
+- Students will be able to create an account and login to the app with their account credentials, as well as manage their account information.
 
 ## Tech Stack
 
-- **Blockchian:** `Python`
-- **Micro-servies:** `Python`
-- **Front-end Web app:** `Vue.js, Node.js or Flask` (TBD)
-- **Data Storage:** `MongoDB`, if needed
+- **Blockchain:** `Python`
+- **Microservices:** `Python, Flask`
+- **Front-end Web app:** `Vue.js & Node.js`
+- **Data Storage:** `MongoDB`
 
-## Architecture Diagram
+## Additional Notes
 
-![Architecture](assets/Architecture.png)
+- Visit the [wiki](https://github.com/ZackHolmberg/COMP4350-Project/wiki) to view meetings information, user stories and design documentation.
