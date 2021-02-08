@@ -1,5 +1,5 @@
-# Use the python3.7.2 container image
-FROM python:3.7.2-stretch
+# Use the python3.7 container image
+FROM python:3.7-alpine
 
 # Set the working directory to /src
 WORKDIR /src
@@ -8,7 +8,15 @@ WORKDIR /src
 ADD . /src
 
 # Install the dependencies within container
-RUN pip install -r requirements.txt
+
+RUN set -e; \
+    apk add --no-cache --virtual .build-deps \
+    gcc \
+    libc-dev \
+    linux-headers \
+    ; \
+    pip install -r requirements.txt; \
+    apk del .build-deps;
 
 # start uWSGI application server
 CMD ["uwsgi", "uwsgi.ini"]
