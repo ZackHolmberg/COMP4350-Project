@@ -9,7 +9,14 @@ services:
       - APP_NAME=TransactionService
     expose:
       - 8001
-
+  mining:
+    build: ./mining
+    container_name: mining
+    restart: always
+    environment:
+      - APP_NAME=MiningService
+    expose:
+      - 8002
   nginx:
     build: ./nginx
     container_name: nginx
