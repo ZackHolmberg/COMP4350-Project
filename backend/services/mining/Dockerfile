@@ -1,5 +1,5 @@
 # Use the python3.7 container image
-FROM python:3.7-alpine
+FROM python:3.8-alpine
 
 # Set the working directory to /src
 WORKDIR /src
@@ -9,14 +9,12 @@ ADD . /src
 
 # Install the dependencies within container
 
-RUN set -e; \
-    apk add --no-cache --virtual .build-deps \
-    gcc \
-    libc-dev \
-    linux-headers \
-    ; \
-    pip install -r requirements.txt; \
-    apk del .build-deps;
+RUN pip install -r requirements.txt \
+    pip install flask-socketio flask-cors; 
 
-# start uWSGI application server
-CMD ["uwsgi", "uwsgi.ini"]
+ENV FLASK_APP run.py
+ENV FLASK_RUN_HOST 0.0.0.0
+
+EXPOSE 5000
+# start gUnicorn application server
+CMD ["flask", "run"]

@@ -9,6 +9,8 @@ services:
       - APP_NAME=TransactionService
     expose:
       - 8001
+    depends_on:
+      - mining
   mining:
     build: ./mining
     container_name: mining
@@ -16,7 +18,7 @@ services:
     environment:
       - APP_NAME=MiningService
     expose:
-      - 8002
+      - 5000
   nginx:
     build: ./nginx
     container_name: nginx
