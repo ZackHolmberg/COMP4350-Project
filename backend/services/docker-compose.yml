@@ -8,7 +8,7 @@ services:
     environment:
       - APP_NAME=TransactionService
     expose:
-      - 8001
+      - 5000
 
   nginx:
     build: ./nginx
