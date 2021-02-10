@@ -1,4 +1,4 @@
-# Use the python3.7 container image
+# Use the python3.8 container image
 FROM python:3.8-alpine
 
 # Set the working directory to /src

@@ -8,9 +8,7 @@ services:
     environment:
       - APP_NAME=TransactionService
     expose:
-      - 8001
-    depends_on:
-      - mining
+      - 5000
   mining:
     build: ./mining
     container_name: mining
@@ -25,3 +23,6 @@ services:
     restart: always
     ports:
       - "80:80"
+    depends_on:
+      - mining
+      - transactions
