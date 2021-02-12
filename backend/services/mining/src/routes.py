@@ -5,9 +5,9 @@ from src import app, socketio
 def index():
     return "Hello From the Mining"
 
-@socketio.on('my event')
+@socketio.on('echo')
 def handle(message):
-    socketio.emit("my response", message, callback=msg)
+    socketio.emit("response", message, callback=msg)
 
 def msg(methods=['GET', 'POST']):
     print('message was received!!!')

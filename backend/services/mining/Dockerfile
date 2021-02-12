@@ -9,12 +9,11 @@ ADD . /src
 
 # Install the dependencies within container
 
-RUN pip install -r requirements.txt \
-    pip install flask-socketio flask-cors; 
+RUN pip install -r requirements.txt; 
 
 ENV FLASK_APP run.py
 ENV FLASK_RUN_HOST 0.0.0.0
 
 EXPOSE 5000
-# start gUnicorn application server
+# start flask server
 CMD ["flask", "run"]

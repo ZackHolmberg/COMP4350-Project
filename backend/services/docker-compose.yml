@@ -17,6 +17,8 @@ services:
     restart: always
     environment:
       - APP_NAME=MiningService
+    volumes:
+      - ./mining:/src
     expose:
       - 5000
   nginx:
