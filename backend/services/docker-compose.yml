@@ -5,6 +5,8 @@ services:
     build: ./transactions
     container_name: transactions
     restart: always
+    volumes:
+      - ./transactions:/src
     environment:
       - APP_NAME=TransactionService
     expose:
