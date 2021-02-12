@@ -15,5 +15,5 @@ ENV FLASK_APP run.py
 ENV FLASK_RUN_HOST 0.0.0.0
 
 EXPOSE 5000
-# start gUnicorn application server
+# start the flask server
 CMD ["flask", "run"]
