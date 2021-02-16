@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="button">{{ label }}</button>
+    <button @click="redirectToHome()" class="button">{{ label }}</button>
   </div>
 </template>
 
@@ -10,7 +10,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Button extends Vue {
   @Prop() private label!: string;
+
+  
 }
+
 </script>
 
 <style>

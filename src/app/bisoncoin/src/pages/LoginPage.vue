@@ -24,17 +24,24 @@ import Button from "../components/Button.vue";
     TextInput,
     Button,
   },
+  
 })
-export default class LoginPage extends Vue {}
+export default class LoginPage extends Vue {
+  
+}
+
+
 </script>
 
-<style>
+<style lang="scss">
+@import "../style.scss";
+
 .home {
   padding: 25px;
 }
 
 body {
-  background-color: lightgray;
+  background-color: $background-color;
 }
 
 img {
