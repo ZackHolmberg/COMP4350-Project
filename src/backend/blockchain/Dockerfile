@@ -14,6 +14,6 @@ RUN pip install -r requirements.txt
 ENV FLASK_APP run.py
 ENV FLASK_RUN_HOST 0.0.0.0
 
-EXPOSE 8080
+EXPOSE 5000
 # start the flask server
 CMD ["flask", "run"]
