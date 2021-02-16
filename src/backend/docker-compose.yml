@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  transaction-api:
+    build: ./services/transaction-api
+    container_name: transaction-api
+    restart: always
+    volumes:
+      - ./services/transaction-api:/src
+    environment:
+      - APP_NAME=TransactionService
+    expose:
+      - 5000
+
+  api-gateway:
+    build: ./services/api-gateway
+    container_name: api-gateway
+    restart: always
+    ports:
+      - "80:80"
+
+  blockchain:
+    build: ./blockchain
+    container_name: blockchain
+    restart: always
+    volumes:
+      - ./blockchain:/src
+    environment:
+      - APP_NAME=Blockchain
+    expose:
+      - 8080
