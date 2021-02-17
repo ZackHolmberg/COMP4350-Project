@@ -16,9 +16,11 @@ export default class Button extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "../style.scss";
+
 .button {
-  background-color: #00a3e050;
+  background-color: $button-background-color;
   width: 100px;
   height: 50px;
   border-radius: 25px;
@@ -27,7 +29,8 @@ export default class Button extends Vue {
   transition: 0.2s linear;
   margin-top: 100px;
   margin-bottom: 50px;
-  border: 1px solid black;
+  border: 1px solid $border-color;
+  color: $button-text;
 }
 
 .button:hover {

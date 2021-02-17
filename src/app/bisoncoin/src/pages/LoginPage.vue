@@ -44,4 +44,8 @@ img {
   margin-bottom: 100px;
   margin-top: 100px;
 }
+
+a {
+  color: $link-color;
+}
 </style>

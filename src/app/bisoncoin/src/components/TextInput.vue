@@ -13,17 +13,21 @@ export default class TextInput extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "../style.scss";
+
 .textInput {
   border-radius: 25px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   padding: 10px;
-  border: 1px solid black;
+  border: 1px solid $border-color;
   margin: 25px;
   width: 30%;
   height: 35px;
   font-size: 16px;
   transition: 0.2s linear;
+  background-color: $text-input-background;
+  color: $text-input-text;
 }
 
 .textInput:hover {

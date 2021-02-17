@@ -11,11 +11,11 @@ import { Component, Vue } from "vue-property-decorator";
 export default class HomePage extends Vue {}
 </script>
 
-<style>
+<style lang="scss">
+@import "../style.scss";
 .wrapper {
   margin: 10%;
   padding: 10%;
-  color: black;
-  background-color: lightgray;
+  background-color: $background-color;
 }
 </style>
