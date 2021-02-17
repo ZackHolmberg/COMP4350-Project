@@ -1,6 +1,8 @@
 <template>
   <div>
-    <button @click="redirectToHome()" class="button">{{ label }}</button>
+    <router-link :to="dest" class="button" tag="button">{{
+      label
+    }}</router-link>
   </div>
 </template>
 
@@ -10,10 +12,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Button extends Vue {
   @Prop() private label!: string;
-
-  
+  @Prop() private dest!: string;
 }
-
 </script>
 
 <style>

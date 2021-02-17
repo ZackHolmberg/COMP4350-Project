@@ -1,22 +1,24 @@
 <template>
   <div id="app">
-    <LoginPage msg="Welcome to BisonCoin!" />
+    <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import LoginPage from "./pages/LoginPage.vue";
+import HomePage from "./pages/HomePage.vue";
 
 @Component({
   components: {
     LoginPage,
+    HomePage,
   },
 })
 export default class App extends Vue {}
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

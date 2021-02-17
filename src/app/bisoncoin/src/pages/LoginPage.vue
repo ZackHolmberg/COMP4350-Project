@@ -8,7 +8,8 @@
     />
     <TextInput label="Username" />
     <TextInput label="Password" />
-    <Button label="Login" />
+    <Button dest="/home" label="Login" />
+
     <!-- TODO: Move this text and other hardcoded text to a separate file, as well as colours -->
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
@@ -24,13 +25,8 @@ import Button from "../components/Button.vue";
     TextInput,
     Button,
   },
-  
 })
-export default class LoginPage extends Vue {
-  
-}
-
-
+export default class LoginPage extends Vue {}
 </script>
 
 <style lang="scss">
