@@ -5,6 +5,16 @@ import time
 from flask import Flask, request
 
 
+class Transaction:
+    def __init__(self, toAddress, fromAddress, amount):
+        self.toAddress = toAddress
+        self.fromAddress = fromAddress
+        self.amount = amount
+
+    def toJSON(self):
+        return json.dumps(self)
+
+
 class Block:
     def __init__(self, index, transaction, timestamp, prevHash):
 
@@ -22,25 +32,58 @@ class Block:
 
 
 class Blockchain:
-    # difficulty of our PoW algorithm
-    difficulty = 4
+
+    wallets = {}
 
     def __init__(self):
 
-        self.transactionQueue = []
         self.chain = []
-        self.createGenesisBlock()
+        self.initializeChain()
 
-    def createGenesisBlock(self):
+    def addWallet(self, id):
+        if id in self.wallets:
+            return False
+        else:
+            self.wallets[id] = 0
+            return True
 
+    def addToWallet(self, id, amount):
+        if id not in self.wallets:
+            return -1
+        else:
+            self.wallets[id] += amount
+            return self.wallets[id]
+
+    def subtractFromWallet(self, id, amount):
+        if id not in self.wallets:
+            return -1
+        if self.wallets[id] < amount:
+            return -2
+        else:
+            self.wallets[id] -= amount
+            return self.wallets[id]
+
+    def getWalletAmount(self, id):
+        if id not in self.wallets:
+            return -1
+        else:
+            return self.wallets[id]
+
+    # difficulty of our proof of work algorithm
+    difficulty = 4
+
+    def initializeChain(self):
+
+        # create the genesis block
         genesisBlock = Block(0, [], time.time(), "0")
+
+        # append it to the chain
         self.chain.append(genesisBlock)
 
-    @property
     def getLastBlock(self):
         return self.chain[-1]
 
-    def addBlock(self, block, proof):
+    def appendBlockToChain(self, block, proof):
 
         prevHash = self.getLastBlock.hash
 
@@ -55,32 +98,26 @@ class Blockchain:
         return True
 
     def validProof(self, block, hash):
-        """
-        Check if block_hash is valid hash of block and satisfies
-        the difficulty criteria.
-        """
         return (hash.startswith('0' * Blockchain.difficulty) and
                 hash == block.calculateHash())
+
+    # The following three methods will likely be taken out and moved to the transaction service or front end
 
     def proofOfWork(self, block):
 
         block.nonce = 0
 
-        computed_hash = block.calculateHash()
-        while not computed_hash.startswith('0' * Blockchain.difficulty):
+        proof = block.calculateHash()
+        while not proof.startswith('0' * Blockchain.difficulty):
             block.nonce += 1
-            computed_hash = block.calculateHash()
+            proof = block.calculateHash()
 
-        return computed_hash
+        return proof
 
     def addTransaction(self, transaction):
         self.transactionQueue.append(transaction)
 
-    # This will likely be brought out and put into the miner component of the web app
     def mine(self):
-
-        if len(self.transactionQueue):
-            return False
 
         last_block = self.getLastBlock
 
@@ -90,23 +127,9 @@ class Blockchain:
                          prevHash=last_block.hash)
 
         proof = self.proofOfWork(newBlock)
-        self.addBlock(newBlock, proof)
+        self.appendBlockToChain(newBlock, proof)
 
-        self.transactionQueue = []
         return newBlock.index
 
 
-app = Flask(__name__)
 blockchain = Blockchain()
-
-
-@app.route('/chain', methods=['GET'])
-def get_chain():
-    chain = []
-    for block in blockchain.chain:
-        chain.append(block.__dict__)
-    return json.dumps({"length": len(chain),
-                       "chain": chain})
-
-
-app.run(debug=True, port=5000)
