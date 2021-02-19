@@ -9,8 +9,6 @@
     <TextInput label="Username" />
     <TextInput label="Password" />
     <Button dest="/home" label="Login" />
-
-    <!-- TODO: Move this text and other hardcoded text to a separate file, as well as colours -->
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
 </template>
@@ -33,7 +31,11 @@ export default class LoginPage extends Vue {}
 @import "../style.scss";
 
 .home {
+  text-align: center;
   padding: 25px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
