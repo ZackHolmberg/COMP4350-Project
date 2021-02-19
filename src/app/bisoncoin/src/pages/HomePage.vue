@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="bison">BisonCoin</div>
+    <div class="wrapper"></div>
   </div>
 </template>
 
@@ -11,9 +11,11 @@ import { Component, Vue } from "vue-property-decorator";
 export default class HomePage extends Vue {}
 </script>
 
-<style>
-.bison {
-  margin: 40px 0px;
-  color: gray;
+<style lang="scss">
+@import "../style.scss";
+.wrapper {
+  margin: 10%;
+  padding: 10%;
+  background-color: $background-color;
 }
 </style>
