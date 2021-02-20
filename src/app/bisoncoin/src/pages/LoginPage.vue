@@ -8,7 +8,7 @@
     />
     <TextInput label="Username" />
     <TextInput label="Password" />
-    <Button dest="/home" label="Login" />
+    <Button class="login-button" dest="/home" label="Login" />
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
 </template>
@@ -36,6 +36,11 @@ export default class LoginPage extends Vue {}
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.login-button {
+  margin-top: 100px;
+  margin-bottom: 50px;
 }
 
 body {

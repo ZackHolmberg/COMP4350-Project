@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link :to="dest" class="button" tag="button">{{
+    <router-link :to="dest" class="cancel-button" tag="button">{{
       label
     }}</router-link>
   </div>
@@ -10,7 +10,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class Button extends Vue {
+export default class CancelButton extends Vue {
   @Prop() private label!: string;
   @Prop() private dest!: string;
 }
@@ -19,8 +19,8 @@ export default class Button extends Vue {
 <style lang="scss">
 @import "../style.scss";
 
-.button {
-  background-color: $button-background-color;
+.cancel-button {
+  background-color: $cancel-button-background-color;
   width: 100px;
   height: 50px;
   border-radius: 25px;
@@ -31,7 +31,7 @@ export default class Button extends Vue {
   color: $button-text;
 }
 
-.button:hover {
+.cancel-button:hover {
   cursor: pointer;
   transform: scale(1.25);
   box-shadow: $box-shadow-hover;

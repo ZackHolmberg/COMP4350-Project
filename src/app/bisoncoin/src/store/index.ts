@@ -9,6 +9,9 @@ export default new Vuex.Store({
   mutations: {
   },
   actions: {
+    sendTransaction(context){
+      // Make API call
+    },
   },
   modules: {
   }
