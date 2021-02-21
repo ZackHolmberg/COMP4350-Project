@@ -44,6 +44,16 @@ services:
     volumes:
       - ./data:/data/db
 
+  mining:
+    build: ./mining
+    container_name: mining
+    restart: always
+    environment:
+      - APP_NAME=MiningService
+    volumes:
+      - ./mining:/src
+    expose:
+      - 5000
   nginx:
     build:
       context: ./
@@ -52,4 +62,10 @@ services:
     restart: always
     ports:
       - "80:80"
+<<<<<<< HEAD
 
+=======
+    depends_on:
+      - mining
+      - transactions
+>>>>>>> 00c47af8ad34ab3389f57ae39338eae1c1b1e510
