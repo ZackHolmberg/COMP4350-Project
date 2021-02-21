@@ -1,11 +1,13 @@
 <template>
   <div class="new-transaction">
-    <p class="contact-text">Select Recipient: </p>
-    <TextInput class="new-transaction-input" label="Contact" v-model="contact"/>
-    <p class="amount-text">Amount: </p>
-    <TextInput class="new-transaction-input" label="0.0 BSC" v-model="amount" />
-    <CancelButton class="transaction-cancel-button" dest="/home" label="Cancel" />
-    <Button class="send-button" dest="/home" label="Send" />
+    <div class="transaction-wrapper">
+      <p class="contact-text">Recipient: </p>
+      <TextInput class="new-transaction-input" label="Email" v-model="contact"/>
+      <p class="amount-text">Amount: </p>
+      <TextInput class="new-transaction-input" label="0.0 BSC" v-model="amount" />
+      <CancelButton class="transaction-cancel-button" dest="/home" label="Cancel" />
+      <Button class="send-button" dest="/home" label="Send" />
+    </div>
   </div>
 </template>
 
@@ -42,6 +44,21 @@ export default class NewTransactionPage extends Vue {
 <style lang="scss">
 @import "../style.scss";
 
+.transaction-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 1%;
+  text-align: center;
+  border-radius: 10px;
+  display: inline-block;
+  width: 600px;
+  height: 67.5%;
+}
+
 .new-transaction {
   margin-top: 100px;
   text-align: center;
@@ -54,19 +71,19 @@ export default class NewTransactionPage extends Vue {
 
 .send-button {
   position: absolute;
-  right: 450px;
+  left: 20%;
   padding: 10px;
 }
 
 .transaction-cancel-button {
   position: absolute;
-  left: 450px;
+  right: 20%;
   padding: 10px;
 }
 
 .amount-text {
   position: absolute;
-  left: 340px;
+  left: 80px;
   padding-top: 20px;
   margin-right: 5px;
   font-size: 20px;
@@ -76,7 +93,7 @@ export default class NewTransactionPage extends Vue {
 
 .contact-text {
   position: absolute;
-  left: 265px;
+  left: 80px;
   padding-top: 20px;
   margin-right: 5px;
   font-size: 20px;
@@ -86,6 +103,7 @@ export default class NewTransactionPage extends Vue {
 
 .new-transaction-input {
   position: relative;
-  left: 0px;
+  width: 1000px;
+  right: 150px;
 }
 </style>
