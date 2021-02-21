@@ -2,7 +2,9 @@ version: "3.7"
 
 services:
   transactions:
-    build: ./transactions
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/TransactionDockerfile
     container_name: transactions
     restart: always
     volumes:
@@ -12,9 +14,40 @@ services:
     expose:
       - 5000
 
+  users:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/UserDockerfile
+    container_name: users
+    restart: always
+    volumes:
+      - ./users:/src
+    environment:
+      - APP_NAME=UserService
+    expose:
+      - 5000
+    depends_on: [mongodb]
+
+  mongodb:
+    image: mongo:4.0.8
+    container_name: mongodb
+    restart: always
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongodbuser
+      MONGO_INITDB_ROOT_PASSWORD: your_mongodb_root_password
+      MONGO_INITDB_DATABASE: bisoncoin
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    volumes:
+      - ./data:/data/db
+
   nginx:
-    build: ./nginx
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/nginxDockerfile
     container_name: nginx
     restart: always
     ports:
       - "80:80"
+
