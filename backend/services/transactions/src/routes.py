@@ -34,7 +34,6 @@ def sign():
         user = data["user"]
     
     # Retrieve the private key from the database
-    
         key = private_keys[user]
     
     except Exception as ex:
@@ -60,8 +59,8 @@ def generatePrivateKey():
         private_keys[user] = signing_key.to_string().hex()
 
         # encode the public key to make it shorter
-        pubk = signing_key.verifying_key.to_string().hex()
-        pubk = base64.b64encode(bytes.fromhex(pubk))
+        pubk = signing_key.verifying_key.to_string()
+        pubk = base64.b64encode(pubk)
 
         public_keys[user] = pubk
 
@@ -86,11 +85,11 @@ def getAddress(user):
     return jsonify(address=public_key.decode()), HttpCode.OK
 
 
-def verifySignature(id, signature, address):
-    public_key = (base64.b64decode(address)).hex()
+def validateSignature(id, signature, address):
+    public_key = base64.b64decode(address)
     signature = base64.b64decode(signature)
 
-    vk = VerifyingKey.from_string(bytes.fromhex(public_key))
+    vk = VerifyingKey.from_string(public_key)
     
     return vk.verify(signature, id.encode())
 
@@ -110,7 +109,7 @@ def createTransaction():
         return jsonify(Exception= INCORRECT_PAYLOAD_MSG), HttpCode.BAD_REQUEST
 
     try:
-        isVerified = verifySignature(transaction_id, signature, from_address)
+        isVerified = validateSignature(transaction_id, signature, from_address)
 
     except Exception as e:
         return jsonify(Exception= str(e)), HttpCode.BAD_REQUEST
