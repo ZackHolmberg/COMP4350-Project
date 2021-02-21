@@ -1,5 +1,7 @@
 from src import app
-from .blockchain import *
+from .transaction import Transaction
+from .block import Block
+from .blockchain import Blockchain, blockchain
 from flask import request
 import json
 
