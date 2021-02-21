@@ -62,10 +62,7 @@ services:
     restart: always
     ports:
       - "80:80"
-<<<<<<< HEAD
 
-=======
     depends_on:
       - mining
       - transactions
->>>>>>> 00c47af8ad34ab3389f57ae39338eae1c1b1e510
