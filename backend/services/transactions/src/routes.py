@@ -17,6 +17,16 @@ TransactionPool = []
 private_keys = {}
 public_keys = {}
 
+
+def validateSignature(id, signature, address):
+    public_key = base64.b64decode(address)
+    signature = base64.b64decode(signature)
+
+    vk = VerifyingKey.from_string(public_key)
+    
+    return vk.verify(signature, id.encode())
+
+
 @app.route("/")
 def index():
     return "Hello Transactions"
@@ -83,16 +93,6 @@ def getAddress(user):
         return jsonify(Exception=INCORRECT_PAYLOAD_MSG), HttpCode.BAD_REQUEST
 
     return jsonify(address=public_key.decode()), HttpCode.OK
-
-
-def validateSignature(id, signature, address):
-    public_key = base64.b64decode(address)
-    signature = base64.b64decode(signature)
-
-    vk = VerifyingKey.from_string(public_key)
-    
-    return vk.verify(signature, id.encode())
-
 
 @app.route("/create", methods=['POST'])
 def createTransaction():
