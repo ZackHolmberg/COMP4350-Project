@@ -35,13 +35,13 @@ jobs:
         cd ./backend/services  
     - name: Test Mining
       run: |
-        cd /mining
+        cd ./mining
         pip install requirements.txt
         python -m pytest
         cd ../
     - name: Test Transactions
       run: |
-        cd /transactions
+        cd ./transactions
         pip install requirements.txt
         python -m pytest
         cd ../
