@@ -1,6 +1,7 @@
 from src import app
 from flask import request, jsonify
 from ecdsa import SigningKey, VerifyingKey
+import base64
 
 import sys, os
 sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -13,7 +14,8 @@ VERFICATION_FAILURE= "Unable to Verify the Transaction"
 
 ## Temporary
 TransactionPool = []
-keys = {}
+private_keys = {}
+public_keys = {}
 
 @app.route("/")
 def index():
@@ -26,25 +28,24 @@ def sign():
     try: 
         to_sign = data["to_sign"]
     
-    
     # TODO: when the user service and auth service is implemented make the appropriate calls
     # to get the current user instead of client passing it into the json data
         
         user = data["user"]
     
-    
     # Retrieve the private key from the database
     
-        key = keys[user]
+        key = private_keys[user]
     
     except Exception as ex:
-        return jsonify(Exception=ex), HttpCode.BAD_REQUEST
+        return jsonify(Exception=INCORRECT_PAYLOAD_MSG), HttpCode.BAD_REQUEST
 
 
     signing_key = SigningKey.from_string(bytes.fromhex(key))
-    signature = signing_key.sign(to_sign)
+    signature = signing_key.sign(to_sign.encode())
+    signature = base64.b64encode(signature)
 
-    return jsonify(to_sign=tosign, signature=signature), HttpCode.OK
+    return jsonify(to_sign=to_sign, signature=signature.decode()), HttpCode.OK
 
 
 
@@ -56,40 +57,45 @@ def generatePrivateKey():
     try:    
         user = data["user"]
 
-        keys[user] = signing_key.to_string().hex()
+        private_keys[user] = signing_key.to_string().hex()
 
-        return jsonify(success=True), HttpCode.OK
+        # encode the public key to make it shorter
+        pubk = signing_key.verifying_key.to_string().hex()
+        pubk = base64.b64encode(bytes.fromhex(pubk))
+
+        public_keys[user] = pubk
+
+        return jsonify(success=True), HttpCode.CREATED
 
     except Exception as e:
         return jsonify(success=False), HttpCode.BAD_REQUEST
 
-@app.route("/address", methods=['GET'])
-def getAddress():
-    data = request.get_json()
+
+@app.route("/address/<user>", methods=['GET'])
+def getAddress(user):
     try: 
     
     # TODO: when the user service and auth service is implemented make the appropriate calls
     # to get the current user instead of client passing it into the json data
-    
-        user = data["user"]
-    
     # Retrieve the private key from the database
-        key = keys[user]
+        public_key = public_keys[user]
     
     except Exception as ex:
         return jsonify(Exception=INCORRECT_PAYLOAD_MSG), HttpCode.BAD_REQUEST
 
+    return jsonify(address=public_key.decode()), HttpCode.OK
 
-    signing_key = SigningKey.from_string(bytes.fromhex(key))
-    address = signing_key.verifying_key.to_string().hex()
-
-    return jsonify(address=address), HttpCode.OK
 
 def verifySignature(id, signature, address):
-    vk = VerifyingKey.from_string(address.encode())
-    return vk.verify(id, signature)
+    public_key = (base64.b64decode(address)).hex()
+    signature = base64.b64decode(signature)
 
-@app.route("/new", methods=['POST'])
+    vk = VerifyingKey.from_string(bytes.fromhex(public_key))
+    
+    return vk.verify(signature, id.encode())
+
+
+@app.route("/create", methods=['POST'])
 def createTransaction():
     data = request.get_json()
 
@@ -103,12 +109,20 @@ def createTransaction():
     except Exception as e:
         return jsonify(Exception= INCORRECT_PAYLOAD_MSG), HttpCode.BAD_REQUEST
 
-    isVerified = verifySignature(transaction_id, signature, from_address)
+    try:
+        isVerified = verifySignature(transaction_id, signature, from_address)
+
+    except Exception as e:
+        return jsonify(Exception= str(e)), HttpCode.BAD_REQUEST
+
 
     if not isVerified:
         return jsonify(Exception= VERFICATION_FAILURE), HttpCode.UNAUTHORIZED
     
+    # call wallet to confirm if the amount event exists
+
     # call the mining service to initiate a mining
     
+    # call the user service to check if the to address is reachable
 
-    return jsonify(Success=True), HttpCode.CREATED
+    return jsonify(success=True), HttpCode.CREATED
