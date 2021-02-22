@@ -26,19 +26,19 @@ class MiningPool:
 
         while True:
             print("Thread called ")
-            
-            self._lock.acquire()
+
             try:
                 if len(self._pool) > 0:
+                    self._lock.acquire()
                     last_transaction = self._pool.pop()
+                    self._lock.release()
+                    
                     receiver(last_transaction)
 
             except Exception as e:
                 print("Receiver produced an error")
                 
             finally:
-                self._lock.release() 
-            
-            time.sleep(MiningPool.DEQUEUE_TIME)
+                time.sleep(MiningPool.DEQUEUE_TIME)
 
     
