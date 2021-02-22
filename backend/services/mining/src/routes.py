@@ -8,20 +8,12 @@ sys.path.append(os.path.abspath(os.path.join('..', '')))
 
 from shared import HttpCode, FailureReturnString
 
-send = threading.Condition()
-ready_to_mine = False
-
 def sendToConnectedClients(transaction):
     # ToDo
     print("To Be Sent to Miner", transaction)
+    socketio.emit("find_proof", transaction)
 
-    with send:
-        while not ready_to_mine:
-            send.wait()
-
-        socketio.emit("find_proof", transaction)
-
-transactions = MiningPool(sendToConnectedClients)
+transactions = MiningPool(sendToConnectedClients, True)
 
 @app.route("/")
 def index():
@@ -45,11 +37,10 @@ def handle(message):
 
 @socketio.on('proof')
 def handle_proofs(message):
-    with send:
-        ready_to_mine = True
-        send.notify_all()
+    # send the stuff off to blockchain
+
+    transactions.ready_to_mine()
     # socketio.emit("response", message, callback=msg)
 
 def msg(methods=['GET', 'POST']):
     print('message was received!!!')
-
