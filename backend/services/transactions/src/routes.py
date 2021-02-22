@@ -6,11 +6,9 @@ import base64
 import sys, os
 sys.path.append(os.path.abspath(os.path.join('..', '')))
 
-from shared import HttpCode
+from shared import HttpCode, FailureReturnString
 ## Global
 COINBASE_REWARD = 10
-INCORRECT_PAYLOAD_MSG = "Please send correct json payload"
-VERFICATION_FAILURE= "Unable to Verify the Transaction"
 
 ## Temporary
 TransactionPool = []
@@ -47,7 +45,7 @@ def sign():
         key = private_keys[user]
     
     except Exception as ex:
-        return jsonify(Exception=INCORRECT_PAYLOAD_MSG), HttpCode.BAD_REQUEST
+        return jsonify(Exception=FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST
 
 
     signing_key = SigningKey.from_string(bytes.fromhex(key))
@@ -90,7 +88,7 @@ def getAddress(user):
         public_key = public_keys[user]
     
     except Exception as ex:
-        return jsonify(Exception=INCORRECT_PAYLOAD_MSG), HttpCode.BAD_REQUEST
+        return jsonify(Exception=FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST
 
     return jsonify(address=public_key.decode()), HttpCode.OK
 
@@ -106,7 +104,7 @@ def createTransaction():
         signature = data["signature"]
 
     except Exception as e:
-        return jsonify(Exception= INCORRECT_PAYLOAD_MSG), HttpCode.BAD_REQUEST
+        return jsonify(Exception= FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST
 
     try:
         isVerified = validateSignature(transaction_id, signature, from_address)
@@ -116,7 +114,7 @@ def createTransaction():
 
 
     if not isVerified:
-        return jsonify(Exception= VERFICATION_FAILURE), HttpCode.UNAUTHORIZED
+        return jsonify(Exception= FailureReturnString.TRANSACTION_VERFICATION_FAILURE), HttpCode.UNAUTHORIZED
     
     # call wallet to confirm if the amount event exists
 
