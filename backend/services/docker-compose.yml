@@ -2,27 +2,37 @@ version: "3.7"
 
 services:
   transactions:
-    build: ./transactions
+    build: 
+      context: ./
+      dockerfile: ./Dockerfiles/TransactionsDockerfile
     container_name: transactions
     restart: always
     volumes:
-      - ./transactions:/src
+      - ./transactions:/src/transactions
+      - ./shared:/src/shared
     environment:
       - APP_NAME=TransactionService
     expose:
       - 5000
+
   mining:
-    build: ./mining
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/MiningDockerfile
     container_name: mining
     restart: always
     environment:
       - APP_NAME=MiningService
     volumes:
-      - ./mining:/src
+      - ./mining:/src/mining
+      - ./shared:/src/shared
     expose:
       - 5000
+
   nginx:
-    build: ./nginx
+    build: 
+      context: ./
+      dockerfile: ./Dockerfiles/NginxDockerfile
     container_name: nginx
     restart: always
     ports:
