@@ -44,7 +44,7 @@ def handle(message):
     socketio.emit("response", message, callback=msg)
 
 @socketio.on('proof')
-def handle(message):
+def handle_proofs(message):
     with send:
         ready_to_mine = True
         send.notify_all()
