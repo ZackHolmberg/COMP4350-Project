@@ -1,5 +1,4 @@
-from src import app, startMining
+from src import app
 
 if __name__ == "__main__":
-    startMining()
     app.run()
