@@ -5,15 +5,19 @@ FROM python:3.8-alpine
 WORKDIR /src
 
 # Copy the current directory contents into the container at /src
-ADD . /src
+ADD ./mining ./mining
+ADD ./shared ./shared
+
+#change the working directory
+WORKDIR ./mining
 
 # Install the dependencies within container
 
-RUN pip install -r requirements.txt; 
+RUN pip install -r requirements.txt
 
 ENV FLASK_APP run.py
 ENV FLASK_RUN_HOST 0.0.0.0
 
 EXPOSE 5000
-# start flask server
+# start the flask server
 CMD ["flask", "run"]
