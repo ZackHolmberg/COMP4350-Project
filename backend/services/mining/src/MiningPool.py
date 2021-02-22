@@ -1,12 +1,12 @@
 import threading
 import time
+import queue
 
 class MiningPool:
     DEQUEUE_TIME = 5
 
     def __init__ (self, receiver, ready_to_mine):
-        self._pool = []
-        self._lock = threading.Lock()
+        self._pool = queue.Queue()
         self._mining_thread = threading.Thread(target=self.sendToMine, kwargs={'self': self, 'receiver': receiver})
         self._mining_thread.daemon = True
 
@@ -14,9 +14,7 @@ class MiningPool:
         self._ready_to_mine = ready_to_mine     
 
     def addToPool(self, data):
-        self._lock.acquire()
-        self._pool.append(data)
-        self._lock.release()
+        self._pool.put(data)
 
     def start_thread(self):
         self._mining_thread.start()
@@ -30,10 +28,8 @@ class MiningPool:
             print("Thread called ")
 
             try:
-                if len(self._pool) > 0:
-                    self._lock.acquire()
-                    last_transaction = self._pool.pop()
-                    self._lock.release()
+                if not self._pool.empty():
+                    last_transaction = self._pool.get()
 
                     with self._send:
                         while not self._ready_to_mine:
