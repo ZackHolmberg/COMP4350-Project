@@ -29,6 +29,20 @@ services:
     expose:
       - 5000
 
+  wallet:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/WalletDockerfile
+    container_name: wallet
+    restart: always
+    environment: 
+      - APP_NAME=WalletService
+    volumes: 
+      - ./wallet:/src/wallet
+      - ./shared:/src/shared
+    expose: 
+      - 5000
+
   nginx:
     build: 
       context: ./
