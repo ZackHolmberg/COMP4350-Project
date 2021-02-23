@@ -1,0 +1,71 @@
+version: "3.7"
+
+services:
+  transactions:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/TransactionsDockerfile
+    container_name: transaction-api
+    restart: always
+    volumes:
+      - ./services/transaction-api:/src/transactions
+      - ./shared:/src/shared
+    environment:
+      - APP_NAME=TransactionService
+    expose:
+      - 5000
+
+  mining:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/MiningDockerfile
+    container_name: mining-api
+    restart: always
+    environment:
+      - APP_NAME=MiningService
+    volumes:
+      - ./services/mining-api:/src/mining
+      - ./shared:/src/shared
+    expose:
+      - 5000
+
+  wallet:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/WalletDockerfile
+    container_name: wallet-api
+    restart: always
+    environment:
+      - APP_NAME=WalletService
+    volumes:
+      - ./services/wallet-api:/src/wallet
+      - ./shared:/src/shared
+    expose:
+      - 5000
+
+  nginx:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/NginxDockerfile
+    container_name: api-gateway
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - mining
+      - transactions
+      - blockchain
+
+  blockchain:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/BlockchainDockerfile
+    container_name: blockchain
+    restart: always
+    environment:
+      - APP_NAME=Blockchain
+    volumes:
+      - ./blockchain/mining:/src/mining
+      - ./shared:/src/shared
+    expose:
+      - 5000
