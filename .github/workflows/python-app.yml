@@ -49,11 +49,11 @@ jobs:
           pip install -r requirements.txt
           python -m pytest
 
-    - name: Test Wallet
-        working-directory: ./backend/services/wallet-api
-        run: |
-          pip install -r requirements.txt
-          python -m pytest
+      - name: Test Wallet
+          working-directory: ./backend/services/wallet-api
+          run: |
+            pip install -r requirements.txt
+            python -m pytest
 
 
 
