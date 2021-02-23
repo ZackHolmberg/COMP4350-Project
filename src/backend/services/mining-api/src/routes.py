@@ -11,10 +11,18 @@ else:
 
 from shared import HttpCode, FailureReturnString
 
+
+ongoing_proof_for_id = None
+COINBASE_AMOUNT = 10
+
 def sendToConnectedClients(transaction):
     # ToDo
     print("To Be Sent to Miner", transaction)
-    socketio.emit("find_proof", transaction)
+    try:
+        ongoing_proof_for_id = transaction["id"]
+        socketio.emit("find_proof", transaction)
+    except Exception as e:
+        print(e)
 
 transactions = MiningPool(sendToConnectedClients, True)
 
@@ -36,14 +44,16 @@ def addDataToQueue():
 
 @socketio.on('echo')
 def handle(message):
-    socketio.emit("response", message, callback=msg)
+    socketio.emit("response", message)
 
 @socketio.on('proof')
 def handle_proofs(message):
-    # send the stuff off to blockchain
-
     transactions.ready_to_mine()
-    # socketio.emit("response", message, callback=msg)
+    # TODO if proof for wrong id is received compare it with the current ongoing proof
 
-def msg(methods=['GET', 'POST']):
-    print('message was received!!!')
+    # TODO send the transaction to blockchain
+
+    # TODO reward the miner (create a new transaction and send it to blockchain)
+
+    # TODO send receivers the message to stop finding the proof
+    socketio.emit("stop_finding", message)

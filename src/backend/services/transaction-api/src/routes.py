@@ -13,6 +13,8 @@ else:
 from shared import HttpCode, FailureReturnString
 
 
+ongoing_proof_for_id = None
+
 def validateSignature(id, signature, address):
     public_key = base64.b64decode(address)
     signature = base64.b64decode(signature)
