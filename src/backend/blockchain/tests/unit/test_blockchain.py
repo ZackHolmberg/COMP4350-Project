@@ -15,11 +15,11 @@ Transaction Tests
 
 
 def test_transaction_constructor():
-    testTransaction = Transaction("toAddress", "fromAddress", 5)
+    test_transaction = Transaction("toAddress", "fromAddress", 5)
     assert (
-        testTransaction.toAddress == "toAddress" and
-        testTransaction.fromAddress == "fromAddress" and
-        testTransaction.amount == 5)
+        test_transaction.to_address == "toAddress" and
+        test_transaction.from_address == "fromAddress" and
+        test_transaction.amount == 5)
 
 
 """
@@ -28,35 +28,22 @@ Block Tests
 
 
 def test_block_constructor():
-    testIndex = 0
-    testTransaction = Transaction(
+    test_index = 0
+    test_transaction = Transaction(
         "toAddress", "fromAddress", 5)
-    print("In test_block_constructor", type(testTransaction))
-    testTimestamp = datetime.now().time().strftime("%m/%d/%Y, %H:%M:%S")
-    testPrevHash = "prevHash"
+    test_timestamp = datetime.now().time().strftime("%m/%d/%Y, %H:%M:%S")
+    test_hash = "0000abc"
+    test_prev_hash = "prevHash"
 
-    testBlock = Block(testIndex, testTransaction,
-                      testTimestamp, testPrevHash)
+    test_block = Block(test_index, test_transaction,
+                       test_timestamp, test_hash, test_prev_hash)
     assert (
-        testBlock.index == testIndex and
-        testBlock.transaction != None and
-        testBlock.timestamp == testTimestamp and
-        testBlock.prevHash == testPrevHash and
-        testBlock.nonce == 0 and
-        len(testBlock.hash) != 0)
-
-
-def test_calculate_hash():
-    testIndex = 0
-    testTransaction = Transaction(
-        "toAddress", "fromAddress", 5)
-    testTimestamp = datetime.now().time().strftime("%m/%d/%Y, %H:%M:%S")
-    testPrevHash = "prevHash"
-
-    testBlock = Block(testIndex, testTransaction,
-                      testTimestamp, testPrevHash)
-
-    assert testBlock.hash == testBlock.calculateHash()
+        test_block.index == test_index and
+        test_block.transaction != None and
+        test_block.timestamp == test_timestamp and
+        test_block.prev_hash == test_prev_hash and
+        test_block.nonce == 0 and
+        len(test_block.hash) != 0)
 
 
 """
@@ -65,40 +52,61 @@ Blockchain Tests
 
 
 def test_blockchain_constructor():
-    testBlockchain = Blockchain()
-    assert len(testBlockchain.chain) == 1
+    test_temp_blockchain = Blockchain()
+    assert len(test_temp_blockchain.chain) == 1
+
+
+test_blockchain = Blockchain()
 
 
 def test_get_last_block():
-    print()
+    assert test_blockchain.get_last_block().index == 0
 
 
 def test_append_block_to_chain():
-    print()
+    test_index = 1
+    test_transaction = Transaction(
+        "toAddress", "fromAddress", 5)
+    test_timestamp = datetime.now().time().strftime("%m/%d/%Y, %H:%M:%S")
+    test_hash = "0000abc"
+    test_prev_hash = "0"*test_blockchain.difficulty
+
+    test_block = Block(test_index, test_transaction,
+                       test_timestamp, test_hash, test_prev_hash)
+    test_blockchain.append_block_to_chain(test_block, "0000abcdefg")
+    assert len(test_blockchain.chain) == 2
 
 
 def test_valid_proof():
-    print()
+
+    assert test_blockchain.valid_proof("0000123abcdefg") == True
 
 
-testBlockchain = Blockchain()
-testWalletId = "walletId"
+test_wallet_id = "walletId"
 
 
 def test_add_wallet():
-    testBlockchain.addWallet(testWalletId)
-    assert testBlockchain.wallets[testWalletId] == 0
+    test_blockchain.add_wallet(test_wallet_id)
+    assert test_blockchain.wallets[test_wallet_id] == 0
 
 
 def test_add_to_wallet():
-    testBlockchain.addToWallet(testWalletId, 5)
-    assert testBlockchain.wallets[testWalletId] == 5
+    test_blockchain.add_to_wallet(test_wallet_id, 5)
+    assert test_blockchain.wallets[test_wallet_id] == 5
 
 
 def test_subtract_from_wallet():
-    testBlockchain.subtractFromWallet(testWalletId, 4)
-    assert testBlockchain.wallets[testWalletId] == 1
+    test_blockchain.subtract_from_wallet(test_wallet_id, 4)
+    assert test_blockchain.wallets[test_wallet_id] == 1
 
 
 def test_get_wallet_amount():
-    assert testBlockchain.getWalletAmount(testWalletId) == 1
+    assert test_blockchain.get_wallet_amount(test_wallet_id) == 1
+
+
+def test_verify_wallet_amount_fail():
+    assert not test_blockchain.verify_wallet_amount(test_wallet_id, 10000)
+
+
+def test_verify_wallet_amount_success():
+    assert test_blockchain.verify_wallet_amount(test_wallet_id, 1)

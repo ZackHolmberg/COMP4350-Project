@@ -3,20 +3,15 @@ import json
 
 
 class Block:
-    def __init__(self, index, transaction, timestamp, prevHash):
+    def __init__(self, index, transaction, timestamp, hash, prev_hash):
 
         self.index = int(index)
         self.transaction = transaction
         self.timestamp = str(timestamp)
-        self.prevHash = str(prevHash)
+        self.prev_hash = str(prev_hash)
         self.nonce = int(0)
-        self.hash = str(self.calculateHash())
-        print("In constructor", type(self.transaction))
+        self.hash = str(hash)
 
-    def calculateHash(self):
-
-        # toHash = json.dumps(self.index, self.transaction.toJSON(
-        # ), self.timestamp, self.prevHash, self.nonce, self.hash)
-        print("In calculateHash", type(self.transaction))
-        toHash = json.dumps(self.transaction.toJSON())
-        return sha256(toHash.encode()).hexdigest()
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True)

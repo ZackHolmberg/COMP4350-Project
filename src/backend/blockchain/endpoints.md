@@ -9,23 +9,19 @@ Required JSON: `None`
 Example return:
 
 ```json
-
-```
-
-## Start a new mining session for the provided transaction
-
-> `POST` <http://localhost/blockchain/mine>
-
-Required JSON:
-
-```json
-{ "toAddress": string, "fromAddress": string, "amount": int }
-```
-
-Example return:
-
-```json
-
+{
+  "length": 1,
+  "chain": [
+    {
+      "hash": "0000",
+      "index": 0,
+      "nonce": 0,
+      "prev_hash": "0",
+      "timestamp": "1614063326.48",
+      "transaction": { "amount": 0, "from_address": "", "to_address": "" }
+    }
+  ]
+}
 ```
 
 ## Send a proof to the blockchain for the current mining session
@@ -41,7 +37,7 @@ Required JSON:
 Example return:
 
 ```json
-
+TBD
 ```
 
 ## Register a new Wallet on the blockchain
@@ -57,12 +53,18 @@ Required JSON:
 Example return:
 
 ```json
-
+200 { "success": true }
 ```
 
-## Add an amount to a Wallet
+or
 
-> `POST` <http://localhost/blockchain/wallet/addAmount>
+```json
+400 {"error": "wallet ID already exists"}
+```
+
+## Verify that a wallet has sufficient funds for the transaction
+
+> `POST` <http://localhost/blockchain/wallet/verifyAmount>
 
 Required JSON:
 
@@ -73,24 +75,16 @@ Required JSON:
 Example return:
 
 ```json
-{ "newAmount": int }
+200 { "valid": true }
 ```
 
-## Subtract Amount from a Wallet
-
-> `POST` <http://localhost/blockchain/wallet/subtractAmount>
-
-Required JSON:
+or
 
 ```json
-{ "walletId": string, "amount": int }
+200 { "valid": false }
 ```
 
-Example return:
-
-```json
-{ "newAmount": int }
-```
+depending whether or not the wallet has sufficient funds greater than or equal to `amount`.
 
 ## Get a Wallet's current balance
 
@@ -105,5 +99,11 @@ Required JSON:
 Example return:
 
 ```json
-{ "amount": int }
+200 { "amount": int }
+```
+
+or
+
+```json
+400 { "error": "no corresponding wallet for id" }
 ```

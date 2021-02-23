@@ -3,3 +3,5 @@
 **/.cache
 src/**.pyc
 tests/**.pyc
+.pytest_cache
+__init__.pyc
