@@ -29,11 +29,25 @@ services:
     expose:
       - 5000
 
+  wallet:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/WalletDockerfile
+    container_name: wallet-api
+    restart: always
+    environment:
+      - APP_NAME=WalletService
+    volumes:
+      - ./services/wallet-api:/src/wallet
+      - ./shared:/src/shared
+    expose:
+      - 5000
+
   nginx:
     build:
       context: ./
       dockerfile: ./Dockerfiles/NginxDockerfile
-    container_name: nginx
+    container_name: api-gateway
     restart: always
     ports:
       - "80:80"
@@ -43,15 +57,15 @@ services:
       - blockchain
 
   blockchain:
-      build:
-        context: ./
-        dockerfile: ./Dockerfiles/BlockchainDockerfile
-      container_name: blockchain
-      restart: always
-      environment:
-        - APP_NAME=Blockchain
-      volumes:
-        - ./blockchain/mining:/src/mining
-        - ./shared:/src/shared
-      expose:
-        - 5000
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/BlockchainDockerfile
+    container_name: blockchain
+    restart: always
+    environment:
+      - APP_NAME=Blockchain
+    volumes:
+      - ./blockchain/mining:/src/mining
+      - ./shared:/src/shared
+    expose:
+      - 5000
