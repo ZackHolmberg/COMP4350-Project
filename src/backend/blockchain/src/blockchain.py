@@ -3,6 +3,11 @@ from .block import Block
 from .transaction import Transaction
 
 
+class WalletException(Exception):
+    def __init__(self, *args, **kwargs):
+        Exception.__init__(self, *args, **kwargs)
+
+
 class Blockchain:
 
     difficulty = 4
@@ -14,7 +19,7 @@ class Blockchain:
 
     def add_wallet(self, id):
         if id in self.wallets:
-            return False
+            raise WalletException("wallet ID already exists")
         else:
             self.wallets[id] = 0
             return True
@@ -29,11 +34,13 @@ class Blockchain:
 
     def get_wallet_amount(self, id):
         if id not in self.wallets:
-            return -1
+            raise WalletException("no corresponding wallet for id")
         else:
             return self.wallets[id]
 
     def verify_wallet_amount(self, id, amount):
+        if id not in self.wallets:
+            raise WalletException("no corresponding wallet for id")
         if self.wallets[id] < amount:
             return False
         else:

@@ -52,7 +52,7 @@ def test_add_wallet(test_client):
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
     assert response.status_code == 400
-    assert response.json['error'] == "wallet ID already exists"
+    assert response.json['err'] == "wallet ID already exists"
 
 
 def test_verify_amount(test_client):
@@ -86,4 +86,4 @@ def test_get_wallet_amount(test_client):
     response = test_client.get(url, data=json.dumps(data2), headers=headers)
 
     assert response.status_code == 400
-    assert response.json['error'] == "no corresponding wallet for id"
+    assert response.json['err'] == "no corresponding wallet for id"

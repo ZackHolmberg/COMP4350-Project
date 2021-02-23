@@ -32,29 +32,33 @@ def proof():
 
 @app.route('/wallet/addWallet', methods=['POST'])
 def addWallet():
-    data = request.json
-    walletId = data["walletId"]
-    if blockchain.add_wallet(walletId):
-        return jsonify(success=True), 201
-    else:
-        return jsonify(error="wallet ID already exists"), 400
+    try:
+        data = request.json
+        walletId = data["walletId"]
+        success = blockchain.add_wallet(walletId)
+        return jsonify(success=success), 201
+    except Exception as e:
+        return jsonify(err=str(e)), 400
 
 
 @app.route('/wallet/verifyAmount', methods=['POST'])
 def verifyAmount():
-    data = request.json
-    walletId = data["walletId"]
-    amount = data["amount"]
-    valid = blockchain.verify_wallet_amount(walletId, amount)
-    return jsonify(valid=valid), 200
+    try:
+        data = request.json
+        walletId = data["walletId"]
+        amount = data["amount"]
+        valid = blockchain.verify_wallet_amount(walletId, amount)
+        return jsonify(valid=valid), 200
+    except Exception as e:
+        return jsonify(err=str(e)), 400
 
 
 @app.route('/wallet/balance', methods=['GET'])
 def getWalletAmount():
-    data = request.json
-    walletId = data["walletId"]
-    amount = blockchain.get_wallet_amount(walletId)
-    if amount == -1:
-        return jsonify(error="no corresponding wallet for id"), 400
-    else:
+    try:
+        data = request.json
+        walletId = data["walletId"]
+        amount = blockchain.get_wallet_amount(walletId)
         return jsonify(amount=amount), 200
+    except Exception as e:
+        return jsonify(err=str(e)), 400
