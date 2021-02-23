@@ -1,31 +1,42 @@
 version: "3.7"
 
 services:
-  transaction-api:
-    build: ./services/transaction-api
+  transactions:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/TransactionsDockerfile
     container_name: transactions
     restart: always
     volumes:
-      - ./services/transaction-api:/src
+      - ./services/transactions:/src/transactions
+      - ./shared:/src/shared
     environment:
       - APP_NAME=TransactionService
     expose:
       - 5000
 
-  api-gateway:
-    build: ./services/api-gateway
-    container_name: api-gateway
+  mining:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/MiningDockerfile
+    container_name: mining
+    restart: always
+    environment:
+      - APP_NAME=MiningService
+    volumes:
+      - ./services/mining:/src/mining
+      - ./shared:/src/shared
+    expose:
+      - 5000
+
+  nginx:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/NginxDockerfile
+    container_name: nginx
     restart: always
     ports:
       - "80:80"
-
-  blockchain:
-    build: ./blockchain
-    container_name: blockchain
-    restart: always
-    volumes:
-      - ./blockchain:/src
-    environment:
-      - APP_NAME=Blockchain
-    expose:
-      - 5000
+    depends_on:
+      - mining
+      - transactions
