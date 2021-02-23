@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   transactions:
-    build: 
+    build:
       context: ./
       dockerfile: ./Dockerfiles/TransactionsDockerfile
     container_name: transactions
@@ -44,7 +44,7 @@ services:
       - 5000
 
   nginx:
-    build: 
+    build:
       context: ./
       dockerfile: ./Dockerfiles/NginxDockerfile
     container_name: nginx
