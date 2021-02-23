@@ -4,7 +4,10 @@ import requests
 import json
 import sys, os
 
-sys.path.append(os.path.abspath(os.path.join('..', '')))
+if os.environ.get('SERVICE_IN_DOCKER',False):             
+    sys.path.append(os.path.abspath(os.path.join('..', '')))
+else:
+    sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
 from shared import HttpCode
 
