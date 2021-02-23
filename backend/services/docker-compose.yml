@@ -8,7 +8,7 @@ services:
     container_name: transactions
     restart: always
     volumes:
-      - ./transactions:/src/transactions
+      - ./services/transactions:/src/transactions
       - ./shared:/src/shared
     environment:
       - APP_NAME=TransactionService
@@ -24,7 +24,7 @@ services:
     environment:
       - APP_NAME=MiningService
     volumes:
-      - ./mining:/src/mining
+      - ./services/mining:/src/mining
       - ./shared:/src/shared
     expose:
       - 5000
@@ -38,7 +38,7 @@ services:
     environment: 
       - APP_NAME=WalletService
     volumes: 
-      - ./wallet:/src/wallet
+      - ./services/wallet:/src/wallet
       - ./shared:/src/shared
     expose: 
       - 5000
