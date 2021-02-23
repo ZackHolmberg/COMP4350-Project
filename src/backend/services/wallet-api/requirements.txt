@@ -19,3 +19,4 @@ requests==2.20.1
 toml==0.10.2
 urllib3==1.24.3
 Werkzeug==1.0.1
+requests-mock==1.8.0
