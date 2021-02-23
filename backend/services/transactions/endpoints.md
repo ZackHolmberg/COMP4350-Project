@@ -1,61 +1,5 @@
 # Transactions API
 
-## Generate keys for a user
-
-> `POST` <http://localhost/transactions/keygen>
-
-> Required JSON:
-
-```json
-{
-  "user": string
-}
-```
-
-Registers Private and Public keys for a User (temprorarily here, will be moved to User service in later iterations)\
-
-Example return:
-
-```json
-{
-  "success": boolean
-}
-```
-
-## Get a public address for the user
-
-> `GET` <http://localhost/transactions/username>
-
-Example return:
-
-```json
-{
-  "address": string
-}
-```
-
-## Sign a message from a users private key
-
-> `POST` <http://localhost/transactions/sign>
-
-> Required JSON:
-
-```json
-{
-  "to_sign": string,
-  "user": string
-}
-```
-
-Example return:
-
-```json
-{
-  "to_sign": string,
-  "signature": string
-}
-```
-
 ## Create a new Transaction
 
 > `POST` <http://localhost/transactions/create>
@@ -72,10 +16,23 @@ Example return:
 }
 ```
 
+- In the request the id needs to be a something that was signed by the users private key on the device
+- signature is a base64 signature that was received from sigining the id
+- The from and to addresses are base64 encoded public key addresses, these will be used to verify the validity of the transaction
+- The amount will need to be present in the users wallet to maka a transaction
+
 Example return:
 
 ```json
 {
   "success": boolean
+}
+```
+
+On a Bad request: 400
+
+```json
+{
+  "err": string
 }
 ```
