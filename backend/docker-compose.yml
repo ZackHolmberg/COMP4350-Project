@@ -2,13 +2,13 @@ version: "3.7"
 
 services:
   transactions:
-    build: 
+    build:
       context: ./
       dockerfile: ./Dockerfiles/TransactionsDockerfile
     container_name: transactions
     restart: always
     volumes:
-      - ./transactions:/src/transactions
+      - ./services/transactions:/src/transactions
       - ./shared:/src/shared
     environment:
       - APP_NAME=TransactionService
@@ -24,13 +24,13 @@ services:
     environment:
       - APP_NAME=MiningService
     volumes:
-      - ./mining:/src/mining
+      - ./services/mining:/src/mining
       - ./shared:/src/shared
     expose:
       - 5000
 
   nginx:
-    build: 
+    build:
       context: ./
       dockerfile: ./Dockerfiles/NginxDockerfile
     container_name: nginx
