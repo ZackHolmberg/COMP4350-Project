@@ -5,7 +5,11 @@ FROM python:3.8-alpine
 WORKDIR /src
 
 # Copy the current directory contents into the container at /src
-ADD . /src
+ADD ./transactions ./transactions
+ADD ./shared ./shared
+
+#change working directory
+WORKDIR ./transactions
 
 # Install the dependencies within container
 
