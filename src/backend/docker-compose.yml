@@ -5,10 +5,10 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfiles/TransactionsDockerfile
-    container_name: transactions
+    container_name: transaction-api
     restart: always
     volumes:
-      - ./services/transactions:/src/transactions
+      - ./services/transaction-api:/src/transactions
       - ./shared:/src/shared
     environment:
       - APP_NAME=TransactionService
@@ -19,12 +19,12 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfiles/MiningDockerfile
-    container_name: mining
+    container_name: mining-api
     restart: always
     environment:
       - APP_NAME=MiningService
     volumes:
-      - ./services/mining:/src/mining
+      - ./services/mining-api:/src/mining
       - ./shared:/src/shared
     expose:
       - 5000
@@ -40,3 +40,18 @@ services:
     depends_on:
       - mining
       - transactions
+      - blockchain
+
+  blockchain:
+      build:
+        context: ./
+        dockerfile: ./Dockerfiles/BlockchainDockerfile
+      container_name: blockchain
+      restart: always
+      environment:
+        - APP_NAME=Blockchain
+      volumes:
+        - ./blockchain/mining:/src/mining
+        - ./shared:/src/shared
+      expose:
+        - 5000
