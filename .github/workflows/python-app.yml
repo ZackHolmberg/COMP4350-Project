@@ -32,25 +32,25 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Test Mining
-        working-directory: ./backend/services/mining-api
+        working-directory: ./src/backend/services/mining-api
         run: |
           pip install -r requirements.txt
           python -m pytest
 
       - name: Test Transactions
-        working-directory: ./backend/services/transaction-api
+        working-directory: ./src/backend/services/transaction-api
         run: |
           pip install -r requirements.txt
           python -m pytest
 
       - name: Test Blockchain
-        working-directory: ./backend/blockchain
+        working-directory: ./src/backend/blockchain
         run: |
           pip install -r requirements.txt
           python -m pytest
 
       - name: Test Wallet
-        working-directory: ./backend/services/wallet-api
+        working-directory: ./src/backend/services/wallet-api
         run: |
           pip install -r requirements.txt
           python -m pytest
