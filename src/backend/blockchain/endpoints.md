@@ -59,7 +59,7 @@ Example return:
 or
 
 ```json
-400 {"error": "wallet ID already exists"}
+400 {"err": "wallet ID already exists"}
 ```
 
 ## Verify that a wallet has sufficient funds for the transaction
@@ -105,5 +105,5 @@ Example return:
 or
 
 ```json
-400 { "error": "no corresponding wallet for id" }
+400 { "err": "no corresponding wallet for id" }
 ```
