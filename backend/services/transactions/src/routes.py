@@ -50,8 +50,8 @@ def createTransaction():
     if not isVerified:
         return jsonify(err= FailureReturnString.TRANSACTION_VERFICATION_FAILURE), HttpCode.UNAUTHORIZED
     
-    # call wallet to confirm if the amount event exists
+    # TODO call wallet to confirm if the amount event exists
 
-    # call the mining service to initiate a mining
+    # TODO call the mining service to initiate a mining
 
     return jsonify(success=True), HttpCode.CREATED
