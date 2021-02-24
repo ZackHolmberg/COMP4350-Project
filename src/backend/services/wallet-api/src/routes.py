@@ -35,7 +35,6 @@ def createWallet():
     response = requests.post(
         "http://blockchain:5000/wallet/addWallet", json=req_body)
 
-    print("Response: ",response)
     return jsonify(response.json()), response.status_code
 
 @cross_origin()
@@ -52,5 +51,4 @@ def getWalletAmount():
     response = requests.get(
         "http://blockchain:5000/wallet/balance", json=req_body)
 
-    print("Response: ",response)
     return jsonify(response.json()), response.status_code
