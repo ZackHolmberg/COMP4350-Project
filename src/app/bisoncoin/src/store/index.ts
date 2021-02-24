@@ -53,38 +53,44 @@ const sign = (transaction: Transaction, privateKey: string): string => {
 
 // END
 
-// Create initial Transaction object, with to/from/amount filled. Then, call getTransactionId, passing that id. Set the id of the transaction with the return value.
-// Finally, call sign(), passing the transaction with 4 fields filled out and the private key, which is in the store. This returns the signature, which you will set 
-// the last Transaction field (signature) too
-
 export default new Vuex.Store({
   state: {
     walletId: publicKey,
     privateKey: privateKey,
-
+  },
+  getters: {
+    walletId: (state) => {
+      return state.walletId;
+    },
+    privateKey: (state) => {
+      return state.privateKey;
+    },
   },
   mutations: {
   },
   actions: {
-    ACTION_SEND_TRANSACTION({ commit },  values ){
+    ACTION_SEND_TRANSACTION({ getters },  values ){
       console.log("hit transaction");
       const amount = parseFloat(values.amount);
       const recipient = values.contact;
+      const from = getters.walletID;
 
-      const id = getTransactionId({ to: publicKey, from: privateKey, amount: amount, id: "0", signature: "" });
-      const signature = sign({ to: publicKey, from: privateKey, amount: amount, id: id, signature: "" }, privateKey);
+      const id = getTransactionId({ to: "", from: from, amount: amount, id: "0", signature: "" });
+      const signature = sign({ to: "", from: from, amount: amount, id: id, signature: "" }, getters.privateKey);
 
       axios
         .post("http://localhost/transactions/create", {
           "id": id,
-          "from": publicKey,
-          "to": privateKey,
+          "from": from,
+          "to": "",
           "amount": amount,
           "signature": signature
         })
         .then((response) => {
           if(response.data.success) {
-            console.log("transaction successful");
+            alert("Transaction was successful!");
+          } else if(response.data.err) {
+            alert("Transaction has failed.");
           }
         });
     },
