@@ -28,8 +28,7 @@ export default class NewTransactionPage extends Vue {
   newTransaction() {
      const values = { amount: 10, contact: "email"};
      this.$store.dispatch("ACTION_SEND_TRANSACTION", values);
-  }
-    
+  }  
 }
 </script>
 

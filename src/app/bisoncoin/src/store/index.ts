@@ -61,20 +61,32 @@ export default new Vuex.Store({
   state: {
     walletId: publicKey,
     privateKey: privateKey,
+
   },
   mutations: {
   },
   actions: {
     ACTION_SEND_TRANSACTION({ commit },  values ){
-      /* axios
-        .post("http://localhost/wallet/create", {
-          "public_key": getters.walletId,
+      console.log("hit transaction");
+      const amount = parseFloat(values.amount);
+      const recipient = values.contact;
+
+      const id = getTransactionId({ to: publicKey, from: privateKey, amount: amount, id: "0", signature: "" });
+      const signature = sign({ to: publicKey, from: privateKey, amount: amount, id: id, signature: "" }, privateKey);
+
+      axios
+        .post("http://localhost/transactions/create", {
+          "id": id,
+          "from": publicKey,
+          "to": privateKey,
+          "amount": amount,
+          "signature": signature
         })
         .then((response) => {
-          commit("SET_LOADING", false);
-          commit("SET_WALLET_CREATED", response.data.success);
-        }); */
-      console.log("sent transaction "+ values.amount + values.contact);
+          if(response.data.success) {
+            console.log("transaction successful");
+          }
+        });
     },
   },
   modules: {

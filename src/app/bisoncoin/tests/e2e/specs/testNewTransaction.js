@@ -8,8 +8,7 @@ describe('Sends a transaction', () => {
         cy.visit('http://localhost:8080/')
         cy.get('#username').type('Username') 
         cy.get('#password').type('Password') 
-        cy.get('#button').click()   
-        cy.url().should('eq', 'http://localhost:8080/home')
+        cy.get('#button').click()
       })
  
       it('Successfully navigates to transaction page', () => {
