@@ -8,7 +8,7 @@
     />
     <TextInput label="Username" />
     <TextInput label="Password" />
-    <Button class="login-button" dest="/home" label="Login" />
+    <Button class="login-button" dest="/home" label="Login" @send="login"/>
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
 </template>
@@ -24,7 +24,11 @@ import Button from "../components/Button.vue";
     Button,
   },
 })
-export default class LoginPage extends Vue {}
+export default class LoginPage extends Vue {
+  login() {
+    console.log("login");
+  }
+}
 </script>
 
 <style lang="scss">

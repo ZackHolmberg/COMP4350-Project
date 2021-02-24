@@ -2,11 +2,11 @@
   <div class="new-transaction">
     <div class="transaction-wrapper">
       <p class="contact-text">Recipient: </p>
-      <TextInput class="new-transaction-input" label="Email" v-model="contact"/>
+      <TextInput id=contact-input class="new-transaction-input" label="Email" v-model="contact"/>
       <p class="amount-text">Amount: </p>
-      <TextInput class="new-transaction-input" label="0.0 BSC" v-model="amount" />
-      <CancelButton class="transaction-cancel-button" dest="/home" label="Cancel" />
-      <Button class="send-button" dest="/home" label="Send" />
+      <TextInput id=amount-input class="new-transaction-input" label="0.0 BSC" v-model="amount" />
+      <CancelButton id=transaction-cancel class="transaction-cancel-button" dest="/home" label="Cancel" />
+      <Button id=transaction-send class="send-button" dest="/home" label="Send" v-on:send="newTransaction" />
     </div>
   </div>
 </template>
@@ -18,26 +18,26 @@ import Button from "../components/Button.vue";
 import CancelButton from "../components/CancelButton.vue";
 
 @Component({
-  methods: {
-    newTransaction(transactionAmount, contactName) {
-        //this.$store.dispatch("sendTransaction");
-    }
-  },
-
   components: {
     TextInput,
     Button,
     CancelButton,
   },
-
-  data: function() {
-      return {
-        amount: "",
-        contact: ""
-      }
-  },
 })
 export default class NewTransactionPage extends Vue {
+  data() {
+    return {
+      amount: "",
+      contact: ""
+    }
+  }
+
+  newTransaction() {
+     const values = { amount: this.$data.amount, contact: this.$data.contact};
+     this.$store.dispatch("sendTransaction", values);
+     console.log("sent transaction in parent");
+  }
+    
 }
 </script>
 

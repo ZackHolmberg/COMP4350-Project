@@ -1,6 +1,6 @@
 <template>
   <div class="create-transaction">
-    <BigButton dest="/transaction" label="New Transaction" />
+    <BigButton id="transaction-button" dest="/transaction" label="New Transaction" />
   </div>
 </template>
 
