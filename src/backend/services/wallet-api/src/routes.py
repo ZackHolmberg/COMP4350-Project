@@ -29,13 +29,8 @@ def createWallet():
 
     response = requests.post("http://blockchain:5000/wallet/addWallet", json=req_body)
 
-    print(response.text)
-
-    if response.status_code == HttpCode.CREATED:
-        return jsonify( response.json() ), HttpCode.CREATED
-    else:
-        return jsonify( response.json() ), HttpCode.BAD_REQUEST
-
+    return jsonify( response.json() ), HttpCode.CREATED
+    
 
 
 @app.route("/amount", methods = ['POST'])
@@ -51,8 +46,5 @@ def getWalletAmount():
 
     response = requests.post("http://blockchain:5000/wallet/balance", json=req_body)
 
-    print(response.text)
-    if response.status_code == HttpCode.OK:   
-        return jsonify( response.json() ), HttpCode.OK
-    else:
-        return jsonify( response.json() ), HttpCode.BAD_REQUEST
+    return jsonify( response.json() ), HttpCode.OK
+    
