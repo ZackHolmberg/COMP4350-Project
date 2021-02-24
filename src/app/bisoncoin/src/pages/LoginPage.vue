@@ -8,7 +8,7 @@
     />
     <TextInput label="Username" />
     <TextInput label="Password" />
-    <Button class="login-button" dest="/home" label="Login" @send="login"/>
+    <Button class="login-button" dest="/home" label="Login" @click.native="login"/>
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
 </template>

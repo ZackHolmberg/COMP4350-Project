@@ -2,11 +2,11 @@
   <div class="new-transaction">
     <div class="transaction-wrapper">
       <p class="contact-text">Recipient: </p>
-      <TextInput id=contact-input class="new-transaction-input" label="Email" v-model="contact"/>
+      <TextInput id=contact-input class="new-transaction-input" label="Email"/>
       <p class="amount-text">Amount: </p>
-      <TextInput id=amount-input class="new-transaction-input" label="0.0 BSC" v-model="amount" />
+      <TextInput id=amount-input class="new-transaction-input" label="0.0 BSC"/>
       <CancelButton id=transaction-cancel class="transaction-cancel-button" dest="/home" label="Cancel" />
-      <Button id=transaction-send class="send-button" dest="/home" label="Send" v-on:send="newTransaction" />
+      <Button id=transaction-send class="send-button" dest="/home" label="Send" @click.native="newTransaction" />
     </div>
   </div>
 </template>
@@ -25,17 +25,9 @@ import CancelButton from "../components/CancelButton.vue";
   },
 })
 export default class NewTransactionPage extends Vue {
-  data() {
-    return {
-      amount: "",
-      contact: ""
-    }
-  }
-
   newTransaction() {
-     const values = { amount: this.$data.amount, contact: this.$data.contact};
-     this.$store.dispatch("sendTransaction", values);
-     console.log("sent transaction in parent");
+     const values = { amount: 10, contact: "email"};
+     this.$store.dispatch("ACTION_SEND_TRANSACTION", values);
   }
     
 }

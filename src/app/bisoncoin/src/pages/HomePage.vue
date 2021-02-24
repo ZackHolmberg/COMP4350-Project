@@ -2,9 +2,6 @@
   <div class="home">
     <div class="wrapper">
       <CreateTransaction />
-      <CreateTransaction />
-      <CreateTransaction />
-      <CreateTransaction />
     </div>
   </div>
 </template>

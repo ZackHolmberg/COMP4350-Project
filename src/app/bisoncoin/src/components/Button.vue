@@ -1,35 +1,18 @@
 <template>
   <div>
-    <router-link :to="dest" class="button" tag="button" @click.native="handleClick">{{
+    <router-link :to="dest" class="button" tag="button" >{{
       label
     }}</router-link>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Button extends Vue {
   @Prop() private label!: string;
   @Prop() private dest!: string;
-  
-
-  /* data() {
-    return {
-      amount: "59",
-      contact: "Me"
-    }
-  } */
-
-  handleClick() {
-    this.$emit('send');
-    console.log("clicked");
-
-    //const values = { amount: this.$data.amount, contact: this.$data.contact};
-    //this.$store.dispatch("sendTransaction", values);
-  }
-
 }
 </script>
 
