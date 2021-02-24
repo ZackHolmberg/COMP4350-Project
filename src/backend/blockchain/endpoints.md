@@ -11,9 +11,10 @@ N / A
 ```
 
 Example return:
-Status code: 200
 
 ```json
+200
+
 {
   "length": 1,
   "chain":
@@ -34,52 +35,14 @@ Required JSON:
 
 Example return:
 
-Status code: 201
-
-```json
-{
-  "success": true
-}
-```
-
-or
-Status code: 400
-
-```json
-{
-  "err": "wallet ID already exists"
-}
-```
-
-## Get Wallet Balance
-
-> GET http://localhost/blockchain/wallet/balance
-
-Required JSON:
-
-```json
-{
-  "walletId": string
-}
-```
-
-Example return:
-Status code: 200
-
-```json
-N / A
-```
-
-Example return:
 
 ```json
 200
 
 {
-  "valid": true
+  "success": true
 }
 ```
-
 or
 
 ```json
