@@ -1,6 +1,7 @@
 from src import app
 from flask import request, jsonify
 from ecdsa import SigningKey, VerifyingKey
+import requests
 import base64
 import sys
 import os
@@ -50,7 +51,14 @@ def createTransaction():
     if not isVerified:
         return jsonify(err=FailureReturnString.TRANSACTION_VERFICATION_FAILURE), HttpCode.UNAUTHORIZED
 
-    # TODO call wallet to confirm if the amount event exists
+    
+    req_body = {"walletId": from_address, "amount": amount}
+
+    response = requests.post("http://blockchain:5000/wallet/verifyAmount", json=req_body)
+
+    if response.status_code is not HttpCode.OK:   
+        return jsonify( response.json() ), response.status_code
+    
 
     # TODO call the mining service to initiate a mining
 

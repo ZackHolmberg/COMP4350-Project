@@ -11,6 +11,8 @@ else:
 
 from shared import HttpCode, FailureReturnString
 
+json_headers = {'Content-Type': 'application/json'}
+
 @app.route("/")
 def index():
     return "Hello from your wallet"
@@ -25,17 +27,10 @@ def createWallet():
 
     req_body = {"walletId": data["public_key"]}
 
-    response = requests.post("http://localhost/blockchain/wallet/addWallet", req_body)
+    response = requests.post("http://blockchain:5000/wallet/addWallet", json=req_body)
 
-    if response.status_code == HttpCode.OK:
-        return jsonify(
-            success = json.loads(response.text)["success"]
-            ), HttpCode.CREATED
-    else:
-        return jsonify(
-            error = json.loads(response.text)["error"]
-        ), HttpCode.BAD_REQUEST
-
+    return jsonify( response.json() ), response.status_code
+    
 
 
 @app.route("/amount", methods = ['POST'])
@@ -49,13 +44,7 @@ def getWalletAmount():
 
     req_body = {"walletId": data["public_key"]}
 
-    response = requests.post("http://localhost/blockchain/wallet/balance", req_body)
+    response = requests.post("http://blockchain:5000/wallet/balance", json=req_body)
 
-    if response.status_code == HttpCode.OK:   
-        return jsonify(
-            amount = json.loads(response.text)["amount"] 
-        ), HttpCode.OK
-    else:
-        return jsonify(
-            error = json.loads(response.text)["error"]
-        ), HttpCode.BAD_REQUEST
+    return jsonify( response.json() ), response.status_code
+    
