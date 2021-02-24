@@ -1,6 +1,7 @@
 from src import app
 from flask import request, jsonify
 from ecdsa import SigningKey, VerifyingKey
+import requests
 import base64
 import sys
 import os
