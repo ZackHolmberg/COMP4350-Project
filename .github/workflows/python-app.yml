@@ -54,8 +54,3 @@ jobs:
         run: |
           pip install -r requirements.txt
           python -m pytest
-
-      - name: Test Frontend
-        working-directory: ./src/frontend
-        run: |
-          sh runE2Es.sh
