@@ -55,6 +55,7 @@ services:
       - mining
       - transactions
       - blockchain
+      - wallet
 
   blockchain:
     build:
@@ -65,7 +66,7 @@ services:
     environment:
       - APP_NAME=Blockchain
     volumes:
-      - ./blockchain/mining:/src/mining
+      - ./blockchain:/src/blockchain
       - ./shared:/src/shared
     expose:
       - 5000

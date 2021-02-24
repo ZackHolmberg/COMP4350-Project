@@ -101,12 +101,14 @@ def test_create_transaction_correct_key_wrong_signature(test_client, json_header
     assert response.status_code == HttpCode.BAD_REQUEST
     assert b"err" in response.data
 
-def test_create_transaction_correct_payload(test_client, json_header, signing_key, public_key):
+def test_create_transaction_correct_payload(test_client, json_header, signing_key, public_key, requests_mock):
     ## sign a transaction
     to_sign = str(uuid4())
     signature = signing_key.sign(to_sign.encode())
     signature = base64.b64encode(signature).decode()
 
+    requests_mock.post("http://blockchain:5000/wallet/verifyAmount",
+                       json={"valid": True}, status_code=200)
 
     data = {
         'id' : to_sign,
