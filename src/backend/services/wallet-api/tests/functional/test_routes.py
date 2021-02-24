@@ -38,7 +38,7 @@ def test_create_wallet_success(test_client, requests_mock):
     url = '/create'
 
     requests_mock.post(
-        "http://blockchain:5000/wallet/addWallet", json={"success": True})
+        "http://blockchain:5000/wallet/addWallet", json={"success": True}, status_code=201)
 
     response = test_client.post(
         url, json={"public_key": 'to_be_genetated_elsewhere'})
