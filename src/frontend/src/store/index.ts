@@ -61,39 +61,46 @@ export default new Vuex.Store({
     walletId: (state) => {
       return state.walletId;
     },
+    walletAmount: (state) => {
+      return state.walletAmount;
+    },
+    // TODO: Remove this getter once we initialize wallet on account creation and not in wallet component
+    walletCreated: (state) => {
+      return state.walletCreated;
+    },
   },
   mutations: {
-    SET_LOADING(state, loading) {
+    MUTATATION_SET_LOADING(state, loading) {
       state.loading = loading;
     },
-    SET_WALLET_AMOUNT(state, amount) {
+    MUTATION_SET_WALLET_AMOUNT(state, amount) {
       state.walletAmount = amount;
     },
     // TODO: Remove once we generate walletId and initialize wallet on account creation
-    SET_WALLET_CREATED(state) {
+    MUTATION_SET_WALLET_CREATED(state) {
       state.walletCreated = true;
     },
   },
   actions: {
-    initializeWallet({ commit, getters }) {
-      commit("SET_LOADING", true);
+    ACTION_INITIALIZE_WALLET({ commit, getters }) {
+      commit("MUTATATION_SET_LOADING", true);
       axios
         .post("http://localhost/wallet/create", {
           "public_key": getters.walletId,
         })
         .then((response) => {
-          commit("SET_LOADING", false);
-          commit("SET_WALLET_CREATED", response.data.success);
+          commit("MUTATATION_SET_LOADING", false);
+          commit("MUTATION_SET_WALLET_CREATED", response.data.success);
         });
     },
-    fetchWalletAmount({ commit, getters }) {
-      commit("SET_LOADING", true);
+    ACTION_FETCH_WALLET_AMOUNT({ commit, getters }) {
+      commit("MUTATATION_SET_LOADING", true);
       axios
         .post("http://localhost/wallet/amount", {
           "public_key": getters.walletId,
         })
         .then((response) => {
-          commit("SET_WALLET_AMOUNT", response.data.amount);
+          commit("MUTATION_SET_WALLET_AMOUNT", response.data.amount);
         });
     },
   },

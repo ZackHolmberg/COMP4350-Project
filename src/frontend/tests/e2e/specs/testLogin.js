@@ -8,7 +8,6 @@ describe('After loading the app', () => {
     })
 
     it('Successfully logs into the app and navigates to home page', () => {
-      cy.visit('http://localhost:8080/')
       cy.get('#username').type('Username') 
       cy.get('#password').type('Password') 
       cy.get('#button').click()   

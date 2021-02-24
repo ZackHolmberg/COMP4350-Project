@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="wallet" class="wallet">
     <h1>{{ walletAmount }} BSC</h1>
   </div>
 </template>
@@ -10,27 +10,21 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class Wallet extends Vue {
   get walletAmount() {
-    return this.$store.state.walletAmount;
+    return this.$store.getters.walletAmount;
   }
 
-  walletId() {
-    return this.$store.state.walletId;
-  }
-
-  privateKey() {
-    return this.$store.state.privateKey;
-  }
-
+  // TODO: Remove this function once we initialize wallet on account creation
   walletCreated() {
-    return this.$store.state.walletCreated;
+    return this.$store.getters.walletCreated;
   }
 
   beforeMount() {
+    // TODO: Remove this conditional once we initialize wallet on account creation and only fetch wallet amount
     if (this.walletCreated()) {
-      this.$store.dispatch("fetchWalletAmount");
+      this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
     } else {
-      this.$store.dispatch("initializeWallet");
-      this.$store.dispatch("fetchWalletAmount");
+      this.$store.dispatch("ACTION_INITIALIZE_WALLET");
+      this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
     }
   }
 }
@@ -39,7 +33,7 @@ export default class Wallet extends Vue {
 <style lang="scss">
 @import "../style.scss";
 
-.container {
+.wallet {
   width: 40%;
   height: 40%;
   background-color: lightgray;
