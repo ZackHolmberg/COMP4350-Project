@@ -30,7 +30,7 @@ def test_home_page(test_client):
 
     response = test_client.get(url)
 
-    assert response.status_code == HttpCode.OK
+    assert response.status_code == HttpCode.OK.value
     assert b"Hello from your wallet" in response.data
 
 
@@ -43,7 +43,7 @@ def test_create_wallet_success(test_client, requests_mock):
     response = test_client.post(
         url, json={"public_key": 'to_be_genetated_elsewhere'})
 
-    assert response.status_code == HttpCode.CREATED
+    assert response.status_code == HttpCode.CREATED.value
     assert json.loads(response.data)["success"] == True
 
 
@@ -56,7 +56,7 @@ def test_create_wallet_error(test_client, requests_mock):
     response = test_client.post(
         url, json={"public_key": 'to_be_genetated_elsewhere'})
 
-    assert response.status_code == HttpCode.BAD_REQUEST
+    assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)["error"] == "wallet ID already exists"
 
 
@@ -68,7 +68,7 @@ def test_create_wallet_incorrect_payload(test_client, requests_mock):
 
     response = test_client.post(url, json={})
 
-    assert response.status_code == HttpCode.BAD_REQUEST
+    assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)[
         "error"] == "Please send correct json payload"
 
@@ -76,26 +76,26 @@ def test_create_wallet_incorrect_payload(test_client, requests_mock):
 def test_get_wallet_amount_success(test_client, requests_mock):
     url = '/amount'
 
-    requests_mock.post(
+    requests_mock.get(
         "http://blockchain:5000/wallet/balance", json={"amount": 0})
 
     response = test_client.post(
         url, json={"public_key": 'to_be_genetated_elsewhere'})
 
-    assert response.status_code == HttpCode.OK
+    assert response.status_code == HttpCode.OK.value
     assert json.loads(response.data)["amount"] == 0
 
 
 def test_get_wallet_amount_error(test_client, requests_mock):
     url = '/amount'
 
-    requests_mock.post("http://blockchain:5000/wallet/balance",
+    requests_mock.get("http://blockchain:5000/wallet/balance",
                        json={"error": "no corresponding wallet for id"}, status_code=400)
 
     response = test_client.post(
         url, json={"public_key": 'to_be_genetated_elsewhere'})
 
-    assert response.status_code == HttpCode.BAD_REQUEST
+    assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)[
         "error"] == "no corresponding wallet for id"
 
@@ -108,6 +108,6 @@ def test_get_wallet_amount_incorrect_payload(test_client, requests_mock):
 
     response = test_client.post(url, json={})
 
-    assert response.status_code == HttpCode.BAD_REQUEST
+    assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)[
         "error"] == "Please send correct json payload"

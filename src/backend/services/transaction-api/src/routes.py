@@ -45,7 +45,7 @@ def createTransaction():
         signature = data["signature"]
 
     except Exception as e:
-        return jsonify(err=FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST
+        return jsonify(err=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
     try:
         isVerified = validateSignature(transaction_id, signature, from_address)
@@ -54,7 +54,7 @@ def createTransaction():
         return jsonify(err=str(e)), HttpCode.BAD_REQUEST
 
     if not isVerified:
-        return jsonify(err=FailureReturnString.TRANSACTION_VERFICATION_FAILURE), HttpCode.UNAUTHORIZED
+        return jsonify(err=FailureReturnString.TRANSACTION_VERFICATION_FAILURE.value), HttpCode.UNAUTHORIZED.value
 
     req_body = {"walletId": from_address, "amount": amount}
 
@@ -66,4 +66,4 @@ def createTransaction():
 
     # TODO call the mining service to initiate a mining
 
-    return jsonify(success=True), HttpCode.CREATED
+    return jsonify(success=True), HttpCode.CREATED.value

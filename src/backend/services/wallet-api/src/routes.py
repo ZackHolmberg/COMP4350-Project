@@ -28,7 +28,7 @@ def createWallet():
     data = request.get_json(force=True)
 
     if (data is None) or ("public_key" not in data):
-        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST
+        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
     req_body = {"walletId": data["public_key"]}
 
@@ -44,7 +44,7 @@ def getWalletAmount():
     data = request.get_json(force=True)
 
     if (data is None) or ("public_key" not in data):
-        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST
+        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
     req_body = {"walletId": data["public_key"]}
 
