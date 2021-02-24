@@ -11,9 +11,10 @@ N / A
 ```
 
 Example return:
-Status code: 200
 
 ```json
+200
+
 {
   "length": 1,
   "chain":
@@ -34,18 +35,19 @@ Required JSON:
 
 Example return:
 
-Status code: 201
 
 ```json
+200
+
 {
   "success": true
 }
 ```
-
 or
-Status code: 400
 
 ```json
+400
+
 {
   "err": "wallet ID already exists"
 }
@@ -53,7 +55,7 @@ Status code: 400
 
 ## Get Wallet Balance
 
-> GET http://localhost/blockchain/wallet/balance
+> `GET` <http://localhost/blockchain/wallet/balance>
 
 Required JSON:
 
@@ -64,18 +66,20 @@ Required JSON:
 ```
 
 Example return:
-Status code: 200
 
 ```json
+200
+
 {
   "amount": int
 }
 ```
 
 or
-Status code: 400
 
 ```json
+400
+
 {
   "err": "no corresponding wallet for id"
 }
@@ -83,7 +87,7 @@ Status code: 400
 
 ## Verify transaction amount
 
-POST http://localhost/blockchain/wallet/verifyAmount
+> `POST` <http://localhost/blockchain/wallet/verifyAmount>
 
 Required JSON:
 
@@ -96,18 +100,19 @@ Required JSON:
 
 Example return:
 
-Status code: 200
-
 ```json
+200
+
 {
   "valid": true
 }
 ```
 
 or
-Status code: 400
 
 ```json
+400
+
 {
   "err": "no corresponding wallet for id"
 }

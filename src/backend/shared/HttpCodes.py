@@ -1,17 +1,20 @@
-class HttpCode:
-    OK: int = 200
-    CREATED: int = 201
-    NO_CONTENT: int = 204
+from enum import Enum
 
-    MOVED_PERMANENTLY: int = 301
-    TEMPORARY_REDIRECT: int = 307
 
-    BAD_REQUEST: int = 400
-    UNAUTHORIZED: int = 401
-    FORBIDDEN: int = 403
-    NOT_FOUND: int = 404
-    METHOD_NOT_ALLOWED: int = 405
+class HttpCode(Enum):
+    OK = 200
+    CREATED = 201
+    NO_CONTENT = 204
 
-    INTERNAL_SERVER_ERROR: int = 500
-    NOT_IMPLEMENTED: int = 501
-    BAD_GATEWAY: int = 502
+    MOVED_PERMANENTLY = 301
+    TEMPORARY_REDIRECT = 307
+
+    BAD_REQUEST = 400
+    UNAUTHORIZED = 401
+    FORBIDDEN = 403
+    NOT_FOUND = 404
+    METHOD_NOT_ALLOWED = 405
+
+    INTERNAL_SERVER_ERROR = 500
+    NOT_IMPLEMENTED = 501
+    BAD_GATEWAY = 502

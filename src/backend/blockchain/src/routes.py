@@ -20,7 +20,7 @@ def get_chain():
     chain = []
     for block in blockchain.chain:
         chain.append(block.toJSON())
-    return jsonify(length=len(chain), chain=chain), HttpCode.OK
+    return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
 
 
 @app.route('/proof', methods=['POST'])
@@ -41,9 +41,9 @@ def addWallet():
         data = request.get_json()
         walletId = data["walletId"]
         success = blockchain.add_wallet(walletId)
-        return jsonify(success=success), HttpCode.CREATED
+        return jsonify(success=success), HttpCode.CREATED.value
     except Exception as e:
-        return jsonify(err=str(e)), HttpCode.BAD_REQUEST
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
 
 
 @app.route('/wallet/verifyAmount', methods=['POST'])
@@ -53,9 +53,9 @@ def verifyAmount():
         walletId = data["walletId"]
         amount = data["amount"]
         valid = blockchain.verify_wallet_amount(walletId, amount)
-        return jsonify(valid=valid), HttpCode.OK
+        return jsonify(valid=valid), HttpCode.OK.value
     except Exception as e:
-        return jsonify(err=str(e)), HttpCode.BAD_REQUEST
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
 
 
 @app.route('/wallet/balance', methods=['GET'])
@@ -64,6 +64,6 @@ def getWalletAmount():
         data = request.get_json()
         walletId = data["walletId"]
         amount = blockchain.get_wallet_amount(walletId)
-        return jsonify(amount=amount), HttpCode.OK
+        return jsonify(amount=amount), HttpCode.OK.value
     except Exception as e:
-        return jsonify(err=str(e)), HttpCode.BAD_REQUEST
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
