@@ -1,1 +1,1 @@
-bisoncoin/runE2Es.sh
+(npm run serve&) && ./node_modules/.bin/cypress run
