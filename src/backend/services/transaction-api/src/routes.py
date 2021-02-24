@@ -51,7 +51,7 @@ def createTransaction():
         isVerified = validateSignature(transaction_id, signature, from_address)
 
     except Exception as e:
-        return jsonify(err=str(e)), HttpCode.BAD_REQUEST
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
 
     if not isVerified:
         return jsonify(err=FailureReturnString.TRANSACTION_VERFICATION_FAILURE.value), HttpCode.UNAUTHORIZED.value
@@ -61,7 +61,7 @@ def createTransaction():
     response = requests.post(
         "http://blockchain:5000/wallet/verifyAmount", json=req_body)
 
-    if response.status_code is not HttpCode.OK:
+    if response.status_code is not HttpCode.OK.value:
         return jsonify(response.json()), response.status_code
 
     # TODO call the mining service to initiate a mining

@@ -68,7 +68,7 @@ def test_create_transaction_incorrect_payload(test_client, json_header):
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert b"err" in response.data
-    assert FailureReturnString.INCORRECT_PAYLOAD.encode() in response.data
+    assert FailureReturnString.INCORRECT_PAYLOAD.value.encode() in response.data
 
 def test_create_transaction_wrong_key(test_client, json_header):
     data = {
@@ -121,7 +121,6 @@ def test_create_transaction_correct_payload(test_client, json_header, signing_ke
 
     response = test_client.post(url, data=json.dumps(data), headers=json_header)
 
-    print(response.data)
     assert response.status_code == HttpCode.CREATED.value
     assert b"success" in response.data
     assert b"true" in response.data
