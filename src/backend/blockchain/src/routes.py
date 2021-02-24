@@ -39,7 +39,6 @@ def proof():
 def addWallet():
     try:
         data = request.get_json()
-        print(data)
         walletId = data["walletId"]
         success = blockchain.add_wallet(walletId)
         return jsonify(success=success), HttpCode.CREATED
@@ -59,7 +58,7 @@ def verifyAmount():
         return jsonify(err=str(e)), HttpCode.BAD_REQUEST
 
 
-@app.route('/wallet/balance', methods=['POST'])
+@app.route('/wallet/balance', methods=['GET'])
 def getWalletAmount():
     try:
         data = request.get_json()

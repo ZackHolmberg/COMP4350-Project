@@ -78,12 +78,12 @@ def test_get_wallet_amount(test_client):
     data1 = {'walletId': "fake_wallet_id"}
     data2 = {'walletId': "non_existent_wallet_id"}
 
-    response = test_client.post(url, data=json.dumps(data1), headers=headers)
+    response = test_client.get(url, data=json.dumps(data1), headers=headers)
 
     assert response.status_code == 200
     assert response.json['amount'] == 0
 
-    response = test_client.post(url, data=json.dumps(data2), headers=headers)
+    response = test_client.get(url, data=json.dumps(data2), headers=headers)
 
     assert response.status_code == 400
     assert response.json['err'] == "no corresponding wallet for id"
