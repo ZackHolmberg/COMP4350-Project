@@ -6,9 +6,9 @@
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
-    <TextInput label="Username" />
-    <TextInput label="Password" />
-    <Button dest="/home" label="Login" />
+    <TextInput id="username" label="Username" />
+    <TextInput id="password" label="Password" />
+    <Button id="button" dest="/home" label="Login" />
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
 </template>
