@@ -59,7 +59,7 @@ def verifyAmount():
         return jsonify(err=str(e)), HttpCode.BAD_REQUEST
 
 
-@app.route('/wallet/balance', methods=['GET'])
+@app.route('/wallet/balance', methods=['POST'])
 def getWalletAmount():
     try:
         data = request.get_json()
