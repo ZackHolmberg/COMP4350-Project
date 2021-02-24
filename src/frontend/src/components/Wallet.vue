@@ -5,27 +5,25 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 
-@Component({
-  computed: {
-    walletAmount() {
-      return this.$store.state.walletAmount;
-    },
-    walletId() {
-      return this.$store.state.walletId;
-    },
-    privateKey() {
-      return this.$store.state.privateKey;
-    },
-  },
-  beforeMount() {
-    console.log("hi");
-    this.$store.dispatch("fetchWalletAmount");
-  },
-})
+@Component
 export default class Wallet extends Vue {
-  @Prop() private label!: string;
+  get walletAmount() {
+    return this.$store.state.walletAmount;
+  }
+
+  walletId() {
+    return this.$store.state.walletId;
+  }
+
+  privateKey() {
+    return this.$store.state.privateKey;
+  }
+
+  beforeMount() {
+    this.$store.dispatch("fetchWalletAmount");
+  }
 }
 </script>
 
@@ -35,7 +33,6 @@ export default class Wallet extends Vue {
 .container {
   width: 40%;
   height: 40%;
-  //   padding: 10px;
   background-color: lightgray;
   text-align: center;
   box-shadow: $box-shadow-hover;
