@@ -29,7 +29,7 @@ def createWallet():
 
     response = requests.post("http://blockchain:5000/wallet/addWallet", json=req_body)
 
-    return jsonify( response.json() ), HttpCode.CREATED
+    return jsonify( response.json() ), response.status_code
     
 
 
@@ -46,5 +46,5 @@ def getWalletAmount():
 
     response = requests.post("http://blockchain:5000/wallet/balance", json=req_body)
 
-    return jsonify( response.json() ), HttpCode.OK
+    return jsonify( response.json() ), response.status_code
     
