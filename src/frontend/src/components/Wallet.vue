@@ -21,8 +21,17 @@ export default class Wallet extends Vue {
     return this.$store.state.privateKey;
   }
 
+  walletCreated() {
+    return this.$store.state.walletCreated;
+  }
+
   beforeMount() {
-    this.$store.dispatch("fetchWalletAmount");
+    if (this.walletCreated()) {
+      this.$store.dispatch("fetchWalletAmount");
+    } else {
+      this.$store.dispatch("initializeWallet");
+      this.$store.dispatch("fetchWalletAmount");
+    }
   }
 }
 </script>

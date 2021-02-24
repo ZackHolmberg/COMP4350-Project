@@ -1,10 +1,14 @@
 from src import app
 from flask import request, jsonify
-from ecdsa import SigningKey, VerifyingKey
+from ecdsa import VerifyingKey
 import requests
 import base64
 import sys
 import os
+from flask_cors import CORS, cross_origin
+
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -12,7 +16,6 @@ else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
 from shared import HttpCode, FailureReturnString
-
 
 def validateSignature(id, signature, address):
     public_key = base64.b64decode(address)
@@ -23,11 +26,13 @@ def validateSignature(id, signature, address):
     return vk.verify(signature, id.encode())
 
 
+@cross_origin()
 @app.route("/")
 def index():
     return "Hello Transactions"
 
 
+@cross_origin()
 @app.route("/create", methods=['POST'])
 def createTransaction():
     data = request.get_json()
@@ -51,14 +56,13 @@ def createTransaction():
     if not isVerified:
         return jsonify(err=FailureReturnString.TRANSACTION_VERFICATION_FAILURE), HttpCode.UNAUTHORIZED
 
-    
     req_body = {"walletId": from_address, "amount": amount}
 
-    response = requests.post("http://blockchain:5000/wallet/verifyAmount", json=req_body)
+    response = requests.post(
+        "http://blockchain:5000/wallet/verifyAmount", json=req_body)
 
-    if response.status_code is not HttpCode.OK:   
-        return jsonify( response.json() ), response.status_code
-    
+    if response.status_code is not HttpCode.OK:
+        return jsonify(response.json()), response.status_code
 
     # TODO call the mining service to initiate a mining
 

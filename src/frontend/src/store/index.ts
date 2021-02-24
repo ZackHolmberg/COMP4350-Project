@@ -1,67 +1,101 @@
-import axios from 'axios';
-import Vue from 'vue'
-import Vuex from 'vuex'
+import axios from "axios";
+import Vue from "vue";
+import Vuex from "vuex";
+import { sha256 } from "js-sha256";
+import * as ecdsa from "elliptic";
 
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
+const ec = new ecdsa.ec("secp256k1");
 
-Vue.use(Vuex)
+type Transaction = {
+  to: string;
+  from: string;
+  amount: number;
+  id: string;
+  signature: string;
+};
+
+const generatePrivateKey = (): string => {
+  const keyPair = ec.genKeyPair();
+  const privateKey = keyPair.getPrivate();
+  return privateKey.toString(16);
+};
+
+const privateKey = generatePrivateKey();
+
+const getPublicFromWallet = (): string => {
+  const key = ec.keyFromPrivate(privateKey, "hex");
+  return key.getPublic().encode("hex", true);
+};
+
+const publicKey = getPublicFromWallet();
+
+const getTransactionId = (transaction: Transaction): string => {
+  return sha256(
+    transaction.to + transaction.from + transaction.amount
+  ).toString();
+};
+
+const sign = (transaction: Transaction, privateKey: string): string => {
+  const dataToSign = transaction.id;
+
+  const key = ec.keyFromPrivate(privateKey, "hex");
+  const signature: string = key
+    .sign(dataToSign)
+    .toDER()
+    .toString(16);
+
+  return signature;
+};
+
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     loading: false,
     walletCreated: false,
     walletAmount: 0,
-    walletId: uuidv4(),
-    privateKey: uuidv4()
+    walletId: publicKey,
+    privateKey: privateKey,
+  },
+  getters: {
+    walletId: (state) => {
+      return state.walletId;
+    },
   },
   mutations: {
     SET_LOADING(state, loading) {
-      state.loading = loading
+      state.loading = loading;
     },
-    SET_WALLET_AMOUNT (state, amount) {
-      state.walletAmount = amount
-    },
-    // TODO: Upon account creation, generate walletId and initialize wallet in the blockchain. For now, do it on app startup
-    SET_WALLET_ID (state, walletId) {
-      state.walletId = walletId
-    },
-    SET_PRIVATE_KEY (state, privateKey) {
-      state.privateKey = privateKey
+    SET_WALLET_AMOUNT(state, amount) {
+      state.walletAmount = amount;
     },
     // TODO: Remove once we generate walletId and initialize wallet on account creation
-    SET_WALLET_CREATED (state) {
-      state.walletCreated = true
+    SET_WALLET_CREATED(state) {
+      state.walletCreated = true;
     },
   },
   actions: {
-
-    initializeWallet(context){
-      context.commit('SET_LOADING',true)
-    // Make API call
-      // axios.get('url').then(response => {
-      //   context.commit('SET_LOADING',false)
-      //   context.commit('SET_LOADING',false)
-      // })
-      context.commit('SET_LOADING',false)
+    initializeWallet({ commit, getters }) {
+      commit("SET_LOADING", true);
+      axios
+        .post("http://localhost/wallet/create", {
+          "public_key": getters.walletId,
+        })
+        .then((response) => {
+          commit("SET_LOADING", false);
+          commit("SET_WALLET_CREATED", response.data.success);
+        });
     },
-    fetchWalletAmount(context){
-      context.commit('SET_LOADING',true)
-      // Make API call
-      // axios.get('http://localhost/wallet').then(response => {
-      //   context.commit('SET_LOADING',false)
-      //   context.commit('SET_WALLET_AMOUNT',response.data.walletAmount)
-      // })
-      context.commit('SET_WALLET_AMOUNT',temp)
-      context.commit('SET_LOADING',false)
-
-    }
+    fetchWalletAmount({ commit, getters }) {
+      commit("SET_LOADING", true);
+      axios
+        .post("http://localhost/wallet/amount", {
+          "public_key": getters.walletId,
+        })
+        .then((response) => {
+          commit("SET_WALLET_AMOUNT", response.data.amount);
+        });
+    },
   },
-  modules: {
-  }
-})
-
+  modules: {},
+});

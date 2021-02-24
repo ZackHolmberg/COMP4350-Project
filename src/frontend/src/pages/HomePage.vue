@@ -1,9 +1,6 @@
 <template>
   <div class="wrapper">
     <Wallet />
-    <Wallet />
-    <Wallet />
-    <Wallet />
   </div>
 </template>
 
