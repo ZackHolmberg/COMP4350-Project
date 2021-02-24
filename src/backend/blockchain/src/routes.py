@@ -39,7 +39,6 @@ def proof():
 def addWallet():
     try:
         data = request.get_json()
-        print("Data:",data)
         walletId = data["walletId"]
         success = blockchain.add_wallet(walletId)
         return jsonify(success=success), HttpCode.CREATED
@@ -63,7 +62,6 @@ def verifyAmount():
 def getWalletAmount():
     try:
         data = request.get_json()
-        print("Data:",data)
         walletId = data["walletId"]
         amount = blockchain.get_wallet_amount(walletId)
         return jsonify(amount=amount), HttpCode.OK
