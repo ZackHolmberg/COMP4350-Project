@@ -15,7 +15,7 @@ Transaction Tests
 
 
 def test_transaction_constructor():
-    test_transaction = Transaction("toAddress", "fromAddress", 5)
+    test_transaction = Transaction("fromAddress","toAddress", 5)
     assert (
         test_transaction.to_address == "toAddress" and
         test_transaction.from_address == "fromAddress" and

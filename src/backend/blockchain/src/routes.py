@@ -5,7 +5,7 @@ from .blockchain import blockchain
 from flask import request, jsonify
 import sys
 import os
-
+import time
 sys.path.append(os.path.abspath(os.path.join('..', '')))
 
 from shared import HttpCode
@@ -26,13 +26,30 @@ def get_chain():
 @app.route('/proof', methods=['POST'])
 def proof():
     data = request.get_json()
-    # proof = data["proof"]
-    # newBlock = Block()
-    # TODO: Get other block data from the request data, including the
-    # transaction amount and to/from wallet IDs
-    # Then, add/subtract the transaction amount from the respective walletIds
-    # Using blockchain.addToWallet and blockchain.subtractFromWallet
-    return "proof was hit. You sent:"+request.get_json()
+    proof = data["proof"]
+    try :
+        new_transaction = Transaction(
+            data["from"], 
+            data["to"], 
+            data["amount"]
+        )
+    except Exception as e:
+        return jsonify(err=str(e)), HttpCode.INCORRECT_PAYLOAD.value
+
+    new_block = Block(
+                len(blockchain.chain), 
+                new_transaction, 
+                time.time(), 
+                "somehash",
+                blockchain.get_last_block().hash)
+    
+
+    blockchain.append_block_to_chain(new_block, proof)
+
+    blockchain.subtract_from_wallet(new_transaction.from_address, new_transaction.amount)
+    blockchain.add_to_wallet(new_transaction.to_address, new_transaction.amount)
+
+    return jsonify(success=True), HttpCode.CREATED.value
 
 
 @app.route('/wallet/addWallet', methods=['POST'])

@@ -105,6 +105,7 @@ def test_create_transaction_correct_payload(test_client, json_header, signing_ke
     ## sign a transaction
     to_sign = str(uuid4())
     signature = signing_key.sign(to_sign.encode())
+
     signature = base64.b64encode(signature).decode()
 
     requests_mock.post("http://blockchain:5000/wallet/verifyAmount",
@@ -118,6 +119,9 @@ def test_create_transaction_correct_payload(test_client, json_header, signing_ke
         'signature' : signature
     }
     url = '/create'
+
+    requests_mock.post("http://mining:5000/queue",
+                       json={"success": True}, status_code=200)
 
     response = test_client.post(url, data=json.dumps(data), headers=json_header)
 
