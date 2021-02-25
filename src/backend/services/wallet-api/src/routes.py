@@ -26,11 +26,12 @@ def index():
 @app.route("/create", methods=['POST'])
 def createWallet():
     data = request.get_json(force=True)
+    
     if (data is None) or ("walletId" not in data):
         return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
     response = requests.post(
-        "http://blockchain:5000/wallet/addWallet", json=req_body)
+        "http://blockchain:5000/wallet/addWallet", json=data)
 
     return jsonify(response.json()), response.status_code
 
