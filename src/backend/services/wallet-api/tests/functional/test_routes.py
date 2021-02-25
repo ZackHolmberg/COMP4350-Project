@@ -41,7 +41,7 @@ def test_create_wallet_success(test_client, requests_mock):
         "http://blockchain:5000/wallet/addWallet", json={"success": True}, status_code=201)
 
     response = test_client.post(
-        url, json={"public_key": 'to_be_genetated_elsewhere'})
+        url, json={"walletId": 'to_be_genetated_elsewhere'})
 
     assert response.status_code == HttpCode.CREATED.value
     assert json.loads(response.data)["success"] == True
@@ -54,7 +54,7 @@ def test_create_wallet_error(test_client, requests_mock):
                        json={"error": "wallet ID already exists"}, status_code=400)
 
     response = test_client.post(
-        url, json={"public_key": 'to_be_genetated_elsewhere'})
+        url, json={"walletId": 'to_be_genetated_elsewhere'})
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)["error"] == "wallet ID already exists"
@@ -80,7 +80,7 @@ def test_get_wallet_amount_success(test_client, requests_mock):
         "http://blockchain:5000/wallet/balance", json={"amount": 0})
 
     response = test_client.post(
-        url, json={"public_key": 'to_be_genetated_elsewhere'})
+        url, json={"walletId": 'to_be_genetated_elsewhere'})
 
     assert response.status_code == HttpCode.OK.value
     assert json.loads(response.data)["amount"] == 0
@@ -93,7 +93,7 @@ def test_get_wallet_amount_error(test_client, requests_mock):
                        json={"error": "no corresponding wallet for id"}, status_code=400)
 
     response = test_client.post(
-        url, json={"public_key": 'to_be_genetated_elsewhere'})
+        url, json={"walletId": 'to_be_genetated_elsewhere'})
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)[
