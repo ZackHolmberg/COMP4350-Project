@@ -21,11 +21,11 @@ export default class BigButton extends Vue {
 
 .big-button {
   background-color: $big-button-background-color;
-  width: 200px;
-  height: 60px;
-  border-radius: 25px;
+  width: 300px;
+  height: 100px;
+  border-radius: 40px;
   box-shadow: $box-shadow;
-  font-size: 24px;
+  font-size: 32px;
   transition: 0.2s linear;
   border: $border-color;
   color: $button-text;

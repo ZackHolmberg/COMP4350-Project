@@ -17,6 +17,7 @@ export default class TextInput extends Vue {
     }
   }
 
+// TODO: Grab user input and send it to the parent component
   inputData() {
     return this.$data.input;
   }

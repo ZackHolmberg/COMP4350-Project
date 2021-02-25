@@ -34,8 +34,8 @@ export default class Wallet extends Vue {
 @import "../style.scss";
 
 .wallet {
-  width: 40%;
-  height: 40%;
+  width: 60%;
+  height: 60%;
   text-align: center;
   border-radius: 10px;
   display: inline-block;
@@ -43,7 +43,7 @@ export default class Wallet extends Vue {
 }
 
 h1 {
-  font-size: 100px;
+  font-size: 150px;
   color: white;
 }
 </style>
