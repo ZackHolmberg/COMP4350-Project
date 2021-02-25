@@ -1,6 +1,6 @@
 # bisoncoin
 
-## Project setup
+## Project setup for frontend
 
 ```
 npm install
@@ -30,6 +30,12 @@ npm run test:unit
 npm run test:e2e
 ```
 
+OR
+
+```
+./runE2Es.sh
+```
+
 ### Lints and fixes files
 
 ```
@@ -39,3 +45,15 @@ npm run lint
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+## Project setup to connect with backend
+
+```
+docker-compose build
+```
+**then run**
+
+```
+docker-compose up
+```
