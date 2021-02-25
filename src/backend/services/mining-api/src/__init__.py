@@ -9,3 +9,4 @@ socketio = SocketIO(app,cors_allowed_origins='*')
 
 
 from src import routes
+routes.transactions.start_thread()

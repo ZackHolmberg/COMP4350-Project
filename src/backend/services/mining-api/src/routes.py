@@ -12,7 +12,6 @@ else:
 from shared import HttpCode, FailureReturnString
 
 
-ongoing_proof_for_id = None
 COINBASE_AMOUNT = 10
 
 # This is temporary till we move mining to user devices
