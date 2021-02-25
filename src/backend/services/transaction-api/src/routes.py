@@ -62,5 +62,5 @@ def createTransaction():
     response = requests.post( "http://blockchain:5000/wallet/verifyAmount", json=req_body)
 
     try:
-        remaining_balance = response.json()["amount"] - amount
+        remaining_balance = float(response.json()["amount"]) - float(amount)
     return jsonify(success=True, remaining_balance=remaining_balance), HttpCode.CREATED.value
