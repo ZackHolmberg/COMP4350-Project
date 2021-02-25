@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input class="textInput" :placeholder="label" />
+    <input class="textInput" :placeholder="label" v-model="input"/>
   </div>
 </template>
 
@@ -10,6 +10,18 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class TextInput extends Vue {
   @Prop() private label!: string;
+
+  data() {
+    return {
+      input: "",
+    }
+  }
+
+// TODO: Grab user input and send it to the parent component
+  inputData() {
+    return this.$data.input;
+  }
+
 }
 </script>
 

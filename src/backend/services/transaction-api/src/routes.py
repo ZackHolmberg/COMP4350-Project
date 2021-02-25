@@ -1,10 +1,13 @@
 from src import app
 from flask import request, jsonify
-from ecdsa import SigningKey, VerifyingKey
 import requests
 import base64
 import sys
 import os
+from flask_cors import CORS, cross_origin
+
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -14,52 +17,53 @@ else:
 from shared import HttpCode, FailureReturnString
 
 
-def validateSignature(id, signature, address):
-    public_key = base64.b64decode(address)
-    signature = base64.b64decode(signature)
-
-    vk = VerifyingKey.from_string(public_key)
-
-    return vk.verify(signature, id.encode())
-
-
+@cross_origin()
 @app.route("/")
 def index():
     return "Hello Transactions"
 
 
+@cross_origin()
 @app.route("/create", methods=['POST'])
 def createTransaction():
     data = request.get_json()
 
     try:
-        transaction_id = data["id"]
         from_address = data["from"]
         to_address = data["to"]
         amount = data["amount"]
-        signature = data["signature"]
 
     except Exception as e:
-        return jsonify(err=FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST
+        return jsonify(err=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
     try:
-        isVerified = validateSignature(transaction_id, signature, from_address)
+        isVerified = True
+        # TODO do verification if the user is logged in/ the other user exists etc
 
     except Exception as e:
-        return jsonify(err=str(e)), HttpCode.BAD_REQUEST
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
 
     if not isVerified:
-        return jsonify(err=FailureReturnString.TRANSACTION_VERFICATION_FAILURE), HttpCode.UNAUTHORIZED
+        return jsonify(err=FailureReturnString.TRANSACTION_VERFICATION_FAILURE.value), HttpCode.UNAUTHORIZED.value
 
-    
     req_body = {"walletId": from_address, "amount": amount}
 
-    response = requests.post("http://blockchain:5000/wallet/verifyAmount", json=req_body)
+    response = requests.post( "http://blockchain:5000/wallet/verifyAmount", json=req_body)
 
-    if response.status_code is not HttpCode.OK:   
-        return jsonify( response.json() ), response.status_code
+    if response.status_code is not HttpCode.OK.value:
+        return jsonify(response.json()), response.status_code
+
+    response = requests.post( "http://mining:5000/queue", json=data)
     
+    if response.status_code is not HttpCode.OK.value:
+        return jsonify(response.json()), response.status_code
 
-    # TODO call the mining service to initiate a mining
+    req_body = {"walletId": from_address}    
+    response = requests.get( "http://blockchain:5000/wallet/balance", json=req_body)
 
-    return jsonify(success=True), HttpCode.CREATED
+    try:
+        remaining_balance = float(response.json()["amount"]) - float(amount)
+        return jsonify(success=True, remaining_balance=remaining_balance), HttpCode.CREATED.value
+    
+    except Exception as e:
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value

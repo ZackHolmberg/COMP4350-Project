@@ -2,6 +2,8 @@
 
 Repo containing documents and code for our COMP 4350 Group Project.
 
+![Github workflow](https://github.com/ZackHolmberg/COMP4350-Project/actions/workflows/python-app.yml/badge.svg)
+
 ## Members
 
 - Abhi Sachdev ([GitHub](https://github.com/abhisachdev17))

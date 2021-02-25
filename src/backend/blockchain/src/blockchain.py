@@ -21,7 +21,7 @@ class Blockchain:
         if id in self.wallets:
             raise WalletException("wallet ID already exists")
         else:
-            self.wallets[id] = 0
+            self.wallets[id] = 10
             return True
 
     def add_to_wallet(self, id, amount):
@@ -49,7 +49,7 @@ class Blockchain:
     def initialize_chain(self):
 
         # create empty transaction
-        empty_transaction = Transaction("", "", 0)
+        empty_transaction = Transaction( "", "", 0)
 
         # create the genesis block
         genesis_block = Block(0, empty_transaction,

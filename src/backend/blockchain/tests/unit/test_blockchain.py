@@ -15,7 +15,7 @@ Transaction Tests
 
 
 def test_transaction_constructor():
-    test_transaction = Transaction("toAddress", "fromAddress", 5)
+    test_transaction = Transaction("fromAddress","toAddress", 5)
     assert (
         test_transaction.to_address == "toAddress" and
         test_transaction.from_address == "fromAddress" and
@@ -87,21 +87,21 @@ test_wallet_id = "walletId"
 
 def test_add_wallet():
     test_blockchain.add_wallet(test_wallet_id)
-    assert test_blockchain.wallets[test_wallet_id] == 0
+    assert test_blockchain.wallets[test_wallet_id] == 10
 
 
 def test_add_to_wallet():
     test_blockchain.add_to_wallet(test_wallet_id, 5)
-    assert test_blockchain.wallets[test_wallet_id] == 5
+    assert test_blockchain.wallets[test_wallet_id] == 15
 
 
 def test_subtract_from_wallet():
     test_blockchain.subtract_from_wallet(test_wallet_id, 4)
-    assert test_blockchain.wallets[test_wallet_id] == 1
+    assert test_blockchain.wallets[test_wallet_id] == 11
 
 
 def test_get_wallet_amount():
-    assert test_blockchain.get_wallet_amount(test_wallet_id) == 1
+    assert test_blockchain.get_wallet_amount(test_wallet_id) == 11
 
 
 def test_verify_wallet_amount_fail():
