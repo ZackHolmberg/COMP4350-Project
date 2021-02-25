@@ -47,9 +47,8 @@ def proof():
     blockchain.subtract_from_wallet(new_transaction.from_address, new_transaction.amount)
     blockchain.add_to_wallet(new_transaction.to_address, new_transaction.amount)
 
-    finally:
-        blockchain.append_block_to_chain(new_block, proof)
-        return jsonify(success=True), HttpCode.CREATED.value
+    blockchain.append_block_to_chain(new_block, proof)
+    return jsonify(success=True), HttpCode.CREATED.value
 
 
 @app.route('/wallet/addWallet', methods=['POST'])
