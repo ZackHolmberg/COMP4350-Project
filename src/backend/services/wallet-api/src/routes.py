@@ -26,13 +26,12 @@ def index():
 @app.route("/create", methods=['POST'])
 def createWallet():
     data = request.get_json(force=True)
-    if (data is None) or ("public_key" not in data):
+    
+    if (data is None) or ("walletId" not in data):
         return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
-    req_body = {"walletId": data["public_key"]}
-
     response = requests.post(
-        "http://blockchain:5000/wallet/addWallet", json=req_body)
+        "http://blockchain:5000/wallet/addWallet", json=data)
 
     return jsonify(response.json()), response.status_code
 
@@ -42,12 +41,11 @@ def getWalletAmount():
 
     data = request.get_json(force=True)
 
-    if (data is None) or ("public_key" not in data):
+    if (data is None) or ("walletId" not in data):
         return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
-    req_body = {"walletId": data["public_key"]}
 
     response = requests.get(
-        "http://blockchain:5000/wallet/balance", json=req_body)
+        "http://blockchain:5000/wallet/balance", json=data)
 
     return jsonify(response.json()), response.status_code
