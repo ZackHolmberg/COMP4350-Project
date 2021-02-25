@@ -3,7 +3,7 @@ import time
 import queue
 
 class MiningPool:
-    DEQUEUE_TIME = 5
+    DEQUEUE_TIME = 2
 
     def __init__ (self, receiver, ready_to_mine):
         self._pool = queue.Queue()
