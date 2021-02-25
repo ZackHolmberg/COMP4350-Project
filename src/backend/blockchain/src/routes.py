@@ -29,11 +29,9 @@ def proof():
     proof = data["proof"]
     try :
         new_transaction = Transaction(
-            data["id"],
             data["from_address"], 
             data["to_address"], 
-            data["amount"],
-            data["signature"]
+            data["amount"]
         )
     except Exception as e:
         return jsonify(err=str(e)), HttpCode.INCORRECT_PAYLOAD.value
