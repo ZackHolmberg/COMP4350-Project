@@ -53,7 +53,7 @@ export default new Vuex.Store({
       commit("MUTATATION_SET_LOADING", true);
       axios
         .post("http://localhost/wallet/create", {
-          "public_key": getters.walletId,
+          "walletId": getters.walletId,
         })
         .then((response) => {
           commit("MUTATATION_SET_LOADING", false);
@@ -64,13 +64,13 @@ export default new Vuex.Store({
       commit("MUTATATION_SET_LOADING", true);
       axios
         .post("http://localhost/wallet/amount", {
-          "public_key": getters.walletId,
+          "walletId": getters.walletId,
         })
         .then((response) => {
           commit("MUTATION_SET_WALLET_AMOUNT", response.data.amount);
         });
     },
-    ACTION_SEND_TRANSACTION({ getters },  values ){
+    ACTION_SEND_TRANSACTION({ getters, dispatch },  values ){
       const recipient = values.contact;
       const transaction: Transaction = { 
         to: "687", // stubbed
@@ -87,6 +87,7 @@ export default new Vuex.Store({
         .then((response) => {
           if(response.data.success) {
             alert("Transaction was successful!");
+            dispatch("ACTION_FETCH_WALLET_AMOUNT");
           } else if(response.data.err) {
             alert("Transaction has failed.");
           }
