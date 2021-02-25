@@ -48,13 +48,19 @@ def createTransaction():
 
     req_body = {"walletId": from_address, "amount": amount}
 
-    response = requests.post(
-        "http://blockchain:5000/wallet/verifyAmount", json=req_body)
+    response = requests.post( "http://blockchain:5000/wallet/verifyAmount", json=req_body)
 
     if response.status_code is not HttpCode.OK.value:
         return jsonify(response.json()), response.status_code
 
-    response = requests.post(
-            "http://mining:5000/queue", json=data)
+    response = requests.post( "http://mining:5000/queue", json=data)
     
-    return jsonify(response.json()), HttpCode.CREATED.value
+    if response.status_code is not HttpCode.OK.value:
+        return jsonify(response.json()), response.status_code
+
+    req_body = {"walletId": from_address}    
+    response = requests.post( "http://blockchain:5000/wallet/verifyAmount", json=req_body)
+
+    try:
+        remaining_balance = response.json()["amount"] - amount
+    return jsonify(success=True, remaining_balance=remaining_balance), HttpCode.CREATED.value
