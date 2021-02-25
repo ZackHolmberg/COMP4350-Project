@@ -64,6 +64,7 @@ def createTransaction():
     if response.status_code is not HttpCode.OK.value:
         return jsonify(response.json()), response.status_code
 
-    # TODO call the mining service to initiate a mining
-
-    return jsonify(success=True), HttpCode.CREATED.value
+    response = requests.post(
+            "http://mining:5000/queue", json=data)
+    
+    return jsonify(response.json()), HttpCode.CREATED.value

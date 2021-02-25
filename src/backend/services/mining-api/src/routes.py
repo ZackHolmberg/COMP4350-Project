@@ -17,14 +17,17 @@ COINBASE_AMOUNT = 10
 # This is temporary till we move mining to user devices
 
 difficulty = 4
-def mine():
-    # actually mine
-
-    # TODO set ready to mine
-    req_body = {"walletId": from_address, "amount": amount}
+def mine(transaction):
+    # TODO actually mine
 
     # send transactions to blockchain
-    transactions.ready_to_mine()
+
+    try:
+        response = requests.post(
+            "http://blockchain:5000/proof", json=transaction)
+    
+    finally:
+        transactions.ready_to_mine()
 
 
 def sendToConnectedClients(transaction):
