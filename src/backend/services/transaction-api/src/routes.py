@@ -63,4 +63,7 @@ def createTransaction():
 
     try:
         remaining_balance = float(response.json()["amount"]) - float(amount)
-    return jsonify(success=True, remaining_balance=remaining_balance), HttpCode.CREATED.value
+        return jsonify(success=True, remaining_balance=remaining_balance), HttpCode.CREATED.value
+    
+    except Exception as e:
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
