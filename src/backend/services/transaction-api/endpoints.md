@@ -20,7 +20,8 @@ Example return:
 
 ```json
 {
-  "success": boolean
+  "success": boolean,
+  "remaining_amount": float
 }
 ```
 

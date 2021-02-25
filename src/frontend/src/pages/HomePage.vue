@@ -1,16 +1,19 @@
 <template>
   <div class="wrapper">
-    <Wallet />
+    <Wallet class="wallet-component"/>
+    <CreateTransaction class="transaction-component"/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Wallet from "../components/Wallet.vue";
+import CreateTransaction from "../components/CreateTransaction.vue";
 
 @Component({
   components: {
     Wallet,
+    CreateTransaction,
   },
 })
 export default class HomePage extends Vue {}
@@ -24,17 +27,24 @@ export default class HomePage extends Vue {}
   bottom: 0;
   left: 0;
   right: 0;
-
   margin: auto;
   padding: 1%;
   background-color: gray;
   text-align: center;
   box-shadow: $box-shadow;
   border-radius: 10px;
-  // float: left;
   display: inline-block;
   width: 55%;
   height: 67.5%;
   border: $border-color;
+}
+
+.wallet-component {
+  position: absolute;
+}
+
+.transaction-component {
+  position: relative;
+  margin-top: 30%;
 }
 </style>

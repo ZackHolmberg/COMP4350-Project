@@ -1,7 +1,7 @@
 from src import app
 from .transaction import Transaction
 from .block import Block
-from .blockchain import blockchain
+from .blockchain import blockchain, Blockchain
 from flask import request, jsonify
 import sys
 import os
@@ -26,7 +26,8 @@ def get_chain():
 @app.route('/proof', methods=['POST'])
 def proof():
     data = request.get_json()
-    proof = data["proof"]
+    proof = '0' * Blockchain.difficulty
+    # proof = data["proof"]
     try :
         new_transaction = Transaction(
             data["from"], 
@@ -47,9 +48,10 @@ def proof():
     blockchain.append_block_to_chain(new_block, proof)
 
     blockchain.subtract_from_wallet(new_transaction.from_address, new_transaction.amount)
-    blockchain.add_to_wallet(new_transaction.to_address, new_transaction.amount)
-
-    return jsonify(success=True), HttpCode.CREATED.value
+    try:
+        blockchain.add_to_wallet(new_transaction.to_address, new_transaction.amount)
+    finally:
+        return jsonify(success=True), HttpCode.CREATED.value
 
 
 @app.route('/wallet/addWallet', methods=['POST'])

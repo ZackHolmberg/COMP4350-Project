@@ -8,7 +8,7 @@
     />
     <TextInput id="username" label="Username" />
     <TextInput id="password" label="Password" />
-    <Button id="button" dest="/home" label="Login" />
+    <Button class="login-button" id="button" dest="/home" label="Login" @click.native="login"/>
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
 </template>
@@ -24,7 +24,9 @@ import Button from "../components/Button.vue";
     Button,
   },
 })
-export default class LoginPage extends Vue {}
+export default class LoginPage extends Vue {
+  login() {}
+}
 </script>
 
 <style lang="scss">
@@ -36,6 +38,11 @@ export default class LoginPage extends Vue {}
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.login-button {
+  margin-top: 100px;
+  margin-bottom: 50px;
 }
 
 body {
