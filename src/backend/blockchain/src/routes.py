@@ -29,8 +29,8 @@ def proof():
     proof = data["proof"]
     try :
         new_transaction = Transaction(
-            data["from_address"], 
-            data["to_address"], 
+            data["from"], 
+            data["to"], 
             data["amount"]
         )
     except Exception as e:
@@ -40,14 +40,15 @@ def proof():
                 len(blockchain.chain), 
                 new_transaction, 
                 time.time(), 
-                blockchain.get_last_block().hash, 
-                "somehash" )
+                "somehash",
+                blockchain.get_last_block().hash)
     
-    
+
+    blockchain.append_block_to_chain(new_block, proof)
+
     blockchain.subtract_from_wallet(new_transaction.from_address, new_transaction.amount)
     blockchain.add_to_wallet(new_transaction.to_address, new_transaction.amount)
 
-    blockchain.append_block_to_chain(new_block, proof)
     return jsonify(success=True), HttpCode.CREATED.value
 
 

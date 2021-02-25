@@ -52,11 +52,11 @@ def addDataToQueue():
     data = request.get_json()
 
     if data is None:
-        return jsonify(FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST
+        return jsonify(FailureReturnString.INCORRECT_PAYLOAD), HttpCode.BAD_REQUEST.value
     
     transactions.addToPool(data)
 
-    return jsonify(success=True), HttpCode.OK
+    return jsonify(success=True), HttpCode.OK.value
     
 
 @socketio.on('echo')
