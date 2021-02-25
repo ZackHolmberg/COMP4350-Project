@@ -21,9 +21,10 @@ def mine():
     # actually mine
 
     # TODO set ready to mine
-    
+    req_body = {"walletId": from_address, "amount": amount}
+
     # send transactions to blockchain
-    return 
+    transactions.ready_to_mine()
 
 
 def sendToConnectedClients(transaction):
