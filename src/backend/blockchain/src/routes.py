@@ -20,50 +20,50 @@ def get_chain():
     chain = []
     for block in blockchain.chain:
         chain.append(block.toJSON())
-    return jsonify(length=len(chain), chain=chain), HttpCode.OK
+    return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
 
 
 @app.route('/proof', methods=['POST'])
 def proof():
-    data = request.json
+    data = request.get_json()
     # proof = data["proof"]
     # newBlock = Block()
     # TODO: Get other block data from the request data, including the
     # transaction amount and to/from wallet IDs
     # Then, add/subtract the transaction amount from the respective walletIds
     # Using blockchain.addToWallet and blockchain.subtractFromWallet
-    return "proof was hit. You sent:"+request.json
+    return "proof was hit. You sent:"+request.get_json()
 
 
 @app.route('/wallet/addWallet', methods=['POST'])
 def addWallet():
     try:
-        data = request.json
+        data = request.get_json()
         walletId = data["walletId"]
         success = blockchain.add_wallet(walletId)
-        return jsonify(success=success), HttpCode.CREATED
+        return jsonify(success=success), HttpCode.CREATED.value
     except Exception as e:
-        return jsonify(err=str(e)), HttpCode.BAD_REQUEST
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
 
 
 @app.route('/wallet/verifyAmount', methods=['POST'])
 def verifyAmount():
     try:
-        data = request.json
+        data = request.get_json()
         walletId = data["walletId"]
         amount = data["amount"]
         valid = blockchain.verify_wallet_amount(walletId, amount)
-        return jsonify(valid=valid), HttpCode.OK
+        return jsonify(valid=valid), HttpCode.OK.value
     except Exception as e:
-        return jsonify(err=str(e)), HttpCode.BAD_REQUEST
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
 
 
 @app.route('/wallet/balance', methods=['GET'])
 def getWalletAmount():
     try:
-        data = request.json
+        data = request.get_json()
         walletId = data["walletId"]
         amount = blockchain.get_wallet_amount(walletId)
-        return jsonify(amount=amount), HttpCode.OK
+        return jsonify(amount=amount), HttpCode.OK.value
     except Exception as e:
-        return jsonify(err=str(e)), HttpCode.BAD_REQUEST
+        return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value

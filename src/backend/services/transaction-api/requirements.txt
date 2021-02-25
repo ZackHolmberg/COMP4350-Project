@@ -12,6 +12,10 @@ pluggy==0.13.1
 py==1.10.0
 pyparsing==2.4.7
 pytest==4.6.11
+requests==2.25.1
+requests-mock==1.8.0
 toml==0.10.2
 Werkzeug==1.0.1
 ecdsa==0.16.1
+flask-cors==3.0.10
+enum34==1.1.10

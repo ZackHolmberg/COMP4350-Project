@@ -15,6 +15,22 @@ from shared import HttpCode, FailureReturnString
 ongoing_proof_for_id = None
 COINBASE_AMOUNT = 10
 
+# This is temporary till we move mining to user devices
+
+difficulty = 4
+def mine():
+    # actually mine
+
+    # TODO set ready to mine
+    
+    # send transactions to blockchain
+
+
+def valid_proof(_hash):
+    _hash = _hash.encode()
+    return _hash.startsWith('0'*difficulty)
+
+
 def sendToConnectedClients(transaction):
     # ToDo
     print("To Be Sent to Miner", transaction)
@@ -24,7 +40,8 @@ def sendToConnectedClients(transaction):
     except Exception as e:
         print(e)
 
-transactions = MiningPool(sendToConnectedClients, True)
+# transactions = MiningPool(sendToConnectedClients, True)
+transactions = MiningPool(mine, True)
 
 @app.route("/")
 def index():

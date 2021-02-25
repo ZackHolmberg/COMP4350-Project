@@ -1,38 +1,119 @@
-# Transactions API
+# Blockchain
 
-## Create a new Transaction
+## Get the current chain contents
 
-> `POST` <http://localhost/transactions/create>
+> GET http://localhost/blockchain/chain
 
-> Required JSON:
+Required JSON:
 
 ```json
-{
-  "id": string,
-  "from": string,
-  "to": string,
-  "amount": float,
-  "signature": string
-}
+N / A
 ```
-
-- In the request the id needs to be a something that was signed by the users private key on the device
-- signature is a base64 signature that was received from sigining the id
-- The from and to addresses are base64 encoded public key addresses, these will be used to verify the validity of the transaction
-- The amount will need to be present in the users wallet to maka a transaction
 
 Example return:
 
 ```json
+200
+
 {
-  "success": boolean
+  "length": 1,
+  "chain":
 }
 ```
 
-On a Bad request: 400
+## Create a new wallet
+
+> POST http://localhost/blockchain/wallet/addWallet
+
+Required JSON:
 
 ```json
 {
-  "err": string
+  "walletId": string
+}
+```
+
+Example return:
+
+
+```json
+200
+
+{
+  "success": true
+}
+```
+or
+
+```json
+400
+
+{
+  "err": "wallet ID already exists"
+}
+```
+
+## Get Wallet Balance
+
+> `GET` <http://localhost/blockchain/wallet/balance>
+
+Required JSON:
+
+```json
+{
+  "walletId": string
+}
+```
+
+Example return:
+
+```json
+200
+
+{
+  "amount": int
+}
+```
+
+or
+
+```json
+400
+
+{
+  "err": "no corresponding wallet for id"
+}
+```
+
+## Verify transaction amount
+
+> `POST` <http://localhost/blockchain/wallet/verifyAmount>
+
+Required JSON:
+
+```json
+{
+  "walletId": string,
+  "amount": int
+}
+```
+
+Example return:
+
+```json
+200
+
+{
+  "valid": true
+}
+```
+
+or
+
+```json
+400
+
+{
+  "err": "no corresponding wallet for id"
 }
 ```

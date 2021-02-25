@@ -1,3 +1,8 @@
 **/env/
 **/__pycache__/
+src/*.pyc
+tests/*.pyc
+.pytest_cache
+__init__.pyc
+**/.cache
 **/*.pyc
