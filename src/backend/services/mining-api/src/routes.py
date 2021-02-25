@@ -24,7 +24,7 @@ def mine():
     # TODO set ready to mine
     
     # send transactions to blockchain
-
+    return
 
 def valid_proof(_hash):
     _hash = _hash.encode()
