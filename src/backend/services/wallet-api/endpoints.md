@@ -8,7 +8,7 @@
 
 ```json
 {
-  "public_key": string
+  "walletId": string
 }
 ```
 
@@ -39,7 +39,7 @@ or
 ```json
 200 
 {
-  "public_key": string
+  "walletId": string
 }
 ```
 Returns the amount of bisoncoin that the user currently owns.
