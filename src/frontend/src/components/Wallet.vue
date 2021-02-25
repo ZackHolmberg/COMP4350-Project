@@ -36,16 +36,14 @@ export default class Wallet extends Vue {
 .wallet {
   width: 40%;
   height: 40%;
-  background-color: lightgray;
   text-align: center;
-  box-shadow: $box-shadow-hover;
   border-radius: 10px;
   display: inline-block;
   margin: 25px;
-  border: $border-color;
 }
 
 h1 {
-  padding: 25%;
+  font-size: 100px;
+  color: white;
 }
 </style>

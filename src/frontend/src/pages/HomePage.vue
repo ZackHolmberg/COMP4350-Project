@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
-    <Wallet />
-    <CreateTransaction />
+    <Wallet class="wallet-component"/>
+    <CreateTransaction class="transaction-component"/>
   </div>
 </template>
 
@@ -37,5 +37,14 @@ export default class HomePage extends Vue {}
   width: 55%;
   height: 67.5%;
   border: $border-color;
+}
+
+.wallet-component {
+  position: absolute;
+}
+
+.transaction-component {
+  position: relative;
+  margin-top: 30%;
 }
 </style>
