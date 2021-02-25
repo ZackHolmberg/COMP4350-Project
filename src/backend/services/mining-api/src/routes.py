@@ -3,6 +3,7 @@ from flask import request, jsonify
 from .MiningPool import MiningPool
 import sys, os
 import threading
+import requests
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -22,12 +23,12 @@ def mine(transaction):
 
     # send transactions to blockchain
 
-    try:
-        response = requests.post(
+   
+    response = requests.post(
             "http://blockchain:5000/proof", json=transaction)
     
-    finally:
-        transactions.ready_to_mine()
+   
+    transactions.ready_to_mine()
 
 
 def sendToConnectedClients(transaction):
