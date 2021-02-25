@@ -4,6 +4,7 @@ import App from './App.vue'
 import store from './store'
 import HomePage from "./pages/HomePage.vue"
 import LoginPage from "./pages/LoginPage.vue"
+import NewTransactionPage from "./pages/NewTransactionPage.vue"
 
 Vue.use(VueRouter);
 
@@ -12,6 +13,7 @@ const router = new VueRouter({
   routes: [
     { path: '/', component: LoginPage },
     { path: '/home', component: HomePage },
+    { path: '/transaction', component: NewTransactionPage},
   ]
 });
 

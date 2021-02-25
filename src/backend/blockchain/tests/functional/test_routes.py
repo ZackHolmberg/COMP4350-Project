@@ -60,7 +60,7 @@ def test_verify_amount(test_client):
     data1 = {'walletId': "fake_wallet_id",
              'amount': 0}
     data2 = {'walletId': "fake_wallet_id",
-             'amount': 5}
+             'amount': 15}
 
     response = test_client.post(url, data=json.dumps(data1), headers=headers)
 
@@ -81,7 +81,7 @@ def test_get_wallet_amount(test_client):
     response = test_client.get(url, data=json.dumps(data1), headers=headers)
 
     assert response.status_code == 200
-    assert response.json['amount'] == 0
+    assert response.json['amount'] == 10
 
     response = test_client.get(url, data=json.dumps(data2), headers=headers)
 

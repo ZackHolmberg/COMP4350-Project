@@ -5,6 +5,7 @@ describe('After loading the app', () => {
     beforeEach(() => {
       // run these tests as if in a desktop
       cy.viewport(1920, 1080)
+      cy.visit('http://localhost:8080/')
     })
 
     it('Successfully logs into the app and navigates to home page', () => {
