@@ -71,7 +71,9 @@ def test_create_transaction_wrong_wallet_amount(test_client, json_header, reques
     response = test_client.post(url, data=json.dumps(data), headers=json_header)
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert b"false" in response.data
+    assert b"err" in response.data
+    assert b"Unable" in response.data
+
 
 def test_create_transaction_mining_fail(test_client, json_header, requests_mock):
     
