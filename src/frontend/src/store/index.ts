@@ -99,7 +99,7 @@ export default new Vuex.Store({
             dispatch("ACTION_FETCH_WALLET_AMOUNT");
           } else if(response.data.err) {
             Vue.$toast.error('Transaction has failed.', { 
-              message: 'Transaction has failed', 
+              message: 'Transaction has failed.', 
               duration: 3000, 
               position: 'top',
               dismissible: true, 
