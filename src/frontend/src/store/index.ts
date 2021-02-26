@@ -1,6 +1,8 @@
 import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
+import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 type Transaction = {
   to: string;
@@ -16,6 +18,7 @@ function uuidv4() {
 }
 
 Vue.use(Vuex);
+Vue.use(VueToast);
 
 export default new Vuex.Store({
   state: {
@@ -86,10 +89,21 @@ export default new Vuex.Store({
         })
         .then((response) => {
           if(response.data.success) {
-            alert("Transaction was successful!");
+            Vue.$toast.success('Transaction has sent!', {
+              message: 'Transaction has sent!',
+              duration: 3000,
+              position: 'top',
+              dismissible: true,
+            });
+
             dispatch("ACTION_FETCH_WALLET_AMOUNT");
           } else if(response.data.err) {
-            alert("Transaction has failed.");
+            Vue.$toast.error('Transaction has failed.', { 
+              message: 'Transaction has failed', 
+              duration: 3000, 
+              position: 'top',
+              dismissible: true, 
+            });
           }
         });
     },

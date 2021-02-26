@@ -25,7 +25,6 @@ import Button from "../components/Button.vue";
   },
 })
 export default class LoginPage extends Vue {
-  login() {}
 }
 </script>
 
