@@ -50,8 +50,8 @@ def createTransaction():
 
     response = requests.post( "http://blockchain:5000/wallet/verifyAmount", json=req_body)
 
-    if response.status_code is not HttpCode.OK.value:
-        return jsonify(response.json()), response.status_code
+    if response.status_code is not HttpCode.OK.value or not response.json()["valid"]:
+        return jsonify(err=FailureReturnString.WALLET_VERFICATION_FAILURE.value), HttpCode.BAD_REQUEST.value
 
     response = requests.post( "http://mining:5000/queue", json=data)
     
