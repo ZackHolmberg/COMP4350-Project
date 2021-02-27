@@ -4,8 +4,8 @@
       id="transaction-button" 
       dest="/transaction" 
       label="New Transaction" 
-      :big="true"
-      :cancel="false"
+      size="big"
+      type="default"
     />
   </div>
 </template>

@@ -10,16 +10,16 @@
         class="transaction-cancel-button" 
         dest="/home" 
         label="Cancel" 
-        :big="false" 
-        :cancel="true"
+        size="small"
+        type="cancel"
       />
       <Button 
         id=transaction-send 
         class="send-button" 
         dest="/home" 
         label="Send" 
-        :big="false"
-        :cancel="false"
+        size="small"
+        type="default"
         @click.native="newTransaction" 
       />
     </div>

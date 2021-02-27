@@ -1,15 +1,15 @@
 <template>
   <div>
-    <router-link v-if="big && !cancel" :to="dest" class="big-button default" tag="button">{{
+    <router-link v-if="size == 'big' && type == 'default'" :to="dest" class="big-button default" tag="button">{{
       label
     }}</router-link>
-    <router-link v-else-if="!big && !cancel" :to="dest" class="button default" tag="button">{{
+    <router-link v-else-if="size == 'small' && type == 'default'" :to="dest" class="button default" tag="button">{{
       label
     }}</router-link>
-    <router-link v-if="big && cancel" :to="dest" class="big-button cancel" tag="button">{{
+    <router-link v-if="size == 'big' && type == 'cancel'" :to="dest" class="big-button cancel" tag="button">{{
       label
     }}</router-link>
-    <router-link v-else-if="!big && cancel" :to="dest" class="button cancel" tag="button">{{
+    <router-link v-else-if="size == 'small' && type == 'cancel'" :to="dest" class="button cancel" tag="button">{{
       label
     }}</router-link>
   </div>
@@ -22,8 +22,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class Button extends Vue {
   @Prop() private label!: string;
   @Prop() private dest!: string;
-  @Prop() private big!: boolean;
-  @Prop() private cancel!: boolean;
+  @Prop() private size!: string;
+  @Prop() private type!: string;
 }
 </script>
 

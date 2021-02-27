@@ -13,8 +13,8 @@
       id="button"
       dest="/home"
       label="Login"
-      :big="false"
-      :cancel="false"
+      size="small"
+      type="default"
     />
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
