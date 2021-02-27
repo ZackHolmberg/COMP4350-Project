@@ -7,7 +7,8 @@
       <TextInput id=amount-input class="new-transaction-input" label="0.0 BSC"/>
       <Button 
         id=transaction-cancel 
-        class="transaction-cancel-button" dest="/home" 
+        class="transaction-cancel-button" 
+        dest="/home" 
         label="Cancel" 
         :big="false" 
         :cancel="true"
