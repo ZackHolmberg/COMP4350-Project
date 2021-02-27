@@ -34,7 +34,7 @@ export default class Button extends Vue {
 }
 
 .default {
-  background-color: $big-button-background-color;
+  background-color: $button-background-color;
 }
 
 .big-button {
