@@ -97,14 +97,14 @@ export default new Vuex.Store({
             });
             commit("MUTATION_SET_WALLET_AMOUNT", response.data.remaining_balance);
           } 
-        }, () => {
-          Vue.$toast.error('Transaction has failed.', { 
-            message: 'Transaction has failed.', 
+        }, (err) => {
+          Vue.$toast.error(err.response.data.err, { 
+            message: err.response.data.err, 
             duration: 3000, 
             position: 'top',
             dismissible: true, 
           });
-        });
+        }); 
     },
   },
 });
