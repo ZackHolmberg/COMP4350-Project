@@ -1,6 +1,15 @@
 <template>
   <div>
-    <router-link :to="dest" class="button" tag="button" >{{
+    <router-link v-if="big && !cancel" :to="dest" class="big-button default" tag="button">{{
+      label
+    }}</router-link>
+    <router-link v-else-if="!big && !cancel" :to="dest" class="button default" tag="button">{{
+      label
+    }}</router-link>
+    <router-link v-if="big && cancel" :to="dest" class="big-button cancel" tag="button">{{
+      label
+    }}</router-link>
+    <router-link v-else-if="!big && cancel" :to="dest" class="button cancel" tag="button">{{
       label
     }}</router-link>
   </div>
@@ -13,14 +22,35 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class Button extends Vue {
   @Prop() private label!: string;
   @Prop() private dest!: string;
+  @Prop() private big!: boolean;
+  @Prop() private cancel!: boolean;
 }
 </script>
 
 <style lang="scss">
 @import "../style.scss";
+.cancel {
+  background-color: $cancel-button-background-color;
+}
+
+.default {
+  background-color: $big-button-background-color;
+}
+
+.big-button {
+  width: 300px;
+  height: 100px;
+  border-radius: 40px;
+  box-shadow: $box-shadow;
+  font-size: 32px;
+  transition: 0.2s linear;
+  border: $border-color;
+  color: $button-text;
+  margin-top: 75px;
+  margin-bottom: 50px;
+}
 
 .button {
-  background-color: $button-background-color;
   width: 100px;
   height: 50px;
   border-radius: 25px;
@@ -32,6 +62,12 @@ export default class Button extends Vue {
 }
 
 .button:hover {
+  cursor: pointer;
+  transform: scale(1.25);
+  box-shadow: $box-shadow-hover;
+}
+
+.big-button:hover {
   cursor: pointer;
   transform: scale(1.25);
   box-shadow: $box-shadow-hover;
