@@ -1,6 +1,12 @@
 <template>
   <div class="create-transaction">
-    <Button id="transaction-button" dest="/transaction" label="New Transaction" big="true"/>
+    <Button 
+      id="transaction-button" 
+      dest="/transaction" 
+      label="New Transaction" 
+      :big="true"
+      :cancel="false"
+    />
   </div>
 </template>
 

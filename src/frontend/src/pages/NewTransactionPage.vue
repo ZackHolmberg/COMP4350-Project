@@ -5,8 +5,22 @@
       <TextInput id=contact-input class="new-transaction-input" label="Email"/>
       <p class="amount-text">Amount: </p>
       <TextInput id=amount-input class="new-transaction-input" label="0.0 BSC"/>
-      <Button id=transaction-cancel class="transaction-cancel-button" dest="/home" label="Cancel" cancel="true"/>
-      <Button id=transaction-send class="send-button" dest="/home" label="Send" @click.native="newTransaction" />
+      <Button 
+        id=transaction-cancel 
+        class="transaction-cancel-button" dest="/home" 
+        label="Cancel" 
+        :big="false" 
+        :cancel="true"
+      />
+      <Button 
+        id=transaction-send 
+        class="send-button" 
+        dest="/home" 
+        label="Send" 
+        :big="false"
+        :cancel="false"
+        @click.native="newTransaction" 
+      />
     </div>
   </div>
 </template>
