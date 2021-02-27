@@ -73,7 +73,7 @@ export default new Vuex.Store({
           commit("MUTATION_SET_WALLET_AMOUNT", response.data.amount);
         });
     },
-    ACTION_SEND_TRANSACTION({ getters, dispatch },  values ){
+    ACTION_SEND_TRANSACTION({ getters, commit },  values ){
       const recipient = values.contact;
       const transaction: Transaction = { 
         to: "687", // stubbed
@@ -95,7 +95,7 @@ export default new Vuex.Store({
               position: 'top',
               dismissible: true,
             });
-            dispatch("ACTION_FETCH_WALLET_AMOUNT");
+            commit("MUTATION_SET_WALLET_AMOUNT", response.data.remaining_balance);
           } 
         }, () => {
           Vue.$toast.error('Transaction has failed.', { 
