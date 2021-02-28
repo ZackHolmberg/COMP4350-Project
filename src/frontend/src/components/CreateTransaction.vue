@@ -1,16 +1,22 @@
 <template>
   <div class="create-transaction">
-    <BigButton id="transaction-button" dest="/transaction" label="New Transaction" />
+    <Button 
+      id="transaction-button" 
+      dest="/transaction" 
+      label="New Transaction" 
+      size="big"
+      type="default"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import BigButton from "../components/BigButton.vue";
+import Button from "../components/Button.vue";
 
 @Component({
   components: {
-    BigButton,
+    Button,
   },
 })
 export default class CreateTransaction extends Vue {}

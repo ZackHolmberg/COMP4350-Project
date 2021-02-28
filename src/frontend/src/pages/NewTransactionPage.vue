@@ -5,8 +5,23 @@
       <TextInput id=contact-input class="new-transaction-input" label="Email"/>
       <p class="amount-text">Amount: </p>
       <TextInput id=amount-input class="new-transaction-input" label="0.0 BSC"/>
-      <CancelButton id=transaction-cancel class="transaction-cancel-button" dest="/home" label="Cancel" />
-      <Button id=transaction-send class="send-button" dest="/home" label="Send" @click.native="newTransaction" />
+      <Button 
+        id=transaction-cancel 
+        class="transaction-cancel-button" 
+        dest="/home" 
+        label="Cancel" 
+        size="small"
+        type="cancel"
+      />
+      <Button 
+        id=transaction-send 
+        class="send-button" 
+        dest="/home" 
+        label="Send" 
+        size="small"
+        type="default"
+        @click.native="newTransaction" 
+      />
     </div>
   </div>
 </template>
@@ -15,13 +30,11 @@
 import { Component, Vue } from "vue-property-decorator";
 import TextInput from "../components/TextInput.vue";
 import Button from "../components/Button.vue";
-import CancelButton from "../components/CancelButton.vue";
 
 @Component({
   components: {
     TextInput,
     Button,
-    CancelButton,
   },
 })
 export default class NewTransactionPage extends Vue {

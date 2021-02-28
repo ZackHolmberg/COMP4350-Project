@@ -13,7 +13,8 @@
       id="button"
       dest="/home"
       label="Login"
-      @click.native="login"
+      size="small"
+      type="default"
     />
     <a href="TODO">Don't have an account? Create one now!</a>
   </div>
@@ -31,7 +32,6 @@ import Button from "../components/Button.vue";
   },
 })
 export default class LoginPage extends Vue {
-  // login() {}
 }
 </script>
 
