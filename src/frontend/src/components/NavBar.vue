@@ -1,0 +1,92 @@
+<template>
+  <div>
+    <img
+      class="nav-logo"   
+      alt="BisonCoin logo"
+      src="../assets/BisonCoin.png"
+    />
+    <img
+      class="nav-account"
+      alt="Account icon"
+      src="../assets/accountIcon.png"
+    />
+    <img
+      class="nav-settings"
+      alt="Settings icon"
+      src="../assets/settingsIcon.png"
+    />
+    <img
+      class="nav-logout"
+      alt="Logout icon"
+      src="../assets/logoutIcon.png"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+
+@Component
+export default class NavBar extends Vue {
+}
+</script>
+
+<style lang="scss">
+@import "../style.scss";
+
+.nav-logo {
+  position: absolute;
+  top: $nav-logo-top;
+  left: $nav-logo-left; 
+  width: $nav-logo-size;
+  height: $nav-logo-size;
+  transition: $hover-transition;
+}
+
+.nav-logo:hover {
+  cursor: pointer;
+  transform: $hover-transform-button;
+}
+
+.nav-account {
+  position: absolute;
+  top: $account-icon-top; 
+  right: $account-icon-right; 
+  width: $account-icon-size; 
+  height: $account-icon-size; 
+  transition: $hover-transition;
+}
+
+.nav-account:hover {
+  cursor: pointer;
+  transform: $hover-transform-button;
+}
+
+.nav-settings {
+  position: absolute;
+  top: $settings-icon-top; 
+  right: $settings-icon-right; 
+  width: $settings-icon-size; 
+  height: $settings-icon-size;
+  transition: $hover-transition;
+}
+
+.nav-settings:hover {
+  cursor: pointer;
+  transform: $hover-transform-button;
+}
+
+.nav-logout {
+  position: absolute;
+  top: $logout-icon-top;
+  right: $logout-icon-right;
+  width: $logout-icon-size; 
+  height: $logout-icon-size;
+  transition: $hover-transition;
+}
+
+.nav-logout:hover {
+  cursor: pointer;
+  transform: $hover-transform-button;
+}
+</style>

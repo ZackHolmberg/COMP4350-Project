@@ -43,7 +43,7 @@ export default class Button extends Vue {
   border-radius: 40px;
   box-shadow: $box-shadow;
   font-size: 32px;
-  transition: 0.2s linear;
+  transition: $hover-transition;
   border: $border-color;
   color: $button-text;
   margin-top: 75px;
@@ -56,20 +56,20 @@ export default class Button extends Vue {
   border-radius: 25px;
   box-shadow: $box-shadow;
   font-size: 16px;
-  transition: 0.2s linear;
+  transition: $hover-transition;
   border: $border-color;
   color: $button-text;
 }
 
 .button:hover {
   cursor: pointer;
-  transform: scale(1.25);
+  transform: $hover-transform-button;
   box-shadow: $box-shadow-hover;
 }
 
 .big-button:hover {
   cursor: pointer;
-  transform: scale(1.25);
+  transform: $hover-transform-button;
   box-shadow: $box-shadow-hover;
 }
 </style>

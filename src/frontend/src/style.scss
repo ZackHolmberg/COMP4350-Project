@@ -1,16 +1,39 @@
 
+// GENERAL
 $background-color: rgb(73, 79, 82);
-
-$button-background-color: rgba(0, 117, 160, 0.582);
-$button-text: #e8e6e3;
-$border-color: 2px solid rgb(140, 130, 115);
-
-$text-input-background: #131516;
-$text-input-text: lightgray;
 
 $link-color: #3391ff;
 
+$hover-transition: 0.2s linear;
+
+// BUTTON
+$button-background-color: rgba(0, 117, 160, 0.582);
+$cancel-button-background-color: rgba(160, 5, 0, 0.555);
+$button-text: #e8e6e3;
+$border-color: 2px solid rgb(140, 130, 115);
+$hover-transform-button: scale(1.2);
+
+// TEXT INPUT
+$text-input-background: #131516;
+$text-input-text: lightgray;
+
+// BOX SHADOW
 $box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 $box-shadow-hover: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 
-$cancel-button-background-color: rgba(160, 5, 0, 0.555);
+// NAV BAR
+$nav-logo-size: 110px;
+$account-icon-size: 70px;
+$settings-icon-size: 80px;
+$logout-icon-size: 70px;
+
+$nav-logo-top: 15px;
+$account-icon-top: 30px;
+$settings-icon-top: 25px;
+$logout-icon-top: 30px;
+
+$nav-logo-left: 30px;
+$account-icon-right: 235px;
+$settings-icon-right: 130px;
+$logout-icon-right: 30px;
+

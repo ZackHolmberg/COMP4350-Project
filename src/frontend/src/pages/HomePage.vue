@@ -1,7 +1,10 @@
 <template>
+<div>
+  <NavBar />
   <div class="wrapper">
     <Wallet class="wallet-component"/>
     <CreateTransaction class="transaction-component"/>
+  </div>
   </div>
 </template>
 
@@ -9,11 +12,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import Wallet from "../components/Wallet.vue";
 import CreateTransaction from "../components/CreateTransaction.vue";
+import NavBar from "../components/NavBar.vue";
 
 @Component({
   components: {
     Wallet,
     CreateTransaction,
+    NavBar,
   },
 })
 export default class HomePage extends Vue {}

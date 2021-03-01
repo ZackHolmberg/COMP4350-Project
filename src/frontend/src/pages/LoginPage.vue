@@ -1,8 +1,7 @@
 <template>
   <div class="home">
     <img
-      width="300px"
-      height="300px"
+      class="login-logo"
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
@@ -55,9 +54,11 @@ body {
   background-color: $background-color;
 }
 
-img {
+.login-logo {
   margin-bottom: 100px;
   margin-top: 100px;
+  width: 300px;
+  height: 300px;
 }
 
 a {
