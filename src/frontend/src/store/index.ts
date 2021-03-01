@@ -2,12 +2,16 @@ import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
 import VueToast from 'vue-toast-notification';
+import { sha256 } from "js-sha256";
 import 'vue-toast-notification/dist/theme-sugar.css';
+import * as rs from 'jsrsasign';
 
 type Transaction = {
   to: string;
   from: string;
   amount: number;
+  id: string;
+  signature: string;
 };
 
 function uuidv4() {
@@ -17,6 +21,34 @@ function uuidv4() {
   });
 }
 
+const genKeyPair = (): string[] => {
+  const keyPair = rs.KEYUTIL.generateKeypair("RSA", 1024);
+  console.log(keyPair)
+  return [rs.KEYUTIL.getPEM(keyPair.prvKeyObj, "PKCS1PRV"), rs.KEYUTIL.getPEM(keyPair.pubKeyObj)];
+}
+
+
+const keyPair = genKeyPair();
+console.log(keyPair);
+const privateKey = keyPair[0];
+const publicKey = keyPair[1];
+
+const getTransactionId = (transaction: Transaction): string => {
+  return sha256(
+    transaction.to + transaction.from + transaction.amount
+  ).toString();
+};
+
+const sign = (transaction: Transaction, privateKey: string): string => {
+  const dataToSign = transaction.id;
+  const sig = new rs.KJUR.crypto.Signature({alg: 'SHA256withRSA'})
+
+  sig.init(privateKey);
+  sig.updateString(dataToSign);
+
+  return sig.sign();
+};
+
 Vue.use(Vuex);
 Vue.use(VueToast);
 
@@ -24,8 +56,9 @@ export default new Vuex.Store({
   state: {
     loading: false,
     walletCreated: false,
-    walletAmount: 0,
-    walletId: uuidv4(),
+    walletAmount: 50,
+    walletId: publicKey,//uuidv4(),
+    privKey: privateKey,
   },
   getters: {
     walletId: (state) => {
@@ -37,6 +70,9 @@ export default new Vuex.Store({
     // TODO: Remove this getter once we initialize wallet on account creation and not in wallet component
     walletCreated: (state) => {
       return state.walletCreated;
+    },
+    privKey: (state) => {
+      return state.privKey;
     },
   },
   mutations: {
@@ -57,6 +93,7 @@ export default new Vuex.Store({
       axios
         .post("http://localhost/wallet/create", {
           "walletId": getters.walletId,
+
         })
         .then((response) => {
           commit("MUTATATION_SET_LOADING", false);
@@ -78,14 +115,21 @@ export default new Vuex.Store({
       const transaction: Transaction = { 
         to: "687", // stubbed
         from: getters.walletId, 
-        amount: parseFloat(values.amount), 
+        amount: parseFloat(values.amount),
+        id: "",
+        signature: ""
       };
     
+      transaction.id = getTransactionId(transaction) 
+      transaction.signature = sign(transaction, getters.privKey)
+
       axios
         .post("http://localhost/transactions/create", {
           "from": transaction.from,
           "to": transaction.to,
           "amount": transaction.amount,
+          "id": transaction.id,
+          "signature": transaction.signature
         })
         .then((response) => {
           if(response.data.success) {

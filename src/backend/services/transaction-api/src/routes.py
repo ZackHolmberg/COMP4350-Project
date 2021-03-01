@@ -5,6 +5,10 @@ import base64
 import sys
 import os
 from flask_cors import CORS, cross_origin
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
+import codecs
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -15,6 +19,17 @@ else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
 from shared import HttpCode, FailureReturnString
+
+def validateSignature(id, signature, address):
+    public_key = RSA.import_key(address)
+    unhexify = codecs.getdecoder('hex')
+    signature = unhexify(signature.encode("utf-8"))[0]
+
+    verifier = PKCS1_v1_5.new(public_key)
+
+    print(verifier.verify(SHA256.new(str.encode(id)), signature), sys.stderr)
+
+    return(verifier.verify(SHA256.new(str.encode(id)), signature))
 
 
 @cross_origin()
@@ -32,13 +47,17 @@ def createTransaction():
         from_address = data["from"]
         to_address = data["to"]
         amount = data["amount"]
+        transaction_id = data["id"]
+        signature = data["signature"]
 
     except Exception as e:
         return jsonify(err=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
     try:
-        isVerified = True
+        isVerified = validateSignature(transaction_id, signature, from_address)
         # TODO do verification if the user is logged in/ the other user exists etc
+        if not isVerified:
+            return jsonify(err="signature verification failed"), HttpCode.BAD_REQUEST.value
 
     except Exception as e:
         return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
