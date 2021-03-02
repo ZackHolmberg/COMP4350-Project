@@ -31,15 +31,15 @@ export default class TextInput extends Vue {
 .textInput {
   border-radius: $text-input-border-radius;
   box-shadow: $box-shadow;
-  padding: 10px;
-  border: border-color;
-  margin: 25px;
-  width: 30%;
-  height: 35px;
-  font-size: 16px;
+  padding: $text-input-padding;
+  border: $border-color;
+  margin: $text-input-margin;
+  width: $text-input-width;
+  height: $text-input-height;
+  font-size: $text-input-font-size;
   transition: $hover-transition;
   background-color: $text-input-background;
-  color: $text-input-text;
+  color: $text-input-color;
 }
 
 .textInput:hover {

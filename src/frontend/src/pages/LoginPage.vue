@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="login">
     <img
       class="login-logo"
       alt="BisonCoin logo"
@@ -37,28 +37,22 @@ export default class LoginPage extends Vue {
 <style lang="scss">
 @import "../style.scss";
 
-.home {
+.login {
   text-align: center;
-  padding: 25px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .login-button {
-  margin-top: 100px;
-  margin-bottom: 50px;
-}
-
-body {
-  background-color: $background-color;
+  margin-top: $login-button-margin-top;
+  margin-bottom: $login-button-margin-bottom;
 }
 
 .login-logo {
-  margin-bottom: 100px;
-  margin-top: 100px;
-  width: 300px;
-  height: 300px;
+  margin-bottom: $login-logo-margin;
+  margin-top: $login-logo-margin;
+  width: $login-logo-size;
+  height: $login-logo-size;
 }
 
 .create-account-link {

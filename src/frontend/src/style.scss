@@ -5,6 +5,8 @@ $link-color: #3391ff;
 
 $hover-transition: 0.2s linear;
 
+$default-text-color: white;
+
 // BUTTON
 $button-background-color: rgba(0, 117, 160, 0.582);
 $cancel-button-background-color: rgba(160, 5, 0, 0.555);
@@ -13,6 +15,7 @@ $button-text: #e8e6e3;
 $button-font-size: 16px;
 $big-button-font-size: 32px;
 $border-color: 2px solid rgb(140, 130, 115);
+
 $hover-transform-button: scale(1.2);
 
 $button-border-radius: 25px;
@@ -26,9 +29,17 @@ $button-height: 50px;
 
 // TEXT INPUT
 $text-input-background: #131516;
-$text-input-text: lightgray;
+
+$text-input-color: lightgray;
+$text-input-font-size: 16px;
+
 $hover-transform-text-input: scale(1.05);
+
 $text-input-border-radius: 25px;
+$text-input-height: 35px;
+$text-input-width: 30%;
+$text-input-padding: 10px;
+$text-input-margin: 25px;
 
 // BOX
 $box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -51,4 +62,36 @@ $nav-logo-left: 30px;
 $account-icon-right: 235px;
 $settings-icon-right: 130px;
 $logout-icon-right: 30px;
+
+// WALLET
+$wallet-font-size: 150px;
+
+// HOME PAGE
+$home-page-wrapper-size: 55%;
+$home-page-wrapper-top: 200px;
+
+$home-page-background-color: gray;
+
+$home-page-transaction-bottom: 20px;
+
+// TRANSACTION PAGE
+$transaction-button-padding: 10px;
+$transaction-button-position: 20%;
+
+$transaction-wrapper-width: 610px;
+$transaction-wrapper-top: 100px;
+
+$transaction-input-width: 1000px;
+$transaction-input-right: 150px;
+
+$transaction-text-font-size: 20px;
+$transaction-text-left: 80px;
+$transaction-text-padding-top: 20px;
+
+// LOGIN PAGE
+$login-logo-size: 300px;
+$login-logo-margin: 100px;
+
+$login-button-margin-top: 100px;
+$login-button-margin-bottom: 50px;
 

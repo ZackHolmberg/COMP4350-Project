@@ -28,28 +28,26 @@ export default class HomePage extends Vue {}
 @import "../style.scss";
 .wrapper {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  padding: 1%;
-  background-color: gray;
+  top: $home-page-wrapper-top;
+  left: 0px;
+  right: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: $home-page-background-color;
   text-align: center;
   box-shadow: $box-shadow;
-  border-radius: 10px;
-  display: inline-block;
-  width: 55%;
-  height: 67.5%;
+  border-radius: $box-border-radius;
+  width: $home-page-wrapper-size;
+  height: $home-page-wrapper-size;
   border: $border-color;
 }
 
 .wallet-component {
-  position: absolute;
+  position: relative;
 }
 
 .transaction-component {
   position: relative;
-  margin-top: 30%;
+  bottom: $home-page-transaction-bottom;
 }
 </style>

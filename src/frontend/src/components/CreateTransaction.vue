@@ -1,5 +1,5 @@
 <template>
-  <div class="create-transaction">
+  <div>
     <Button 
       id="transaction-button" 
       dest="/transaction" 
@@ -21,7 +21,3 @@ import Button from "../components/Button.vue";
 })
 export default class CreateTransaction extends Vue {}
 </script>
-
-<style lang="scss">
-@import "../style.scss";
-</style>
