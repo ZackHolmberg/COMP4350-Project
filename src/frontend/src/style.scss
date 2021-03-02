@@ -53,7 +53,7 @@ $account-icon-size: 70px;
 $settings-icon-size: 80px;
 $logout-icon-size: 70px;
 
-$nav-logo-top: 15px;
+$nav-logo-top: 13px;
 $account-icon-top: 30px;
 $settings-icon-top: 25px;
 $logout-icon-top: 30px;
@@ -63,12 +63,15 @@ $account-icon-right: 235px;
 $settings-icon-right: 130px;
 $logout-icon-right: 30px;
 
+$nav-bar-height: 120px;
+
 // WALLET
 $wallet-font-size: 150px;
 
 // HOME PAGE
 $home-page-wrapper-size: 55%;
-$home-page-wrapper-top: 200px;
+$home-page-wrapper-top: 300px;
+$home-page-wrapper-min-size: 500px;
 
 $home-page-background-color: gray;
 

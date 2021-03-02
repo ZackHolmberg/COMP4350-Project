@@ -38,7 +38,9 @@ export default class HomePage extends Vue {}
   box-shadow: $box-shadow;
   border-radius: $box-border-radius;
   width: $home-page-wrapper-size;
+  min-width: $home-page-wrapper-min-size;
   height: $home-page-wrapper-size;
+  min-height: $home-page-wrapper-min-size;
   border: $border-color;
 }
 

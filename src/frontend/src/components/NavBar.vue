@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="nav-bar">
     <img
       class="nav-logo"   
       alt="BisonCoin logo"
@@ -40,12 +40,6 @@ export default class NavBar extends Vue {
   left: $nav-logo-left; 
   width: $nav-logo-size;
   height: $nav-logo-size;
-  transition: $hover-transition;
-}
-
-.nav-logo:hover {
-  cursor: pointer;
-  transform: $hover-transform-button;
 }
 
 .nav-account {
@@ -88,5 +82,13 @@ export default class NavBar extends Vue {
 .nav-logout:hover {
   cursor: pointer;
   transform: $hover-transform-button;
+}
+
+.nav-bar {
+  width: 100%;
+  height: $nav-bar-height;
+  background-color: $button-background-color;
+  border-radius: $box-border-radius;
+  box-shadow: $box-shadow;
 }
 </style>
