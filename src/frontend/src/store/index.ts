@@ -50,7 +50,7 @@ export default new Vuex.Store({
     loading: false,
     walletCreated: false,
     walletAmount: 0,
-    walletId: publicKey,//uuidv4(),
+    walletId: publicKey,
     privateKey: privateKey,
   },
   getters: {
