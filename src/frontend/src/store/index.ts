@@ -29,7 +29,6 @@ const genKeyPair = (): string[] => {
 
 
 const keyPair = genKeyPair();
-console.log(keyPair);
 const privateKey = keyPair[0];
 const publicKey = keyPair[1];
 
@@ -56,9 +55,9 @@ export default new Vuex.Store({
   state: {
     loading: false,
     walletCreated: false,
-    walletAmount: 50,
+    walletAmount: 0,
     walletId: publicKey,//uuidv4(),
-    privKey: privateKey,
+    privateKey: privateKey,
   },
   getters: {
     walletId: (state) => {
@@ -71,8 +70,8 @@ export default new Vuex.Store({
     walletCreated: (state) => {
       return state.walletCreated;
     },
-    privKey: (state) => {
-      return state.privKey;
+    privateKey: (state) => {
+      return state.privateKey;
     },
   },
   mutations: {
@@ -121,7 +120,7 @@ export default new Vuex.Store({
       };
     
       transaction.id = getTransactionId(transaction) 
-      transaction.signature = sign(transaction, getters.privKey)
+      transaction.signature = sign(transaction, getters.privateKey)
 
       axios
         .post("http://localhost/transactions/create", {
@@ -133,7 +132,7 @@ export default new Vuex.Store({
         })
         .then((response) => {
           if(response.data.success) {
-            Vue.$toast.success('Transaction has sent!', {
+            Vue.$toast.success('Transaction has been sent!', {
               message: 'Transaction has sent!',
               duration: 3000,
               position: 'top',
