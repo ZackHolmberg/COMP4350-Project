@@ -24,13 +24,4 @@ export default class CreateTransaction extends Vue {}
 
 <style lang="scss">
 @import "../style.scss";
-
-.create-transaction {
-  width: 60%;
-  height: 60%;
-  text-align: center;
-  border-radius: 10px;
-  display: inline-block;
-  margin: 25px;
-}
 </style>

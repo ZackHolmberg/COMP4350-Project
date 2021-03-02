@@ -38,24 +38,22 @@ export default class Button extends Vue {
 }
 
 .big-button {
-  width: 300px;
-  height: 100px;
-  border-radius: 40px;
+  width: $big-button-width;
+  height: $big-button-height;
+  border-radius: $big-button-border-radius;
   box-shadow: $box-shadow;
-  font-size: 32px;
+  font-size: $big-button-font-size;
   transition: $hover-transition;
   border: $border-color;
   color: $button-text;
-  margin-top: 75px;
-  margin-bottom: 50px;
 }
 
 .button {
-  width: 100px;
-  height: 50px;
-  border-radius: 25px;
+  width: $button-width;
+  height: $button-height;
+  border-radius: $button-border-radius;
   box-shadow: $box-shadow;
-  font-size: 16px;
+  font-size: $button-font-size;
   transition: $hover-transition;
   border: $border-color;
   color: $button-text;

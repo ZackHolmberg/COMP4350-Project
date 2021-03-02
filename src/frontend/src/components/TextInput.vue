@@ -29,7 +29,7 @@ export default class TextInput extends Vue {
 @import "../style.scss";
 
 .textInput {
-  border-radius: 25px;
+  border-radius: $text-input-border-radius;
   box-shadow: $box-shadow;
   padding: 10px;
   border: border-color;
@@ -44,7 +44,7 @@ export default class TextInput extends Vue {
 
 .textInput:hover {
   cursor: pointer;
-  transform: scale(1.05);
+  transform: $hover-transform-text-input;
   box-shadow: $box-shadow-hover;
 }
 </style>

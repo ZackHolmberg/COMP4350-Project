@@ -15,7 +15,7 @@
       size="small"
       type="default"
     />
-    <a href="TODO">Don't have an account? Create one now!</a>
+    <a class="create-account-link" href="TODO">Don't have an account? Create one now!</a>
   </div>
 </template>
 
@@ -61,7 +61,7 @@ body {
   height: 300px;
 }
 
-a {
+.create-account-link {
   color: $link-color;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="wallet" class="wallet">
-    <h1>{{ walletAmount }} BSC</h1>
+    <h1 class="wallet-header">{{ walletAmount }} BSC</h1>
   </div>
 </template>
 
@@ -33,16 +33,7 @@ export default class Wallet extends Vue {
 <style lang="scss">
 @import "../style.scss";
 
-.wallet {
-  width: 60%;
-  height: 60%;
-  text-align: center;
-  border-radius: 10px;
-  display: inline-block;
-  margin: 25px;
-}
-
-h1 {
+.wallet-header {
   font-size: 150px;
   color: white;
 }

@@ -57,7 +57,6 @@ export default class NewTransactionPage extends Vue {
   margin: auto;
   padding: 1%;
   text-align: center;
-  border-radius: 10px;
   display: inline-block;
   width: 600px;
   height: 67.5%;
