@@ -1,7 +1,6 @@
 from src import app
 from flask import request, jsonify
 import requests
-import base64
 import sys
 import os
 from flask_cors import CORS, cross_origin
@@ -26,8 +25,6 @@ def validateSignature(id, signature, address):
     signature = unhexify(signature.encode("utf-8"))[0]
 
     verifier = PKCS1_v1_5.new(public_key)
-
-    print(verifier.verify(SHA256.new(str.encode(id)), signature), sys.stderr)
 
     return(verifier.verify(SHA256.new(str.encode(id)), signature))
 

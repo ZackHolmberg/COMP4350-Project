@@ -11,7 +11,6 @@ else:
 
 from shared import HttpCode
 
-
 @pytest.fixture(scope='module')
 def test_client():
     test_client = app.test_client()
