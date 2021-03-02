@@ -14,19 +14,12 @@ type Transaction = {
   signature: string;
 };
 
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
+// Transaction Signing
 const genKeyPair = (): string[] => {
   const keyPair = rs.KEYUTIL.generateKeypair("RSA", 1024);
   console.log(keyPair)
   return [rs.KEYUTIL.getPEM(keyPair.prvKeyObj, "PKCS1PRV"), rs.KEYUTIL.getPEM(keyPair.pubKeyObj)];
 }
-
 
 const keyPair = genKeyPair();
 const privateKey = keyPair[0];
@@ -47,6 +40,7 @@ const sign = (transaction: Transaction, privateKey: string): string => {
 
   return sig.sign();
 };
+// end 
 
 Vue.use(Vuex);
 Vue.use(VueToast);
@@ -92,7 +86,6 @@ export default new Vuex.Store({
       axios
         .post("http://localhost/wallet/create", {
           "walletId": getters.walletId,
-
         })
         .then((response) => {
           commit("MUTATATION_SET_LOADING", false);
