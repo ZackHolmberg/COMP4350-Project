@@ -1,5 +1,5 @@
 // GENERAL
-$background-color: rgb(73, 79, 82);
+$background-color: rgb(106, 109, 110);
 
 $link-color: #3391ff;
 
@@ -53,10 +53,10 @@ $account-icon-size: 70px;
 $settings-icon-size: 80px;
 $logout-icon-size: 70px;
 
-$nav-logo-top: 13px;
-$account-icon-top: 30px;
-$settings-icon-top: 25px;
-$logout-icon-top: 30px;
+$nav-logo-top: 5px;
+$account-icon-top: 25px;
+$settings-icon-top: 20px;
+$logout-icon-top: 25px;
 
 $nav-logo-left: 30px;
 $account-icon-right: 235px;
@@ -73,9 +73,11 @@ $home-page-wrapper-size: 55%;
 $home-page-wrapper-top: 300px;
 $home-page-wrapper-min-size: 500px;
 
-$home-page-background-color: gray;
+$home-page-background-color: rgba(0, 0, 0, 0.75);
 
 $home-page-transaction-bottom: 20px;
+
+$home-page-border: 1px solid black;
 
 // TRANSACTION PAGE
 $transaction-button-padding: 10px;

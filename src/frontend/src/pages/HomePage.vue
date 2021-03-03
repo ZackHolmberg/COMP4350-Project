@@ -35,13 +35,13 @@ export default class HomePage extends Vue {}
   margin-right: auto;
   background-color: $home-page-background-color;
   text-align: center;
-  box-shadow: $box-shadow;
+  box-shadow: $box-shadow-hover;
   border-radius: $box-border-radius;
   width: $home-page-wrapper-size;
   min-width: $home-page-wrapper-min-size;
   height: $home-page-wrapper-size;
   min-height: $home-page-wrapper-min-size;
-  border: $border-color;
+  border: $home-page-border;
 }
 
 .wallet-component {

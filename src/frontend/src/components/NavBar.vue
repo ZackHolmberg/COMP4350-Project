@@ -88,7 +88,6 @@ export default class NavBar extends Vue {
   width: 100%;
   height: $nav-bar-height;
   background-color: $button-background-color;
-  border-radius: $box-border-radius;
   box-shadow: $box-shadow;
 }
 </style>
