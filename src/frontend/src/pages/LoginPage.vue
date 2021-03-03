@@ -39,7 +39,6 @@ export default class LoginPage extends Vue {
 
 .login {
   text-align: center;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 

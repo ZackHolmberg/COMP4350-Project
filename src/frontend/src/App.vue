@@ -17,5 +17,6 @@ body {
   background-color: $background-color;
   margin: 0px;
   padding: 0px;
+  font-family: $default-font;
 }
 </style>

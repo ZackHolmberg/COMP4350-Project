@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400&display=swap");
+
 // GENERAL
 $background-color: rgb(106, 109, 110);
 
@@ -6,6 +8,7 @@ $link-color: #3391ff;
 $hover-transition: 0.2s linear;
 
 $default-text-color: white;
+$default-font: "Montserrat", sans-serif;
 
 // BUTTON
 $button-background-color: rgba(0, 117, 160, 0.582);

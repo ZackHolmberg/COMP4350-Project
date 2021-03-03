@@ -37,6 +37,7 @@ export default class TextInput extends Vue {
   width: $text-input-width;
   height: $text-input-height;
   font-size: $text-input-font-size;
+  font-family: $default-font;
   transition: $hover-transition;
   background-color: $text-input-background;
   color: $text-input-color;

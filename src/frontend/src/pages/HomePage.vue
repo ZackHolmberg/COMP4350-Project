@@ -5,7 +5,7 @@
     <Wallet class="wallet-component"/>
     <CreateTransaction class="transaction-component"/>
   </div>
-  </div>
+</div>
 </template>
 
 <script lang="ts">

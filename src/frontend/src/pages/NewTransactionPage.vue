@@ -60,7 +60,6 @@ export default class NewTransactionPage extends Vue {
 }
 
 .new-transaction {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
