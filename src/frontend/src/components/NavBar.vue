@@ -1,21 +1,25 @@
 <template>
   <div class="nav-bar">
     <img
+      id="nav-logo"
       class="nav-logo"   
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
     <img
+      id='nav-account'
       class="nav-account"
       alt="Account icon"
       src="../assets/accountIcon.png"
     />
     <img
+      id="nav-settings"
       class="nav-settings"
       alt="Settings icon"
       src="../assets/settingsIcon.png"
     />
     <img
+      id="nav-logout"
       class="nav-logout"
       alt="Logout icon"
       src="../assets/logoutIcon.png"
