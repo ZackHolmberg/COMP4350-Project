@@ -19,18 +19,34 @@
       v-bind:disabled="loading"
     />
 
+    <TextInput
+      id="password2"
+      label="Reenter Password"
+      ref="password2"
+      v-bind:disabled="loading"
+    />
+
+    <TextInput
+      id="firstName"
+      label="First Name"
+      ref="firstName"
+      v-bind:disabled="loading"
+    />
+
+    <TextInput
+      id="lastName"
+      label="Last Name"
+      ref="lastName"
+      v-bind:disabled="loading"
+    />
+
     <Button
       class="login-button"
       id="button"
-      label="Login"
       dest=""
-      size="small"
-      type="default"
-      @click.native="login"
+      label="Create Account"
+      @click.native="createAccount"
     />
-    <router-link to="/createAccount" tag="a"
-      >Don't have an account? Create one now!</router-link
-    >
   </div>
 </template>
 
@@ -44,22 +60,22 @@ import Button from "../components/Button.vue";
     TextInput,
     Button,
   },
-  methods: {
-    login: function() {
-      const umnetId = this.$refs.umnetId.inputData();
-      const password = this.$refs.password.inputData();
-      const values = { umnetId: umnetId, password: password };
-      this.$store.dispatch("ACTION_LOGIN", values);
-    },
-  },
 })
-export default class LoginPage extends Vue {
-  get loading() {
-    return this.$store.getters.loading;
-  }
-
-  get userError() {
-    return this.$store.getters.userError;
+export default class CreateAccountPage extends Vue {
+  createAccount() {
+    const umnetId = this.$refs.umnetId.inputData();
+    const password = this.$refs.password.inputData();
+    const password2 = this.$refs.password2.inputData();
+    const firstName = this.$refs.firstName.inputData();
+    const lastName = this.$refs.lastName.inputData();
+    const values = {
+      umnetId: umnetId,
+      password: password,
+      password2: password2,
+      firstName: firstName,
+      lastName: lastName,
+    };
+    this.$store.dispatch("ACTION_CREATE_ACCOUNT", values);
   }
 }
 </script>

@@ -1,29 +1,58 @@
 <template>
   <div>
-    <router-link v-if="size == 'big' && type == 'default'" :to="dest" class="big-button default" tag="button">{{
-      label
-    }}</router-link>
-    <router-link v-else-if="size == 'small' && type == 'default'" :to="dest" class="button default" tag="button">{{
-      label
-    }}</router-link>
-    <router-link v-if="size == 'big' && type == 'cancel'" :to="dest" class="big-button cancel" tag="button">{{
-      label
-    }}</router-link>
-    <router-link v-else-if="size == 'small' && type == 'cancel'" :to="dest" class="button cancel" tag="button">{{
-      label
-    }}</router-link>
+    <router-link
+      v-if="size == 'big' && type == 'default'"
+      :to="dest"
+      class="big-button default"
+      tag="button"
+      ><Circle2 class="loading" v-if="loading" />
+      <span v-else>{{ label }}</span></router-link
+    >
+    <router-link
+      v-else-if="size == 'small' && type == 'default'"
+      :to="dest"
+      class="button default"
+      tag="button"
+      ><Circle2 class="loading" v-if="loading" />
+      <span v-else>{{ label }}</span></router-link
+    >
+    <router-link
+      v-if="size == 'big' && type == 'cancel'"
+      :to="dest"
+      class="big-button cancel"
+      tag="button"
+      ><Circle2 class="loading" v-if="loading" />
+      <span v-else>{{ label }}</span></router-link
+    >
+    <router-link
+      v-else-if="size == 'small' && type == 'cancel'"
+      :to="dest"
+      class="button cancel"
+      tag="button"
+      ><Circle2 class="loading" v-if="loading" />
+      <span v-else>{{ label }}</span></router-link
+    >
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import Circle2 from "vue-loading-spinner/src/components/Circle2.vue";
 
-@Component
+@Component({
+  components: {
+    Circle2,
+  },
+})
 export default class Button extends Vue {
   @Prop() private label!: string;
   @Prop() private dest!: string;
   @Prop() private size!: string;
   @Prop() private type!: string;
+
+  get loading() {
+    return this.$store.getters.loading;
+  }
 }
 </script>
 
@@ -71,5 +100,9 @@ export default class Button extends Vue {
   cursor: pointer;
   transform: scale(1.25);
   box-shadow: $box-shadow-hover;
+}
+
+.loading {
+  margin-left: 25%;
 }
 </style>

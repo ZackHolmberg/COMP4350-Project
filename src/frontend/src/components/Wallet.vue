@@ -18,14 +18,9 @@ export default class Wallet extends Vue {
     return this.$store.getters.walletCreated;
   }
 
+  // Is this better in the component or in @Component, under methods?
   beforeMount() {
-    // TODO: Remove this conditional once we initialize wallet on account creation and only fetch wallet amount
-    if (this.walletCreated()) {
       this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
-    } else {
-      this.$store.dispatch("ACTION_INITIALIZE_WALLET");
-      this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
-    }
   }
 }
 </script>
