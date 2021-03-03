@@ -14,10 +14,12 @@ type Transaction = {
   signature: string;
 };
 
-// Transaction Signing
+// -------------------------------------------------------------
+//  Transaction Signing
+//----------------------------------------------------------------
+
 const genKeyPair = (): string[] => {
   const keyPair = rs.KEYUTIL.generateKeypair("RSA", 1024);
-  console.log(keyPair)
   return [rs.KEYUTIL.getPEM(keyPair.prvKeyObj, "PKCS1PRV"), rs.KEYUTIL.getPEM(keyPair.pubKeyObj)];
 }
 
@@ -40,7 +42,10 @@ const sign = (transaction: Transaction, privateKey: string): string => {
 
   return sig.sign();
 };
-// end 
+
+//-----------------------------------------------------------
+// Transaction Signing end 
+//------------------------------------------------------------
 
 Vue.use(Vuex);
 Vue.use(VueToast);
@@ -125,8 +130,8 @@ export default new Vuex.Store({
         })
         .then((response) => {
           if(response.data.success) {
-            Vue.$toast.success('Transaction has been sent!', {
-              message: 'Transaction has sent!',
+            Vue.$toast.success('Transaction sent successfully!', {
+              message: 'Transaction sent successfully!',
               duration: 3000,
               position: 'top',
               dismissible: true,

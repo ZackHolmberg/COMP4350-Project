@@ -25,8 +25,9 @@ def validateSignature(id, signature, address):
     signature = unhexify(signature.encode("utf-8"))[0]
 
     verifier = PKCS1_v1_5.new(public_key)
-
-    return(verifier.verify(SHA256.new(str.encode(id)), signature))
+    verified = verifier.verify(SHA256.new(str.encode(id)), signature)
+    
+    return verified
 
 
 @cross_origin()
@@ -53,8 +54,9 @@ def createTransaction():
     try:
         isVerified = validateSignature(transaction_id, signature, from_address)
         # TODO do verification if the user is logged in/ the other user exists etc
+        
         if not isVerified:
-            return jsonify(err="signature verification failed"), HttpCode.BAD_REQUEST.value
+            return jsonify(err=FailureReturnString.SIGNATURE_VERFICATION_FAILURE.value), HttpCode.BAD_REQUEST.value
 
     except Exception as e:
         return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
