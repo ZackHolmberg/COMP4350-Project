@@ -6,6 +6,10 @@ import { sha256 } from "js-sha256";
 import 'vue-toast-notification/dist/theme-sugar.css';
 import * as rs from 'jsrsasign';
 
+// ---------------------------------------------------------------
+//  TRANSACTION SIGNING
+// ---------------------------------------------------------------
+
 type Transaction = {
   to: string;
   from: string;
@@ -13,10 +17,6 @@ type Transaction = {
   id: string;
   signature: string;
 };
-
-// -------------------------------------------------------------
-//  Transaction Signing
-//----------------------------------------------------------------
 
 const genKeyPair = (): string[] => {
   const keyPair = rs.KEYUTIL.generateKeypair("RSA", 1024);
@@ -43,9 +43,9 @@ const sign = (transaction: Transaction, privateKey: string): string => {
   return sig.sign();
 };
 
-//-----------------------------------------------------------
-// Transaction Signing end 
-//------------------------------------------------------------
+// ---------------------------------------------------------------
+// TRANSACTION SIGNING END 
+// ---------------------------------------------------------------
 
 Vue.use(Vuex);
 Vue.use(VueToast);
@@ -57,6 +57,10 @@ export default new Vuex.Store({
     walletAmount: 0,
     walletId: publicKey,
     privateKey: privateKey,
+    umnetId: "example12",
+    password: "12345",
+    firstName: "FirstName",
+    lastName: "LastName",
   },
   getters: {
     walletId: (state) => {
@@ -72,6 +76,18 @@ export default new Vuex.Store({
     privateKey: (state) => {
       return state.privateKey;
     },
+    umnetId: (state) => {
+      return state.umnetId;
+    },
+    password: (state) => {
+      return state.password;
+    },
+    firstName: (state) => {
+      return state.firstName;
+    },
+    lastName: (state) => {
+      return state.lastName;
+    }
   },
   mutations: {
     MUTATATION_SET_LOADING(state, loading) {

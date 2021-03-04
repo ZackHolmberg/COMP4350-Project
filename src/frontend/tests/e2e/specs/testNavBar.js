@@ -16,6 +16,11 @@ describe('Checks nav bar', () => {
         cy.get('#nav-settings').should('be.visible')
         cy.get('#nav-logout').should('be.visible')   
       })
+
+      it('Account icon navigates to account page', () => { 
+        cy.get('#nav-account').click()
+        cy.url().should('eq', 'http://localhost:8080/account')  
+      })
     })
   })
 

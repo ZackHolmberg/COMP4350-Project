@@ -6,12 +6,14 @@
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
-    <img
-      id='nav-account'
-      class="nav-account"
-      alt="Account icon"
-      src="../assets/accountIcon.png"
-    />
+    <router-link to="/account">
+      <img
+        id='nav-account'
+        class="nav-account"
+        alt="Account icon"
+        src="../assets/accountIcon.png"
+      />
+    </router-link>
     <img
       id="nav-settings"
       class="nav-settings"

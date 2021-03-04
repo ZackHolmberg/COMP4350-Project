@@ -2,9 +2,18 @@
   <div class="new-transaction">
     <div class="transaction-wrapper">
       <p class="transaction-text">Recipient: </p>
-      <TextInput id=contact-input class="new-transaction-input" label="Email"/>
+      <TextInput 
+        id=contact-input 
+        class="new-transaction-input" 
+        label="Email" 
+        :disable="false"
+      />
       <p class="transaction-text">Amount: </p>
-      <TextInput id=amount-input class="new-transaction-input" label="0.0 BSC"/>
+      <TextInput 
+        id=amount-input 
+        class="new-transaction-input" 
+        label="0.0 BSC" 
+        :disable="false"/>
       <Button 
         id=transaction-cancel 
         class="transaction-cancel-button" 
