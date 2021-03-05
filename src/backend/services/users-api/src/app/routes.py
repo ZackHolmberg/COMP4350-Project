@@ -122,18 +122,20 @@ def updateUser():
     user = {
         "first_name" : first_name,
         "last_name" : last_name,
-        "username" : username.upper(),
         "password" : password,
         "public_key" : public_key
     }
 
     try:
-        mongo.db.users.update_one({"username" : username.upper()}, {"$set" : user})
+        if mongo.db.users.find_one({"username" : username.upper()}) is None:
+            raise Exception("user doesn't exist")
+        
+        res = mongo.db.users.update_one({"username" : username.upper()}, {"$set" : user})
     except Exception as e:
         return jsonify(err=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, error=str(e)), HttpCode.BAD_REQUEST.value
 
     return jsonify(
         status = True,
-        message= 'User ' + first_name + ' ' + last_name + ' updated successfully! :)'
+        message= 'User ' + username +' updated successfully! :)'
     ), 201
 
