@@ -33,17 +33,10 @@ def login():
 
     return jsonify(success = (user["password"] == password))
 
-@app.route("/getUserInfo", methods=["POST"])
-def getUserInfo():
-    data = request.get_json(force=True)
+@app.route("/username/<username>")
+def getUserInfo(username):
 
-    try:
-        username = data['username']
-    
-    except Exception as e:
-          return jsonify(err=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
-
-    user = mongo.db.users.find_one({'username' : username})
+    user = mongo.db.users.find_one({'username' : username.upper()})
 
     try:
         data = {
@@ -60,7 +53,7 @@ def getUserInfo():
         data = data
     )
 
-@app.route("/users")
+@app.route("/all")
 def users():
     userList = mongo.db.users.find()
     
@@ -81,7 +74,7 @@ def users():
         data=data
     )
 
-@app.route('/users', methods=['POST'])
+@app.route('/create', methods=['POST'])
 def createUser():
     data = request.get_json(force=True)
     try: 
@@ -105,8 +98,7 @@ def createUser():
     try:
         mongo.db.users.insert_one(user)
     except Exception as e:
-        #TODO: add this error code to the failure return strings
-        return jsonify(err="database schema validation failed! please check your input and try again."), HttpCode.BAD_REQUEST.value
+        return jsonify(err=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, error=str(e)), HttpCode.BAD_REQUEST.value
 
     return jsonify(
         status = True,
