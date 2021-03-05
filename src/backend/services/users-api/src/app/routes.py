@@ -105,3 +105,35 @@ def createUser():
         status = True,
         message= 'User ' + first_name + ' ' + last_name + ' added successfully! :)'
     ), 201
+
+@app.route('/update', methods=['POST'])
+def updateUser():
+    data = request.get_json()
+    try: 
+        first_name = data["first_name"]
+        last_name = data["last_name"]
+        password = data["password"]
+        username = data["username"]
+        public_key = data["public_key"]
+    
+    except Exception as e:
+        return jsonify(err=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
+    
+    user = {
+        "first_name" : first_name,
+        "last_name" : last_name,
+        "username" : username.upper(),
+        "password" : password,
+        "public_key" : public_key
+    }
+
+    try:
+        mongo.db.users.update_one({"username" : username.upper()}, {"$set" : user})
+    except Exception as e:
+        return jsonify(err=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, error=str(e)), HttpCode.BAD_REQUEST.value
+
+    return jsonify(
+        status = True,
+        message= 'User ' + first_name + ' ' + last_name + ' updated successfully! :)'
+    ), 201
+
