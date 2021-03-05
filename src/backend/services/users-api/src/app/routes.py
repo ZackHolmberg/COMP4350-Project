@@ -21,7 +21,7 @@ def index():
 
 @app.route("/login", methods=["POST"])
 def login():
-    data = request.get_json(force=True)
+    data = request.get_json()
 
     try:
         username = data['username']
@@ -76,7 +76,7 @@ def users():
 
 @app.route('/create', methods=['POST'])
 def createUser():
-    data = request.get_json(force=True)
+    data = request.get_json()
     try: 
         first_name = data["first_name"]
         last_name = data["last_name"]
