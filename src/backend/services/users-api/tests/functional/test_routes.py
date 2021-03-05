@@ -8,7 +8,6 @@ with patch.object(database_init, 'create_users_db', return_value=mongomock.Mongo
     from src.app import app
     from src.app import mongo
 
-from src.databases.UserSchema import userSchema
 import sys, os
 
 
