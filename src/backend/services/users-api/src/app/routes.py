@@ -10,6 +10,7 @@ else:
 
 from shared import HttpCode, FailureReturnString, config
 
+# TODO: add an endpoint to update a user
 
 @app.route("/")
 def index():
@@ -90,7 +91,7 @@ def createUser():
     user = {
         "first_name" : first_name,
         "last_name" : last_name,
-        "username" : username,
+        "username" : username.upper(),
         "password" : password,
         "public_key" : public_key
     }
