@@ -31,7 +31,7 @@ def test_client():
 
 @pytest.fixture(scope='module')
 def test_db_patch():
-    mongo.db.create_collection("users", validator=userSchema)
+    mongo.db.create_collection("users")
 
     mongo.db.users.insert_one({"first_name" : "Akshay", "last_name" : "sharma", "username" : "SHARMAA2", "password" : "akshay123", "public_key" : "akshay_pk"})
     mongo.db.users.create_index("username", unique=True)
@@ -56,6 +56,10 @@ def test_home_page(test_client, test_db_patch):
     assert response.status_code == 200
     resp_msg = "Hello Users of " + mongo.db.name
     assert resp_msg.encode('utf-8') in response.data
+
+def test_insert_user(test_client, test_db_patch):
+    url = '/create'
+
 
 def test_get_user(test_client, test_db_patch):
     mongo.db.users.insert_one({"first_name" : "Abhishek", "last_name" : "Sachdev", "username" : "SACHDEV1", "password" : "abhi123", "public_key" : "abhi_pk"})
