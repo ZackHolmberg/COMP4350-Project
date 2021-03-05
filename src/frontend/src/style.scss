@@ -9,6 +9,7 @@ $hover-transition: 0.2s linear;
 
 $default-text-color: white;
 $default-font: "Montserrat", sans-serif;
+$default-header-font-size: 50px;
 
 // BUTTON
 $button-background-color: rgba(0, 117, 160, 0.582);
@@ -102,4 +103,16 @@ $login-logo-margin: 100px;
 
 $login-button-margin-top: 100px;
 $login-button-margin-bottom: 50px;
+
+// ACCOUNT PAGE
+
+$account-button-padding: 10px;
+$account-button-position: 20%;
+
+$account-wrapper-width: 610px;
+$account-wrapper-top: 120px;
+
+$account-text-font-size: 20px;
+$account-text-left: 80px;
+$account-text-padding-top: 20px;
 

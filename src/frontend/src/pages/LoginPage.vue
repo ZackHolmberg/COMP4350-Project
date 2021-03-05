@@ -5,8 +5,16 @@
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
-    <TextInput id="username" label="Username" />
-    <TextInput id="password" label="Password" />
+    <TextInput 
+      id="username" 
+      label="Username" 
+      :disable="false"
+    />
+    <TextInput 
+      id="password" 
+      label="Password" 
+      :disable="false"
+    />
     <Button
       class="login-button"
       id="button"

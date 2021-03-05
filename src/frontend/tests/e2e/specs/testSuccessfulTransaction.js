@@ -28,7 +28,7 @@ describe('Sends a transaction', () => {
         cy.wait(['@transactionCreate'])
         transaction = cy.get('[class="v-toast__text"]')
         transaction.should('be.visible')    
-        transaction.contains('Transaction has sent!')    
+        transaction.contains('Transaction sent successfully!')    
         cy.url().should('eq', 'http://localhost:8080/home') 
       })
     })
