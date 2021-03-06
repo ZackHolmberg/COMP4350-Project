@@ -8,7 +8,6 @@ class Config:
         env_path = Path('' + serviceName) / '.env'
         print(env_path)
         load_dotenv(dotenv_path = env_path)
-        # print(os.environ)
         #load the environment variables
         self.MONGODB_DATABASE = os.getenv('MONGODB_DATABASE')
         self.MONGODB_USERNAME = os.getenv('MONGODB_USERNAME')
