@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input class="textInput" :placeholder="label" v-model="input"/>
+    <input class="textInput" :placeholder="label" v-model="input" :disabled="disable"/>
   </div>
 </template>
 
@@ -10,6 +10,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class TextInput extends Vue {
   @Prop() private label!: string;
+  @Prop() private disable!: boolean;
 
   data() {
     return {
@@ -29,22 +30,23 @@ export default class TextInput extends Vue {
 @import "../style.scss";
 
 .textInput {
-  border-radius: 25px;
+  border-radius: $text-input-border-radius;
   box-shadow: $box-shadow;
-  padding: 10px;
-  border: border-color;
-  margin: 25px;
-  width: 30%;
-  height: 35px;
-  font-size: 16px;
-  transition: 0.2s linear;
+  padding: $text-input-padding;
+  border: $border-color;
+  margin: $text-input-margin;
+  width: $text-input-width;
+  height: $text-input-height;
+  font-size: $text-input-font-size;
+  font-family: $default-font;
+  transition: $hover-transition;
   background-color: $text-input-background;
-  color: $text-input-text;
+  color: $text-input-color;
 }
 
 .textInput:hover {
   cursor: pointer;
-  transform: scale(1.05);
+  transform: $hover-transform-text-input;
   box-shadow: $box-shadow-hover;
 }
 </style>

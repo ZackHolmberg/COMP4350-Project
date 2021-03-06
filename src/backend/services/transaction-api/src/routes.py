@@ -1,10 +1,13 @@
 from src import app
 from flask import request, jsonify
 import requests
-import base64
 import sys
 import os
 from flask_cors import CORS, cross_origin
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
+import codecs
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -15,6 +18,16 @@ else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
 from shared import HttpCode, FailureReturnString
+
+def validateSignature(id, signature, address):
+    public_key = RSA.import_key(address)
+    unhexify = codecs.getdecoder('hex')
+    signature = unhexify(signature.encode("utf-8"))[0]
+
+    verifier = PKCS1_v1_5.new(public_key)
+    verified = verifier.verify(SHA256.new(str.encode(id)), signature)
+    
+    return verified
 
 
 @cross_origin()
@@ -32,13 +45,18 @@ def createTransaction():
         from_address = data["from"]
         to_address = data["to"]
         amount = data["amount"]
+        transaction_id = data["id"]
+        signature = data["signature"]
 
     except Exception as e:
         return jsonify(err=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
     try:
-        isVerified = True
+        isVerified = validateSignature(transaction_id, signature, from_address)
         # TODO do verification if the user is logged in/ the other user exists etc
+        
+        if not isVerified:
+            return jsonify(err=FailureReturnString.SIGNATURE_VERFICATION_FAILURE.value), HttpCode.BAD_REQUEST.value
 
     except Exception as e:
         return jsonify(err=str(e)), HttpCode.BAD_REQUEST.value
@@ -50,8 +68,8 @@ def createTransaction():
 
     response = requests.post( "http://blockchain:5000/wallet/verifyAmount", json=req_body)
 
-    if response.status_code is not HttpCode.OK.value:
-        return jsonify(response.json()), response.status_code
+    if response.status_code is not HttpCode.OK.value or not response.json()["valid"]:
+        return jsonify(err=FailureReturnString.WALLET_VERFICATION_FAILURE.value), HttpCode.BAD_REQUEST.value
 
     response = requests.post( "http://mining:5000/queue", json=data)
     

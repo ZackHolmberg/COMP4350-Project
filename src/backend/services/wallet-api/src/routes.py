@@ -25,11 +25,10 @@ def index():
 @cross_origin()
 @app.route("/create", methods=['POST'])
 def createWallet():
-    data = request.get_json(force=True)
-<<<<<<< HEAD
-=======
-    
->>>>>>> bf59cae78659c89d1133642cb3f47479545294d0
+
+    data = request.get_json()    
+
+>>>>>>> 7b2c08c28d0acbedf2effb473a7a5987a51b066a
     if (data is None) or ("walletId" not in data):
         return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 

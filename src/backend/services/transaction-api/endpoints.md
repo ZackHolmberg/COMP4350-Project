@@ -7,14 +7,18 @@
 
 ```json
 {
+  "id": string,
   "from": string,
   "to": string,
-  "amount": float
+  "amount": float,
+  "signature": float
 }
 ```
 
-- The from and to addresses are base64 encoded user key addresses, these will be used to verify the validity of the transaction
+- The from and to addresses are encoded user key addresses, these will be used to verify the validity of the transaction
 - The amount will need to be present in the users wallet to make a transaction
+- id is a random transaction id that will be signed with the private key
+- Signature is the signed transaction id from the private key of the public key address
 
 Example return:
 

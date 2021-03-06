@@ -1,5 +1,3 @@
-// https://docs.cypress.io/api/introduction/api.html
-
 describe('Loads the web app', () => {
   context('1080p resolution', () => {
     beforeEach(() => {
