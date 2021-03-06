@@ -11,6 +11,7 @@ else:
 
 from shared.exceptions import IncorrectPayloadException 
 from shared.utils import BisonCoinUrls, send_post_request
+from shared import HttpCode
 
 COINBASE_AMOUNT = 10
 
