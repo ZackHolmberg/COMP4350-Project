@@ -112,12 +112,12 @@
 
 ```json
 {
-"first_name": string,
-"last_name": string,
-"curr_password": string (used for verification),
-"new_password": string (same as old password if you don't wanna change the password),
-"umnetID": string,
-"public_key": string,
+  "first_name": string,
+  "last_name": string,
+  "umnetID": string,
+  "public_key": string,
+  "curr_password": string,
+  "new_password": string
 }
 ```
 

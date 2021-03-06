@@ -2,33 +2,63 @@
   <div class="view-account">
     <h1 class="account-header">Account</h1>
     <div class="account-wrapper">
-      <p id="account-name" class="view-account-text">
-        Name: {{ userFirstName }} {{ userLastName }}
-      </p>
-      <p id="account-umnetId" class="view-account-text">
-        UMnetId: {{ userUMnetId }} 
-      </p>
-      <p id="account-email" class="view-account-text">
-        Email: {{ userUMnetId }}@myumanitoba.ca
-      </p>
-      <p id="account-password" class="view-account-text">
-        Password: ********
-      </p>
-      <Button 
-        id=account-cancel 
-        class="account-cancel-button" 
-        dest="/home" 
-        label="Cancel" 
+      <TextInput
+        id="account-first-name"
+        class="view-account-text"
+        :label="userFirstName"
+        :disable="!editing"
+        ref="userFirstName"
+      />
+
+      <TextInput
+        id="account-last-name"
+        class="view-account-text"
+        :label="userLastName"
+        :disable="!editing"
+        ref="userLastName"
+      />
+      <TextInput
+        id="account-umnetId"
+        class="view-account-text"
+        :label="userUMnetId"
+        :disable="true"
+        ref="umnetId"
+      />
+      <TextInput
+        id="account-password"
+        class="view-account-text"
+        :label="userPassword"
+        :disable="!editing"
+        ref="userPassword"
+      />
+
+      <Button
+        id="account-cancel"
+        class="account-cancel-button"
+        dest="/home"
+        label="Cancel"
         size="small"
         type="cancel"
       />
-      <Button 
-        id=account-edit
-        class="account-edit-button" 
-        dest="/home" 
-        label="Edit" 
+      <Button
+        v-if="!editing"
+        id="account-edit"
+        class="account-edit-button"
+        dest="/account"
+        label="Edit"
         size="small"
         type="default"
+        @click.native="setEditing(true)"
+      />
+      <Button
+        v-else
+        id="account-save"
+        class="account-edit-button"
+        dest="/account"
+        label="Save Changes"
+        size="small"
+        type="default"
+        @click.native="saveChanges"
       />
     </div>
   </div>
@@ -37,10 +67,12 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Button from "../components/Button.vue";
+import TextInput from "../components/TextInput.vue";
 
 @Component({
   components: {
-    Button
+    Button,
+    TextInput,
   },
 })
 export default class ViewAccountPage extends Vue {
@@ -58,6 +90,28 @@ export default class ViewAccountPage extends Vue {
 
   get userLastName() {
     return this.$store.getters.lastName;
+  }
+
+  get editing() {
+    return this.$store.getters.editing;
+  }
+
+  setEditing(editing: boolean) {
+    console.log("setting editing to:", editing);
+    this.$store.commit("MUTATATION_SET_EDITING", editing);
+  }
+
+  saveChanges() {
+    const password = this.$refs.userPassword.inputData();
+    const firstName = this.$refs.userFirstName.inputData();
+    const lastName = this.$refs.userLastName.inputData();
+    const values = {
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    };
+    this.setEditing(false);
+    this.$store.dispatch("ACTION_UPDATE_USER", values);
   }
 }
 </script>
@@ -105,5 +159,4 @@ export default class ViewAccountPage extends Vue {
   font-weight: bold;
   color: $default-text-color;
 }
-
 </style>

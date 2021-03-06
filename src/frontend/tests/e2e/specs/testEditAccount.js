@@ -1,4 +1,4 @@
-describe("Checks account page", () => {
+describe("Checks ability to edit account", () => {
   context("1080p resolution", () => {
     beforeEach(() => {
       // run these tests as if in a desktop
@@ -22,15 +22,30 @@ describe("Checks account page", () => {
       cy.url().should("eq", "http://localhost:8080/account");
       cy.get("#account-cancel").should("be.visible");
       cy.get("#account-edit").should("be.visible");
-      cy.get("#account-name").should("be.visible");
-      cy.get("#account-email").should("be.visible");
+      cy.get("#account-first-name").should("be.visible");
+      cy.get("#account-last-name").should("be.visible");
       cy.get("#account-umnetId").should("be.visible");
       cy.get("#account-password").should("be.visible");
     });
 
-    it("Cancels view account", () => {
+    it("Edits and saves new user info", () => {
+      cy.get("#account-edit").click();
+      cy.url().should("eq", "http://localhost:8080/account");
+      cy.get("#account-first-name").type("newFirstName");
+      cy.intercept("POST", "/users/update", { fixture: "success.json" }).as(
+        "updateUser"
+      );
+      cy.get("#account-save").click();
+      cy.wait(["@updateUser"]);
+
       cy.get("#account-cancel").click();
-      cy.url().should("eq", "http://localhost:8080/home");
+      cy.get("#nav-account").click();
+
+      cy.get("#account-edit").should("be.visible");
+      cy.get("input")
+        .invoke("attr", "placeholder")
+        .should("contain", "newFirstName");
+      cy.url().should("eq", "http://localhost:8080/account");
     });
   });
 });
