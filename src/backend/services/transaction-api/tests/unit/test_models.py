@@ -36,33 +36,21 @@ def test_validate_signature_non_encoded(public_key):
     signature = "A Non encoded Signature"
     id_ = "Something that was signed"
     try:
-<<<<<<< HEAD
         validate_signature(id_, signature, public_key)
-=======
-        validateSignature(id_, signature, public_key)
->>>>>>> staging
         assert False
     except Exception as e:
         assert True
 
 def test_validate_signature_correct(public_key, signature):
     try:
-<<<<<<< HEAD
         validate_signature("Test", signature, public_key)
-=======
-        validateSignature("Test", signature, public_key)
->>>>>>> staging
         assert True
     except Exception as e:
         assert False
 
 def test_validate_signature_incorrect(public_key, signature):
     try:
-<<<<<<< HEAD
         validate_signature("TestIncorrect", signature, public_key)
-=======
-        validateSignature("TestIncorrect", signature, public_key)
->>>>>>> staging
         assert True
     except Exception as e:
         assert False
@@ -71,11 +59,7 @@ def test_validate_signature_wrong_public_key(signature):
     key = RSA.generate(bits=1024, randfunc=get_random_bytes)
     public_key = key.public_key().exportKey()
     try:
-<<<<<<< HEAD
         validate_signature("Test", signature, public_key)
-=======
-        validateSignature("Test", signature, public_key)
->>>>>>> staging
         assert False
     except Exception as e:
         assert True
