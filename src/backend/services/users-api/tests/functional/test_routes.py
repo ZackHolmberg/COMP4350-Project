@@ -85,11 +85,7 @@ def test_insert_user(test_client, test_db_patch, json_header):
 
 def test_get_all_users(test_client, test_db_patch):
     
-    url = '/all'
-
-    # print("USERS:")
-    # for usr in mongo.db.users.find({}):
-    #     print(usr)
+    url = '/list'
 
     response = test_client.get(url)
 
@@ -130,7 +126,6 @@ def test_create_error_duplicate_umnetID_and_password(test_client, test_db_patch,
 
 
 def test_create_error_incomplete_payload(test_client, test_db_patch, json_header):
-    # TODO: send a request with missing payload params and assert for an incorrect payload failure
     url = '/create'
     
     # duplicate umnetID

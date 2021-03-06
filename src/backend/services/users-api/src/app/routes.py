@@ -8,9 +8,8 @@ if os.environ.get('SERVICE_IN_DOCKER', False):
 else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
-from shared import HttpCode, FailureReturnString, config
+from shared import HttpCode, FailureReturnString
 
-# TODO: add an endpoint to update a user
 
 @app.route("/")
 def index():
@@ -34,8 +33,8 @@ def login():
 
     return jsonify(success = (user["password"] == password))
 
-@app.route("/umnetID/<umnetID>")
-def getUserInfo(umnetID):
+@app.route("/umnetID/<umnetID>" , methods=['GET'])
+def getUser(umnetID):
 
     user = mongo.db.users.find_one({'umnetID' : umnetID.upper()})
 
@@ -54,8 +53,8 @@ def getUserInfo(umnetID):
         data = data
     )
 
-@app.route("/all")
-def users():
+@app.route("/list" , methods=['GET'])
+def getUsers():
     userList = mongo.db.users.find()
     
     user = {}
@@ -142,5 +141,5 @@ def updateUser():
     return jsonify(
         status = True,
         message= 'User ' + umnetID +' updated successfully! :)'
-    ), 201
+    ), 200
 
