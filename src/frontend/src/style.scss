@@ -75,13 +75,17 @@ $wallet-font-size: 150px;
 // HOME PAGE
 $home-page-wrapper-size: 55%;
 $home-page-wrapper-top: 300px;
-$home-page-wrapper-min-size: 500px;
+$home-page-wrapper-min-height: 500px;
+$home-page-wrapper-max-height: 600px;
+$home-page-wrapper-max-width: 1000px;
+$home-page-wrapper-min-width: 800px;
 
 $home-page-background-color: rgba(0, 0, 0, 0.75);
 
-$home-page-transaction-bottom: 20px;
-
 $home-page-border: 1px solid black;
+
+$home-page-button-position: 12%;
+$home-page-button-bottom: 20%;
 
 // TRANSACTION PAGE
 $transaction-button-padding: 10px;
@@ -105,7 +109,6 @@ $login-button-margin-top: 100px;
 $login-button-margin-bottom: 50px;
 
 // ACCOUNT PAGE
-
 $account-button-padding: 10px;
 $account-button-position: 20%;
 

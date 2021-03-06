@@ -61,6 +61,7 @@ export default new Vuex.Store({
     password: "12345",
     firstName: "FirstName",
     lastName: "LastName",
+    mining: true,
   },
   getters: {
     walletId: (state) => {
@@ -87,6 +88,9 @@ export default new Vuex.Store({
     },
     lastName: (state) => {
       return state.lastName;
+    },
+    mining: (state) => {
+      return state.mining;
     }
   },
   mutations: {
@@ -99,6 +103,9 @@ export default new Vuex.Store({
     // TODO: Remove once we generate walletId and initialize wallet on account creation
     MUTATION_SET_WALLET_CREATED(state) {
       state.walletCreated = true;
+    },
+    MUTATATION_SET_MINING(state, mining) {
+      state.mining = mining;
     },
   },
   actions: {
