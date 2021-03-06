@@ -54,3 +54,9 @@ jobs:
         run: |
           pip install -r requirements.txt
           python -m pytest
+
+      - name: Test Users
+        working-directory: ./src/backend/services/users-api
+        run: |
+          pip install -r requirements.txt
+          python -m pytest
