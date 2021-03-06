@@ -6,5 +6,9 @@ class FailureReturnString(Enum):
     TRANSACTION_VERFICATION_FAILURE = "Unable to Verify the Transaction"
     WALLET_VERFICATION_FAILURE = "Unable to Verify the Wallet Amount"
     UNKNOWN_FAILURE = "Something went wrong, please try again"
+<<<<<<< HEAD
     SIGNATURE_VERFICATION_FAILURE = "signature verification failed"
     RECEIVER_NOT_PRESENT = "The receiver you are trying to send the money to doesn't exist"
+=======
+    SIGNATURE_VERFICATION_FAILURE = "signature verification failed"
+>>>>>>> staging
