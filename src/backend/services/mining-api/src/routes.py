@@ -73,7 +73,3 @@ def handle_proofs(message):
 @app.errorhandler(IncorrectPayloadException)
 def handle_payload_error(e):
     return jsonify(error=e.json_message), e.return_code
-
-@app.errorhandler(Exception)
-def handle_unknown_error(e):
-    print(e)
