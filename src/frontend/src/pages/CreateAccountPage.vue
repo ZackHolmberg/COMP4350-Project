@@ -10,34 +10,34 @@
       id="umnetId"
       label="umnetId"
       ref="umnetId"
-      v-bind:disabled="loading"
+      :disable="loading"
     />
     <TextInput
       id="password"
       label="Password"
       ref="password"
-      v-bind:disabled="loading"
+      :disable="loading"
     />
 
     <TextInput
       id="password2"
       label="Reenter Password"
       ref="password2"
-      v-bind:disabled="loading"
+      :disable="loading"
     />
 
     <TextInput
       id="firstName"
       label="First Name"
       ref="firstName"
-      v-bind:disabled="loading"
+      :disable="loading"
     />
 
     <TextInput
       id="lastName"
       label="Last Name"
       ref="lastName"
-      v-bind:disabled="loading"
+      :disable="loading"
     />
 
     <Button

@@ -1,16 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400&display=swap");
 
-$background-color: rgb(73, 79, 82);
-
-$button-background-color: rgba(0, 117, 160, 0.582);
-$button-text: #e8e6e3;
-$border-color: 2px solid rgb(140, 130, 115);
-
-$text-input-background: #131516;
-$text-input-text: lightgray;
+// GENERAL
+$background-color: rgb(106, 109, 110);
 
 $link-color: #3391ff;
 
+$hover-transition: 0.2s linear;
+
+$default-text-color: white;
+$default-font: "Montserrat", sans-serif;
+$default-header-font-size: 50px;
+
+// BUTTON
+$button-background-color: rgba(0, 117, 160, 0.582);
+$cancel-button-background-color: rgba(160, 5, 0, 0.555);
+
+$button-text: #e8e6e3;
+$button-font-size: 16px;
+$big-button-font-size: 32px;
+$border-color: 2px solid rgb(140, 130, 115);
+
+$hover-transform-button: scale(1.2);
+
+$button-border-radius: 25px;
+$big-button-border-radius: 40px;
+
+$big-button-width: 300px;
+$big-button-height: 100px;
+
+$button-width: 100px;
+$button-height: 50px;
+
+// TEXT INPUT
+$text-input-background: #131516;
+
+$text-input-color: lightgray;
+$text-input-font-size: 16px;
+
+$hover-transform-text-input: scale(1.05);
+
+$text-input-border-radius: 25px;
+$text-input-height: 35px;
+$text-input-width: 30%;
+$text-input-padding: 10px;
+$text-input-margin: 25px;
+
+// BOX
 $box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 $box-shadow-hover: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 
-$cancel-button-background-color: rgba(160, 5, 0, 0.555);
+$box-border-radius: 10px;
+
+// NAV BAR
+$nav-logo-size: 110px;
+$account-icon-size: 70px;
+$settings-icon-size: 80px;
+$logout-icon-size: 70px;
+
+$nav-logo-top: 5px;
+$account-icon-top: 25px;
+$settings-icon-top: 20px;
+$logout-icon-top: 25px;
+
+$nav-logo-left: 30px;
+$account-icon-right: 235px;
+$settings-icon-right: 130px;
+$logout-icon-right: 30px;
+
+$nav-bar-height: 120px;
+
+// WALLET
+$wallet-font-size: 150px;
+
+// HOME PAGE
+$home-page-wrapper-size: 55%;
+$home-page-wrapper-top: 300px;
+$home-page-wrapper-min-height: 500px;
+$home-page-wrapper-max-height: 600px;
+$home-page-wrapper-max-width: 1000px;
+$home-page-wrapper-min-width: 800px;
+
+$home-page-background-color: rgba(0, 0, 0, 0.75);
+
+$home-page-border: 1px solid black;
+
+$home-page-button-position: 12%;
+$home-page-button-bottom: 20%;
+
+// TRANSACTION PAGE
+$transaction-button-padding: 10px;
+$transaction-button-position: 20%;
+
+$transaction-wrapper-width: 610px;
+$transaction-wrapper-top: 100px;
+
+$transaction-input-width: 1000px;
+$transaction-input-right: 150px;
+
+$transaction-text-font-size: 20px;
+$transaction-text-left: 80px;
+$transaction-text-padding-top: 20px;
+
+// LOGIN PAGE
+$login-logo-size: 300px;
+$login-logo-margin: 100px;
+
+$login-button-margin-top: 100px;
+$login-button-margin-bottom: 50px;
+
+// ACCOUNT PAGE
+$account-button-padding: 10px;
+$account-button-position: 20%;
+
+$account-wrapper-width: 610px;
+$account-wrapper-top: 120px;
+
+$account-text-font-size: 20px;
+$account-text-left: 80px;
+$account-text-padding-top: 20px;
+

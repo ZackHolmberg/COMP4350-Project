@@ -20,9 +20,7 @@ describe('On the homepage', () => {
       wallet.should('be.visible')    
       wallet.contains("10 BSC")    
     })
-
   })
-  
 })
 
 

@@ -10,9 +10,13 @@ import { Vue } from "vue-property-decorator";
 export default class App extends Vue {}
 </script>
 
-<style>
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400&display=swap");
+<style lang="scss">
+@import "./style.scss";
+
 body {
-  font-family: "Montserrat", sans-serif;
+  background-color: $background-color;
+  margin: 0px;
+  padding: 0px;
+  font-family: $default-font;
 }
 </style>

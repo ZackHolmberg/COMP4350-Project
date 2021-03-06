@@ -1,8 +1,7 @@
 <template>
-  <div class="home">
+  <div class="login">
     <img
-      width="300px"
-      height="300px"
+      class="login-logo"
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
@@ -10,13 +9,13 @@
       id="umnetId"
       label="umnetId"
       ref="umnetId"
-      v-bind:disabled="loading"
+      :disable="loading"
     />
     <TextInput
       id="password"
       label="Password"
       ref="password"
-      v-bind:disabled="loading"
+      :disable="loading"
     />
 
     <Button
@@ -67,29 +66,24 @@ export default class LoginPage extends Vue {
 <style lang="scss">
 @import "../style.scss";
 
-.home {
+.login {
   text-align: center;
-  padding: 25px;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .login-button {
-  margin-top: 100px;
-  margin-bottom: 50px;
+  margin-top: $login-button-margin-top;
+  margin-bottom: $login-button-margin-bottom;
 }
 
-body {
-  background-color: $background-color;
+.login-logo {
+  margin-bottom: $login-logo-margin;
+  margin-top: $login-logo-margin;
+  width: $login-logo-size;
+  height: $login-logo-size;
 }
 
-img {
-  margin-bottom: 100px;
-  margin-top: 100px;
-}
-
-a {
+.create-account-link {
   color: $link-color;
 }
 </style>
