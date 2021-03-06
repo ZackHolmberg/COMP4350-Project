@@ -81,7 +81,7 @@ def test_create_user(test_client, test_db_patch, json_header):
 
     response = test_client.post(
         url, data=json.dumps(payload), headers=json_header)
-    assert response.success == True
+    assert response.data.success == True
     user = mongo.db.users.find_one({"umnetID": "FINESM1"})
     assert user is not None
 
@@ -181,7 +181,7 @@ def test_success_update_user(test_client, test_db_patch, json_header):
         url, data=json.dumps(payload), headers=json_header)
 
     # Check the response to see if its correct
-    assert response.success == True
+    assert response.data.success == True
 
     # Check the db to see if the updates were successful
     db_user = mongo.db.users.find_one({"umnetID": "SHARMAA2"})
@@ -189,7 +189,7 @@ def test_success_update_user(test_client, test_db_patch, json_header):
 
     # Try changing it back with wrong password
     # Check the response to see if it's correct
-    assert response.success == True
+    assert response.data.success == True
 
     # Check the db to see if the updates were successful
     db_user = mongo.db.users.find_one({"umnetID": "SHARMAA2"})
@@ -228,7 +228,7 @@ def test_success_update_user(test_client, test_db_patch, json_header):
         url, data=json.dumps(payload), headers=json_header)
 
     # Check if the response is correct
-    assert response.success == True
+    assert response.data.success == True
 
     # Check if the database was updated successfully
     db_user = mongo.db.users.find_one({"umnetID": "SHARMAA2"})
