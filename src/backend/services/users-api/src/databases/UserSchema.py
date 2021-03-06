@@ -13,7 +13,7 @@ userSchema = {
                 },
                 "umnetID": {
                     "bsonType": "string",
-                    "description": "user's umnetID must be a string and is required. This is the UMNETID in our implementation."
+                    "description": "user's umnetID must be a string and is required. This is the umnetID in our implementation."
                 },
                 "password": {
                     "bsonType": "string",
