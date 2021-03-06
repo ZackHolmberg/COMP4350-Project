@@ -5,12 +5,7 @@
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
-    <TextInput
-      id="umnetId"
-      label="umnetId"
-      ref="umnetId"
-      :disable="loading"
-    />
+    <TextInput id="umnetId" label="umnetId" ref="umnetId" :disable="loading" />
     <TextInput
       id="password"
       label="Password"
@@ -27,7 +22,7 @@
       type="default"
       @click.native="login"
     />
-    <router-link to="/createAccount" tag="a"
+    <router-link to="/createAccount" id="create-account-link" tag="a"
       >Don't have an account? Create one now!</router-link
     >
   </div>

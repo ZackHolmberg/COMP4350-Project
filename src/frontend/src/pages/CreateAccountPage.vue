@@ -6,12 +6,7 @@
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
-    <TextInput
-      id="umnetId"
-      label="umnetId"
-      ref="umnetId"
-      :disable="loading"
-    />
+    <TextInput id="umnetId" label="umnetId" ref="umnetId" :disable="loading" />
     <TextInput
       id="password"
       label="Password"
@@ -27,14 +22,14 @@
     />
 
     <TextInput
-      id="firstName"
+      id="first-name"
       label="First Name"
       ref="firstName"
       :disable="loading"
     />
 
     <TextInput
-      id="lastName"
+      id="last-name"
       label="Last Name"
       ref="lastName"
       :disable="loading"
@@ -42,7 +37,7 @@
 
     <Button
       class="login-button"
-      id="button"
+      id="create-account-button"
       dest=""
       label="Create Account"
       @click.native="createAccount"
