@@ -25,25 +25,25 @@ def login():
     data = request.get_json()
 
     try:
-        username = data['username']
+        umnetID = data['umnetID']
         password = data['password']
     except Exception as e:
         return jsonify(err= FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
 
-    user = mongo.db.users.find_one({"username":username})
+    user = mongo.db.users.find_one({"umnetID":umnetID})
 
     return jsonify(success = (user["password"] == password))
 
-@app.route("/username/<username>")
-def getUserInfo(username):
+@app.route("/umnetID/<umnetID>")
+def getUserInfo(umnetID):
 
-    user = mongo.db.users.find_one({'username' : username.upper()})
+    user = mongo.db.users.find_one({'umnetID' : umnetID.upper()})
 
     try:
         data = {
             'first_name' : user['first_name'],
             'last_name' : user['last_name'],
-            'username' : user['username'],
+            'umnetID' : user['umnetID'],
             'public_key' : user['public_key']
         }
     except Exception as e:
@@ -65,7 +65,7 @@ def users():
         user = {
             'first_name' : usr['first_name'],
             'last_name' : usr['last_name'],
-            'username' : usr['username'],
+            'umnetID' : usr['umnetID'],
             'public_key' : usr['public_key']
         }
         data.append(user)
@@ -82,7 +82,7 @@ def createUser():
         first_name = data["first_name"]
         last_name = data["last_name"]
         password = data["password"]
-        username = data["username"]
+        umnetID = data["umnetID"]
         public_key = data["public_key"]
     
     except Exception as e:
@@ -91,7 +91,7 @@ def createUser():
     user = {
         "first_name" : first_name,
         "last_name" : last_name,
-        "username" : username.upper(),
+        "umnetID" : umnetID.upper(),
         "password" : password,
         "public_key" : public_key
     }
@@ -113,7 +113,7 @@ def updateUser():
         first_name = data["first_name"]
         last_name = data["last_name"]
         password = data["password"]
-        username = data["username"]
+        umnetID = data["umnetID"]
         public_key = data["public_key"]
     
     except Exception as e:
@@ -127,15 +127,16 @@ def updateUser():
     }
 
     try:
-        if mongo.db.users.find_one({"username" : username.upper()}) is None:
+        usr = mongo.db.users.find_one({"umnetID" : umnetID.upper()}) 
+        if usr is None:
             raise Exception("user doesn't exist")
-        
-        res = mongo.db.users.update_one({"username" : username.upper()}, {"$set" : user})
+
+        res = mongo.db.users.update_one({"umnetID" : umnetID.upper()}, {"$set" : user})
     except Exception as e:
         return jsonify(err=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, error=str(e)), HttpCode.BAD_REQUEST.value
 
     return jsonify(
         status = True,
-        message= 'User ' + username +' updated successfully! :)'
+        message= 'User ' + umnetID +' updated successfully! :)'
     ), 201
 

@@ -1,7 +1,7 @@
 userSchema = {
         "$jsonSchema": {
             "bsonType": "object",
-            "required": ["first_name", "last_name", "username", "password", "public_key"],
+            "required": ["first_name", "last_name", "umnetID", "password", "public_key"],
             "properties": {
                 "first_name": {
                     "bsonType": "string",
@@ -11,9 +11,9 @@ userSchema = {
                     "bsonType": "string",
                     "description": "user's last name must be a string and is required."
                 },
-                "username": {
+                "umnetID": {
                     "bsonType": "string",
-                    "description": "user's username must be a string and is required. This is the UMNETID in our implementation."
+                    "description": "user's umnetID must be a string and is required. This is the UMNETID in our implementation."
                 },
                 "password": {
                     "bsonType": "string",

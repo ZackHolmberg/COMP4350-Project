@@ -33,9 +33,9 @@ def test_client():
 def test_db_patch():
     mongo.db.create_collection("users")
 
-    mongo.db.users.insert_one({"first_name" : "Akshay", "last_name" : "Sharma", "username" : "SHARMAA2", "password" : "akshay123", "public_key" : "akshay_pk"})
-    mongo.db.users.insert_one({"first_name" : "Abhi", "last_name" : "Sachdev", "username" : "SACHDEV1", "password" : "abhi123", "public_key" : "abhi_pk"})
-    mongo.db.users.create_index("username", unique=True)
+    mongo.db.users.insert_one({"first_name" : "Akshay", "last_name" : "Sharma", "umnetID" : "SHARMAA2", "password" : "akshay123", "public_key" : "akshay_pk"})
+    mongo.db.users.insert_one({"first_name" : "Abhi", "last_name" : "Sachdev", "umnetID" : "SACHDEV1", "password" : "abhi123", "public_key" : "abhi_pk"})
+    mongo.db.users.create_index("umnetID", unique=True)
     mongo.db.users.create_index("public_key", unique=True)
  
 @pytest.fixture(scope='module')
@@ -61,13 +61,14 @@ def test_home_page(test_client, test_db_patch):
     resp_msg = "Hello Users of " + mongo.db.name
     assert resp_msg.encode('utf-8') in response.data
 
+
 def test_insert_user(test_client, test_db_patch, json_header):
     url = '/create'
     
     payload = {
         "first_name" : "Madison",
         "last_name" : "Fines",
-        "username" : "FINESM1",
+        "umnetID" : "FINESM1",
         "password" : "madison123",
         "public_key" : "madison_pk"
         }
@@ -75,32 +76,36 @@ def test_insert_user(test_client, test_db_patch, json_header):
     response = test_client.post(url, data=json.dumps(payload), headers=json_header)
     assert b'User Madison Fines added successfully! :)' in response.data
 
-    user = mongo.db.users.find_one({"username" : "FINESM1"})
+    user = mongo.db.users.find_one({"umnetID" : "FINESM1"})
     assert user is not None
 
     # remove the added user to maintain the state of the db
-    mongo.db.users.delete_one({"username" : "FINESM1"})
+    mongo.db.users.delete_one({"umnetID" : "FINESM1"})
 
 
 def test_get_all_users(test_client, test_db_patch):
     
     url = '/all'
 
+    # print("USERS:")
+    # for usr in mongo.db.users.find({}):
+    #     print(usr)
+
     response = test_client.get(url)
 
-    assert b'"username":"SHARMAA2"' in response.data
-    assert b'"username":"SACHDEV1"' in response.data
+    assert b'"umnetID":"SHARMAA2"' in response.data
+    assert b'"umnetID":"SACHDEV1"' in response.data
 
 
-def test_create_error_duplicate_username_and_password(test_client, test_db_patch, json_header):
+def test_create_error_duplicate_umnetID_and_password(test_client, test_db_patch, json_header):
     
     url = '/create'
     
-    # duplicate username
+    # duplicate umnetID
     payload = {
         "first_name" : "Zack",
         "last_name" : "Holmberg",
-        "username" : "SHARMAA2",
+        "umnetID" : "SHARMAA2",
         "password" : "zack123",
         "public_key" : "zack_pk"
         }
@@ -114,7 +119,7 @@ def test_create_error_duplicate_username_and_password(test_client, test_db_patch
     payload = {
         "first_name" : "Bob",
         "last_name" : "Dylan",
-        "username" : "DYLANB1",
+        "umnetID" : "DYLANB1",
         "password" : "bob123",
         "public_key" : "abhi_pk"
         }
@@ -128,11 +133,11 @@ def test_create_error_incomplete_payload(test_client, test_db_patch, json_header
     # TODO: send a request with missing payload params and assert for an incorrect payload failure
     url = '/create'
     
-    # duplicate username
+    # duplicate umnetID
     payload = {
         "first_name" : "Bob",
         "last_name" : "Dylan",
-        "username" : "SHARMAA2",
+        "umnetID" : "SHARMAA2",
         "password" : "bob123"
         }
 
@@ -141,15 +146,15 @@ def test_create_error_incomplete_payload(test_client, test_db_patch, json_header
     assert b'Please send correct json payload' in response.data
 
 
-def test_success_get_user_by_username(test_client, test_db_patch):
-    url = '/username/SHARMAA2'
+def test_success_get_user_by_umnetID(test_client, test_db_patch):
+    url = '/umnetID/SHARMAA2'
 
     response = test_client.get(url)
 
-    assert b'"username":"SHARMAA2"' in response.data
+    assert b'"umnetID":"SHARMAA2"' in response.data
 
-def test_failure_get_user_by_username_user_not_found(test_client, test_db_patch):
-    url = '/username/DOESNTEXIST'
+def test_failure_get_user_by_umnetID_user_not_found(test_client, test_db_patch):
+    url = '/umnetID/DOESNTEXIST'
 
     response = test_client.get(url)
 
@@ -161,7 +166,7 @@ def test_success_update_user(test_client, test_db_patch, json_header):
     payload = {
         "first_name" : "Akshay",
         "last_name" : "Sharma",
-        "username" : "SHARMAA2",
+        "umnetID" : "SHARMAA2",
         "password" : "akshay234",
         "public_key" : "akshay_pk"
         }
@@ -172,14 +177,14 @@ def test_success_update_user(test_client, test_db_patch, json_header):
     assert b'User SHARMAA2 updated successfully! :)' in response.data
 
     # Check the db to see if the updates were successful
-    db_user = mongo.db.users.find_one({"username" : "SHARMAA2"})
+    db_user = mongo.db.users.find_one({"umnetID" : "SHARMAA2"})
     assert 'akshay234' == db_user["password"]
 
     # change the password back to original (bonus test lol)
     payload = {
         "first_name" : "Akshay",
         "last_name" : "Sharma",
-        "username" : "SHARMAA2",
+        "umnetID" : "SHARMAA2",
         "password" : "akshay123",
         "public_key" : "akshay_pk"
         }
@@ -190,7 +195,7 @@ def test_success_update_user(test_client, test_db_patch, json_header):
     assert b'User SHARMAA2 updated successfully! :)' in response.data
 
     # Check if the database was updated successfully
-    db_user = mongo.db.users.find_one({"username" : "SHARMAA2"})
+    db_user = mongo.db.users.find_one({"umnetID" : "SHARMAA2"})
     assert 'akshay123' == db_user["password"]
 
 
@@ -200,7 +205,7 @@ def test_failure_update_user_user_not_found(test_client, test_db_patch, json_hea
     payload = {
         "first_name" : "Fake",
         "last_name" : "User",
-        "username" : "DOES_NOT_EXIST",
+        "umnetID" : "DOES_NOT_EXIST",
         "password" : "fake123",
         "public_key" : "fake_pk"
         }
@@ -217,7 +222,7 @@ def test_failure_update_user_incomplete_payload(test_client, test_db_patch, json
     payload = {
         "first_name" : "Akshay",
         "last_name" : "Sharma",
-        "username" : "SHARMAA2",
+        "umnetID" : "SHARMAA2",
         "password" : "akshay123"
         }
 
