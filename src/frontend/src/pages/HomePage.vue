@@ -4,6 +4,7 @@
   <div class="wrapper">
     <Wallet class="wallet-component"/>
     <CreateTransaction class="transaction-component"/>
+    <Mining class="mining-component"/>
   </div>
 </div>
 </template>
@@ -13,12 +14,14 @@ import { Component, Vue } from "vue-property-decorator";
 import Wallet from "../components/Wallet.vue";
 import CreateTransaction from "../components/CreateTransaction.vue";
 import NavBar from "../components/NavBar.vue";
+import Mining from "../components/Mining.vue";
 
 @Component({
   components: {
     Wallet,
     CreateTransaction,
     NavBar,
+    Mining,
   },
 })
 export default class HomePage extends Vue {}
@@ -38,9 +41,11 @@ export default class HomePage extends Vue {}
   box-shadow: $box-shadow-hover;
   border-radius: $box-border-radius;
   width: $home-page-wrapper-size;
-  min-width: $home-page-wrapper-min-size;
+  min-width: $home-page-wrapper-min-width;
+  max-width: $home-page-wrapper-max-width;
   height: $home-page-wrapper-size;
-  min-height: $home-page-wrapper-min-size;
+  min-height: $home-page-wrapper-min-height;
+  max-height: $home-page-wrapper-max-height;
   border: $home-page-border;
 }
 
@@ -49,7 +54,14 @@ export default class HomePage extends Vue {}
 }
 
 .transaction-component {
-  position: relative;
-  bottom: $home-page-transaction-bottom;
+  position: absolute;
+  bottom: $home-page-button-bottom;
+  left: $home-page-button-position;
+}
+
+.mining-component {
+  position: absolute;
+  bottom: $home-page-button-bottom;
+  right: $home-page-button-position;
 }
 </style>
