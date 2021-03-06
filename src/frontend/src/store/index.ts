@@ -61,7 +61,7 @@ export default new Vuex.Store({
     password: "12345",
     firstName: "FirstName",
     lastName: "LastName",
-    mining: true,
+    mining: false,
   },
   getters: {
     walletId: (state) => {
