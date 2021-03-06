@@ -12,9 +12,9 @@ if os.environ.get('SERVICE_IN_DOCKER', False):
 else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
-from shared.exceptions import IncorrectPayloadException, TransactionVerificationException, BisonCoinException, WalletVerificationException
+from shared.exceptions import IncorrectPayloadException, TransactionVerificationException, BisonCoinException, WalletVerificationException, ReceiverException
 from shared.utils import send_get_request, send_post_request, BisonCoinUrls
-from shared.httpcodes import HttpCode
+from shared import HttpCode
 
 blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
 mining_url = BisonCoinUrls.mining_url
