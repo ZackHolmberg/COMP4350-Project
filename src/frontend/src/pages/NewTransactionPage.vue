@@ -1,10 +1,19 @@
 <template>
   <div class="new-transaction">
     <div class="transaction-wrapper">
-      <p class="contact-text">Recipient: </p>
-      <TextInput id=contact-input class="new-transaction-input" label="Email"/>
-      <p class="amount-text">Amount: </p>
-      <TextInput id=amount-input class="new-transaction-input" label="0.0 BSC"/>
+      <p class="transaction-text">Recipient: </p>
+      <TextInput 
+        id=contact-input 
+        class="new-transaction-input" 
+        label="Email" 
+        :disable="false"
+      />
+      <p class="transaction-text">Amount: </p>
+      <TextInput 
+        id=amount-input 
+        class="new-transaction-input" 
+        label="0.0 BSC" 
+        :disable="false"/>
       <Button 
         id=transaction-cancel 
         class="transaction-cancel-button" 
@@ -15,7 +24,7 @@
       />
       <Button 
         id=transaction-send 
-        class="send-button" 
+        class="transaction-send-button" 
         dest="/home" 
         label="Send" 
         size="small"
@@ -50,64 +59,43 @@ export default class NewTransactionPage extends Vue {
 
 .transaction-wrapper {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: $transaction-wrapper-top;
   left: 0;
   right: 0;
   margin: auto;
   padding: 1%;
   text-align: center;
-  border-radius: 10px;
-  display: inline-block;
-  width: 600px;
-  height: 67.5%;
+  width: $transaction-wrapper-width;
 }
 
 .new-transaction {
-  margin-top: 100px;
-  text-align: center;
-  padding: 2px;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: $background-color;
 }
 
-.send-button {
+.transaction-send-button {
   position: absolute;
-  left: 20%;
-  padding: 10px;
+  left: $transaction-button-position;
+  padding: $transaction-button-padding;
 }
 
 .transaction-cancel-button {
   position: absolute;
-  right: 20%;
-  padding: 10px;
+  right: $transaction-button-position;
+  padding: $transaction-button-padding;
 }
 
-.amount-text {
+.transaction-text {
   position: absolute;
-  left: 80px;
-  padding-top: 20px;
-  margin-right: 5px;
-  font-size: 20px;
+  left: $transaction-text-left;
+  padding-top: $transaction-text-padding-top;
+  font-size: $transaction-text-font-size;
   font-weight: bold;
-  color: white;
-}
-
-.contact-text {
-  position: absolute;
-  left: 80px;
-  padding-top: 20px;
-  margin-right: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
+  color: $default-text-color;
 }
 
 .new-transaction-input {
   position: relative;
-  width: 1000px;
-  right: 150px;
+  width: $transaction-input-width;
+  right: $transaction-input-right;
 }
 </style>
