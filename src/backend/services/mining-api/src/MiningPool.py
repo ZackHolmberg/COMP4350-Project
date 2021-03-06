@@ -47,5 +47,4 @@ class MiningPool:
         with self._send:
             self._ready_to_mine = True
             self._send.notify_all()
-
     
