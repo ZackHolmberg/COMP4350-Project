@@ -112,7 +112,8 @@ def updateUser():
     try: 
         first_name = data["first_name"]
         last_name = data["last_name"]
-        password = data["password"]
+        curr_password = data["curr_password"]
+        new_password = data["new_password"]
         umnetID = data["umnetID"]
         public_key = data["public_key"]
     
@@ -122,7 +123,7 @@ def updateUser():
     user = {
         "first_name" : first_name,
         "last_name" : last_name,
-        "password" : password,
+        "password" : new_password,
         "public_key" : public_key
     }
 
@@ -131,6 +132,9 @@ def updateUser():
         if usr is None:
             raise Exception("user doesn't exist")
 
+        if usr["password"] != curr_password:
+            raise Exception("password verification failed")
+        
         res = mongo.db.users.update_one({"umnetID" : umnetID.upper()}, {"$set" : user})
     except Exception as e:
         return jsonify(err=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, error=str(e)), HttpCode.BAD_REQUEST.value

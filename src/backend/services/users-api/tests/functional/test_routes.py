@@ -167,12 +167,21 @@ def test_success_update_user(test_client, test_db_patch, json_header):
         "first_name" : "Akshay",
         "last_name" : "Sharma",
         "umnetID" : "SHARMAA2",
-        "password" : "akshay234",
+        "curr_password" : "akshay123",
+        "new_password" : "akshay234",
         "public_key" : "akshay_pk"
         }
 
     response = test_client.post(url, data=json.dumps(payload), headers=json_header)
 
+    # Check the response to see if its correct 
+    assert b'User SHARMAA2 updated successfully! :)' in response.data
+
+    # Check the db to see if the updates were successful
+    db_user = mongo.db.users.find_one({"umnetID" : "SHARMAA2"})
+    assert 'akshay234' == db_user["password"]
+
+    # Try changing it back with wrong password
     # Check the response to see if it's correct 
     assert b'User SHARMAA2 updated successfully! :)' in response.data
 
@@ -185,7 +194,26 @@ def test_success_update_user(test_client, test_db_patch, json_header):
         "first_name" : "Akshay",
         "last_name" : "Sharma",
         "umnetID" : "SHARMAA2",
-        "password" : "akshay123",
+        "curr_password" : "akshay123",
+        "new_password" : "akshay123",
+        "public_key" : "akshay_pk"
+        }
+
+    response = test_client.post(url, data=json.dumps(payload), headers=json_header)
+
+    # Check if the response is correct
+    assert b'"password verification failed"' in response.data
+    # Check if the pw in database is still correct
+    db_user = mongo.db.users.find_one({"umnetID" : "SHARMAA2"})
+    assert 'akshay234' == db_user["password"]
+
+    # change the password back to original (bonus test lol)
+    payload = {
+        "first_name" : "Akshay",
+        "last_name" : "Sharma",
+        "umnetID" : "SHARMAA2",
+        "curr_password" : "akshay234",
+        "new_password" : "akshay123",
         "public_key" : "akshay_pk"
         }
 
@@ -206,7 +234,8 @@ def test_failure_update_user_user_not_found(test_client, test_db_patch, json_hea
         "first_name" : "Fake",
         "last_name" : "User",
         "umnetID" : "DOES_NOT_EXIST",
-        "password" : "fake123",
+        "curr_password" : "fake123",
+        "new_password" : "fake123",
         "public_key" : "fake_pk"
         }
 
