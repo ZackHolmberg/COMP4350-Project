@@ -1,21 +1,18 @@
-from src import app
+from src import app, cross_origin
 from flask import request, jsonify
 import requests
 import sys
 import os
-from flask_cors import CORS, cross_origin
-
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
 else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
-from shared import HttpCode, FailureReturnString
+from shared.utils import BisonCoinUrls
+from shared.exceptions import IncorrectPayloadException
 
-json_headers = {'Content-Type': 'application/json'}
+blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
 
 @cross_origin()
 @app.route("/")
@@ -25,17 +22,12 @@ def index():
 @cross_origin()
 @app.route("/create", methods=['POST'])
 def createWallet():
-    data = request.get_json(force=True)
-<<<<<<< HEAD
-=======
-    
->>>>>>> bf59cae78659c89d1133642cb3f47479545294d0
+    data = request.get_json()    
+
     if (data is None) or ("walletId" not in data):
-        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
-
-    response = requests.post(
-        "http://blockchain:5000/wallet/addWallet", json=data)
-
+        raise IncorrectPayloadException()
+    
+    response = requests.post( blockchain_wallet_url.format("addWallet"), json=data)
     return jsonify(response.json()), response.status_code
 
 @cross_origin()
@@ -45,10 +37,13 @@ def getWalletAmount():
     data = request.get_json(force=True)
 
     if (data is None) or ("walletId" not in data):
-        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
+        raise IncorrectPayloadException()
 
-
-    response = requests.get(
-        "http://blockchain:5000/wallet/balance", json=data)
-
+    response = requests.get( blockchain_wallet_url.format("balance"), json=data)
     return jsonify(response.json()), response.status_code
+
+
+@app.errorhandler(IncorrectPayloadException)
+def handle_wallet_error(e):
+    return jsonify(error=e.json_message), e.return_code
+

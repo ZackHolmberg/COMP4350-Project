@@ -1,2 +1,2 @@
-from .HttpCodes import HttpCode
-from .ReturnStrings import FailureReturnString
+from .httpcodes import HttpCode
+from .returnstrings import FailureReturnString

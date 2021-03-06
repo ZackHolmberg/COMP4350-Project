@@ -1,12 +1,7 @@
 import time
 from .block import Block
 from .transaction import Transaction
-
-
-class WalletException(Exception):
-    def __init__(self, *args, **kwargs):
-        Exception.__init__(self, *args, **kwargs)
-
+from .exceptions import WalletException
 
 class Blockchain:
 

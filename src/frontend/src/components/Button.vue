@@ -1,6 +1,15 @@
 <template>
   <div>
-    <router-link :to="dest" class="button" tag="button" >{{
+    <router-link v-if="size == 'big' && type == 'default'" :to="dest" class="big-button default" tag="button">{{
+      label
+    }}</router-link>
+    <router-link v-else-if="size == 'small' && type == 'default'" :to="dest" class="button default" tag="button">{{
+      label
+    }}</router-link>
+    <router-link v-if="size == 'big' && type == 'cancel'" :to="dest" class="big-button cancel" tag="button">{{
+      label
+    }}</router-link>
+    <router-link v-else-if="size == 'small' && type == 'cancel'" :to="dest" class="button cancel" tag="button">{{
       label
     }}</router-link>
   </div>
@@ -13,27 +22,54 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class Button extends Vue {
   @Prop() private label!: string;
   @Prop() private dest!: string;
+  @Prop() private size!: string;
+  @Prop() private type!: string;
 }
 </script>
 
 <style lang="scss">
 @import "../style.scss";
+.cancel {
+  background-color: $cancel-button-background-color;
+}
+
+.default {
+  background-color: $button-background-color;
+}
+
+.big-button {
+  width: $big-button-width;
+  height: $big-button-height;
+  border-radius: $big-button-border-radius;
+  box-shadow: $box-shadow;
+  font-size: $big-button-font-size;
+  font-family: $default-font;
+  transition: $hover-transition;
+  border: $border-color;
+  color: $button-text;
+}
 
 .button {
-  background-color: $button-background-color;
-  width: 100px;
-  height: 50px;
-  border-radius: 25px;
+  width: $button-width;
+  height: $button-height;
+  border-radius: $button-border-radius;
   box-shadow: $box-shadow;
-  font-size: 16px;
-  transition: 0.2s linear;
+  font-size: $button-font-size;
+  font-family: $default-font;
+  transition: $hover-transition;
   border: $border-color;
   color: $button-text;
 }
 
 .button:hover {
   cursor: pointer;
-  transform: scale(1.25);
+  transform: $hover-transform-button;
+  box-shadow: $box-shadow-hover;
+}
+
+.big-button:hover {
+  cursor: pointer;
+  transform: $hover-transform-button;
   box-shadow: $box-shadow-hover;
 }
 </style>

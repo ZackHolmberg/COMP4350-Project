@@ -1,30 +1,23 @@
 <template>
-  <div class="create-transaction">
-    <BigButton id="transaction-button" dest="/transaction" label="New Transaction" />
+  <div>
+    <Button 
+      id="transaction-button" 
+      dest="/transaction" 
+      label="New Transaction" 
+      size="big"
+      type="default"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import BigButton from "../components/BigButton.vue";
+import Button from "../components/Button.vue";
 
 @Component({
   components: {
-    BigButton,
+    Button,
   },
 })
 export default class CreateTransaction extends Vue {}
 </script>
-
-<style lang="scss">
-@import "../style.scss";
-
-.create-transaction {
-  width: 60%;
-  height: 60%;
-  text-align: center;
-  border-radius: 10px;
-  display: inline-block;
-  margin: 25px;
-}
-</style>
