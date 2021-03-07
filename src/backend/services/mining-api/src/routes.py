@@ -67,7 +67,6 @@ def handle_proofs(message):
 
     # TODO reward the miner (create a new transaction and send it to blockchain)
 
-    # TODO send receivers the message to stop finding the proof
     socketio.emit("stop_finding", message)
 
 @app.errorhandler(IncorrectPayloadException)

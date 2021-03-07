@@ -96,7 +96,6 @@ def create_user():
 
     return jsonify(
         success = True,
-        message= 'User ' + first_name + ' ' + last_name + ' added successfully! :)'
     ), HttpCode.CREATED.value
 
 @app.route('/update', methods=['POST'])
@@ -134,8 +133,7 @@ def update_user():
         raise DatabaseVerificationException(str(e))
 
     return jsonify(
-        success = True,
-        message= 'User ' + umnetID +' updated successfully! :)'
+        success = True
     ), HttpCode.OK.value
 
 
