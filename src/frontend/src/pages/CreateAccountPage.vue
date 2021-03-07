@@ -85,13 +85,6 @@ export default class CreateAccountPage extends Vue {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.login-logo {
-  margin-bottom: $login-logo-margin;
-  margin-top: $login-logo-margin;
-  width: $login-logo-size;
-  height: $login-logo-size;
-}
-
 .create-account-button {
   margin-top: $create-account-button-margin-top;
   margin-bottom: $create-account-button-margin-bottom;
