@@ -23,7 +23,7 @@ def index():
 @app.route("/create", methods=['POST'])
 def createWallet():
     data = request.get_json()    
-
+    
     if (data is None) or ("walletId" not in data):
         raise IncorrectPayloadException()
     
@@ -33,7 +33,6 @@ def createWallet():
 @cross_origin()
 @app.route("/amount", methods=['POST'])
 def getWalletAmount():
-
     data = request.get_json(force=True)
 
     if (data is None) or ("walletId" not in data):
