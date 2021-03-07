@@ -1,102 +1,134 @@
-**IMPLEMENTED ENDPOINTS**: (please refer to user routes for returns):
+# User API
 
-- users/list(GET): returns a list of users present in the database
+## List Users
 
-    **response**:
+> users/list(GET): returns a list of users present in the database
 
+### Response
+
+```json
+{
+  "success": true,
+  "data": [
     {
-        status = True
-        data = [
-            {
-                first_name : string
-                last_name : string
-                umnetID : string
-                public_key : string
-            }
-        ]
-    }
+      "first_name": string,
+      "last_name": string,
+      "umnetID": string,
+      "public_key": string
+    },
+    ...
+  ]
+}
+```
 
-    -or-
+-or-
 
-    failure payload with err in json file
+```json
+{ "error": string }
+```
 
-- users/create(POST): add the user to the database, all the payload fields are required, returns an acknowledgment string
+## Create User
 
-    **payload**: 
-    
-    {
-        "first_name" : string
-        "last_name" : string
-        "umnetID" : string (UMNETID), unique
-        "public_key" : string, unique
-        "password" : string
-    }
+> users/create(POST): add the user to the database, all the payload fields are required, returns an acknowledgment string
 
-    **response**:
+### Payload
 
-    {
-        status : True
-        message : 'user {firstname} {lastname} added successfully! :)'
-    }
+```json
+{
+  "first_name": string,
+  "last_name": string,
+  "umnetID": string,
+  "public_key": string,
+  "password": string
+}
+```
 
-    -or-
+### Response
 
-    failure payload with err
+```json
+{ "success": true }
+```
 
+-or-
 
-- users/umnetID/<umnetID>(GET): returns the info of a particular user. 
+```json
+{ "error": string }
+```
 
-    **response**:
+## Get User
 
-    {
-        status : True
-        data : {
-            first_name : string
-            last_name : string
-            umnetID : string
-            public_key : string
-        }
-    }
+> users/umnetID/{{umnetID}}(GET): returns the info of a particular user.
 
-    -or-
+### Response
 
-    failure payload with data : error messafe
+```json
+{
+  "success": true,
+  "data": {
+    "first_name": string,
+    "last_name": string,
+    "umnetID": string,
+    "public_key": string
+  }
+}
+```
 
-- users/login (POST): returns true if login is successful else false
+-or-
 
-    **payload**: {
-        "umnetID": string
-        "password" : string
-    } 
+```json
+{ "error": string }
+```
 
-    **response**:
+## Login
 
-    {
-        success : True
-    }
+> users/login (POST): returns true if login is successful else false
 
-    -or-
+### Payload
 
-    failure payload with err
+```json
+{
+  "umnetID": string,
+  "password": string
+}
+```
 
-- users/update (POST): updates the user's info. CANNOT UPDATE UMNETID
+### Response
 
-    **payload**: {
-         "first_name": string
-         "last_name": string
-         "curr_password": string (used for verification)
-         "new_password": string (same as old password if you don't wanna change the password)
-         "umnetID": string
-         "public_key": string
-    }
+```json
+{ "success": true }
+```
 
-    **response**:
+-or-
 
-    {
-        status = True
-        message = 'user {umnetID} updated successfully! :)'
-    }
+```json
+{ "error": string }
+```
 
-    -or-
+## Update User
 
-    failure payload with error message in "err:"
+> users/update (POST): updates the user's info. CANNOT UPDATE UMNETID
+
+### Payload
+
+```json
+{
+"first_name": string,
+"last_name": string,
+"curr_password": string (used for verification),
+"new_password": string (same as old password if you don't wanna change the password),
+"umnetID": string,
+"public_key": string,
+}
+```
+
+### Response
+
+```json
+{ "success": true }
+```
+
+-or-
+
+```json
+{ "error": string }
+```

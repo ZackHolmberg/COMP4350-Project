@@ -1,35 +1,36 @@
 <template>
   <div class="new-transaction">
     <div class="transaction-wrapper">
-      <p class="transaction-text">Recipient: </p>
-      <TextInput 
-        id=contact-input 
-        class="new-transaction-input" 
-        label="Email" 
+      <p class="transaction-text">Recipient:</p>
+      <TextInput
+        id="contact-input"
+        class="new-transaction-input"
+        label="Email"
         :disable="false"
       />
-      <p class="transaction-text">Amount: </p>
-      <TextInput 
-        id=amount-input 
-        class="new-transaction-input" 
-        label="0.0 BSC" 
-        :disable="false"/>
-      <Button 
-        id=transaction-cancel 
-        class="transaction-cancel-button" 
-        dest="/home" 
-        label="Cancel" 
+      <p class="transaction-text">Amount:</p>
+      <TextInput
+        id="amount-input"
+        class="new-transaction-input"
+        label="0.0 BSC"
+        :disable="false"
+      />
+      <Button
+        id="transaction-cancel"
+        class="transaction-cancel-button"
+        dest="/home"
+        label="Cancel"
         size="small"
         type="cancel"
       />
-      <Button 
-        id=transaction-send 
-        class="transaction-send-button" 
-        dest="/home" 
-        label="Send" 
+      <Button
+        id="transaction-send"
+        class="transaction-send-button"
+        dest="/home"
+        label="Send"
         size="small"
         type="default"
-        @click.native="newTransaction" 
+        @click.native="newTransaction"
       />
     </div>
   </div>
@@ -48,9 +49,9 @@ import Button from "../components/Button.vue";
 })
 export default class NewTransactionPage extends Vue {
   newTransaction() {
-     const values = { amount: 10, contact: "email"};
-     this.$store.dispatch("ACTION_SEND_TRANSACTION", values);
-  }  
+    const values = { amount: 10, contact: "email" };
+    this.$store.dispatch("ACTION_SEND_TRANSACTION", values);
+  }
 }
 </script>
 

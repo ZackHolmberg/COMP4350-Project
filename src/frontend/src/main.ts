@@ -6,21 +6,23 @@ import HomePage from "./pages/HomePage.vue"
 import LoginPage from "./pages/LoginPage.vue"
 import NewTransactionPage from "./pages/NewTransactionPage.vue"
 import ViewAccountPage from "./pages/ViewAccountPage.vue"
+import CreateAccountPage from "./pages/CreateAccountPage.vue";
 
 Vue.use(VueRouter);
 
-const router = new VueRouter({
-  mode: 'history',
+export const router = new VueRouter({
+  mode: "history",
   routes: [
-    { path: '/', component: LoginPage },
-    { path: '/home', component: HomePage },
-    { path: '/transaction', component: NewTransactionPage},
+    { path: "/", component: LoginPage },
+    { path: "/home", component: HomePage },
+    { path: "/transaction", component: NewTransactionPage },
+    { path: "/createAccount", component: CreateAccountPage },
     { path: '/account', component: ViewAccountPage},
-  ]
+  ],
 });
 
 new Vue({
   router,
   store,
-  render: h => h(App)
-}).$mount('#app');
+  render: (h) => h(App),
+}).$mount("#app");
