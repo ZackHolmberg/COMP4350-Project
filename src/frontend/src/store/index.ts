@@ -56,6 +56,7 @@ Vue.use(VueToast);
 
 const EMPTY_TEXT_FIELD_ERROR =
   "One or more input fields are empty. Please fill out all input fields.";
+const ERROR_STRING = "An error occurred. Please try again.";
 
 export default new Vuex.Store({
   state: {
@@ -68,6 +69,7 @@ export default new Vuex.Store({
     firstName: "FirstName",
     lastName: "LastName",
     mining: false,
+    editing: false,
   },
   getters: {
     loading: (state) => {
@@ -97,6 +99,9 @@ export default new Vuex.Store({
     mining: (state) => {
       return state.mining;
     },
+    editing: (state) => {
+      return state.editing;
+    },
   },
   mutations: {
     MUTATATION_SET_LOADING(state, loading) {
@@ -108,8 +113,62 @@ export default new Vuex.Store({
     MUTATATION_SET_MINING(state, mining) {
       state.mining = mining;
     },
+    MUTATATION_SET_EDITING(state, editing) {
+      state.editing = editing;
+    },
+    MUTATATION_SET_FIRST_NAME(state, firstName) {
+      state.firstName = firstName;
+    },
+    MUTATATION_SET_LAST_NAME(state, lastName) {
+      state.lastName = lastName;
+    },
+    MUTATATION_SET_PASSWORD(state, password) {
+      state.password = password;
+    },
   },
   actions: {
+    ACTION_UPDATE_USER({ commit, getters }, values) {
+      commit("MUTATATION_SET_LOADING", true);
+
+      const password = values.password ? values.password : getters.password;
+      const firstName = values.firstName ? values.firstName : getters.firstName;
+      const lastName = values.lastName ? values.lastName : getters.lastName;
+
+      axios
+        .post("http://localhost/users/update", {
+          "first_name": firstName,
+          "last_name": lastName,
+          "umnetID": getters.umnetId,
+          "public_key": getters.walletId,
+          "curr_password": getters.password,
+          "new_password": password
+        })
+        .then(
+          () => {
+            commit("MUTATION_SET_WALLET_CREATED", true);
+            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATATION_SET_FIRST_NAME", firstName);
+            commit("MUTATATION_SET_LAST_NAME", lastName);
+            commit("MUTATATION_SET_PASSWORD", password);
+          },
+          (err) => {
+            commit("MUTATATION_SET_LOADING", false);
+
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : ERROR_STRING
+            Vue.$toast.error(message
+              ,
+              {
+                message: message,
+                duration: 3000,
+                position: "top",
+                dismissible: true,
+              }
+            );
+          }
+        );
+    },
     ACTION_INITIALIZE_WALLET({ commit, getters, dispatch }) {
       commit("MUTATATION_SET_LOADING", true);
       axios
@@ -125,7 +184,7 @@ export default new Vuex.Store({
           (err) => {
             const message = err.response && err.response.data.error
               ? err.response.data.error
-              : "An error occurred. Please try again."
+              : ERROR_STRING
             Vue.$toast.error(message
               ,
               {
@@ -153,7 +212,7 @@ export default new Vuex.Store({
           (err) => {
             const message = err.response && err.response.data.error
               ? err.response.data.error
-              : "An error occurred. Please try again."
+              : ERROR_STRING
             Vue.$toast.error(message
               ,
               {
@@ -179,6 +238,7 @@ export default new Vuex.Store({
 
       transaction.id = getTransactionId(transaction);
       transaction.signature = sign(transaction, getters.privateKey);
+      commit("MUTATATION_SET_LOADING", true);
 
       axios
         .post("http://localhost/transactions/create", {
@@ -200,14 +260,16 @@ export default new Vuex.Store({
           }
         },
           (err) => {
+            commit("MUTATATION_SET_LOADING", false);
+
             Vue.$toast.error(
               err.response.data.error
                 ? err.response.data.error
-                : "An error occurred. Please try again.",
+                : ERROR_STRING,
               {
                 message: err.response.data.error
                   ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                  : ERROR_STRING,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -232,8 +294,6 @@ export default new Vuex.Store({
         });
         return;
       }
-
-
       // If we have two valid fields, send off to auth service for login
 
       commit("MUTATATION_SET_LOADING", true);
@@ -264,7 +324,7 @@ export default new Vuex.Store({
 
             const message = err.response && err.response.data.error
               ? err.response.data.error
-              : "An error occurred. Please try again."
+              : ERROR_STRING
             Vue.$toast.error(message
               ,
               {
@@ -330,7 +390,7 @@ export default new Vuex.Store({
 
             const message = err.response && err.response.data.error
               ? err.response.data.error
-              : "An error occurred. Please try again."
+              : ERROR_STRING
             Vue.$toast.error(message
               ,
               {
