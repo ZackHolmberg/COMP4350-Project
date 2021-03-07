@@ -85,7 +85,7 @@ or
 }
 ```
 
-## Verify transaction amount
+## Create a new transaction
 
 > `POST` <http://localhost/blockchain/wallet/createTransaction>
 
@@ -115,6 +115,6 @@ or
 400
 
 {
-  "err": "no corresponding wallet for id"
+  "err": string
 }
 ```
