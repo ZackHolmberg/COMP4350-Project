@@ -35,7 +35,6 @@ Required JSON:
 
 Example return:
 
-
 ```json
 200
 
@@ -43,6 +42,7 @@ Example return:
   "success": true
 }
 ```
+
 or
 
 ```json
@@ -87,14 +87,15 @@ or
 
 ## Verify transaction amount
 
-> `POST` <http://localhost/blockchain/wallet/verifyAmount>
+> `POST` <http://localhost/blockchain/wallet/createTransaction>
 
 Required JSON:
 
 ```json
 {
-  "walletId": string,
-  "amount": int
+  "from": string,
+  "amount": int,
+  "to": string
 }
 ```
 

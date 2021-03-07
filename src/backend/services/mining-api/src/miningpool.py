@@ -33,7 +33,6 @@ class MiningPool:
                         while not self._ready_to_mine:
                             self._send.wait()
 
-                        print('ready to mine is set to false')
                         self._ready_to_mine = False
                     receiver(last_transaction)
 

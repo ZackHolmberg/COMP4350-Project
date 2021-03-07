@@ -49,9 +49,6 @@ def proof():
 
     blockchain.append_block_to_chain(new_block, proof)
 
-    blockchain.subtract_from_wallet(new_transaction.from_address, new_transaction.amount)
-    blockchain.add_to_wallet(new_transaction.to_address, new_transaction.amount)
-    
     return jsonify(success=True), HttpCode.CREATED.value
 
 @app.route('/wallet/checkWallet', methods=['POST'])
@@ -59,7 +56,6 @@ def check_wallet_exists():
     try:
         data = request.get_json()
         wallet_id = data["walledId"]
-        
         exists = False
         if wallet_id in blockchain.wallets:
             exists =True
@@ -81,18 +77,25 @@ def add_wallet():
         raise IncorrectPayloadException()
 
 
-@app.route('/wallet/verifyAmount', methods=['POST'])
-def verify_amount():
+@app.route('/wallet/createTransaction', methods=['POST'])
+def create_transaction():
     try:
         data = request.get_json()
-        wallet_id = data["walletId"]
+        wallet_id = data["from"]
         amount = data["amount"]
-        valid = blockchain.verify_wallet_amount(wallet_id, amount)
-        return jsonify(valid=valid), HttpCode.OK.value
+        receiver = data["to"]
 
     except KeyError as e:
         raise IncorrectPayloadException()
 
+    valid = blockchain.verify_wallet_amount(wallet_id, amount)
+    if not valid:
+        raise WalletException("Not Enough Coins to create the transaction")
+
+    blockchain.subtract_from_wallet(wallet_id, amount)
+    blockchain.add_to_wallet(receiver, amount)
+    
+    return jsonify(valid=valid), HttpCode.OK.value
 
 @app.route('/wallet/balance', methods=['GET'])
 def get_wallet_amount():

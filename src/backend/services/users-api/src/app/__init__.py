@@ -10,7 +10,7 @@ if os.environ.get('SERVICE_IN_DOCKER', False):
 else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
-from shared import HttpCode, FailureReturnString, config
+from shared import config, HttpCode
 
 
 app = Flask(__name__)

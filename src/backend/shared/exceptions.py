@@ -10,16 +10,21 @@ class BisonCoinException(Exception):
 
 class IncorrectPayloadException(BisonCoinException):
     def __init__(self):
-        super().__init__(json_message=FailureReturnString.INCORRECT_PAYLOAD.value, return_code=HttpCode.BAD_REQUEST.value)
+        super().__init__(FailureReturnString.INCORRECT_PAYLOAD.value, HttpCode.BAD_REQUEST.value)
 
 class TransactionVerificationException(BisonCoinException):
     def __init__(self, json_message=FailureReturnString.SIGNATURE_VERFICATION_FAILURE.value, return_code= HttpCode.BAD_REQUEST.value):
-        super().__init__(json_message=json_message, return_code=return_code)
-
-class WalletVerificationException(BisonCoinException):
-    def __init__(self):
-        super().__init__(json_message=FailureReturnString.WALLET_VERFICATION_FAILURE.value, return_code=HttpCode.BAD_REQUEST.value)
+        super().__init__(json_message, return_code)
 
 class ReceiverException(BisonCoinException):
     def __init__(self):
-        super().__init__(json_message=FailureReturnString.RECEIVER_NOT_PRESENT.value, return_code=HttpCode.BAD_REQUEST.value)
+        super().__init__(FailureReturnString.RECEIVER_NOT_PRESENT.value, HttpCode.BAD_REQUEST.value)
+
+class UserNotFoundException(BisonCoinException):
+    def __init__(self):
+        super().__init__(FailureReturnString.USER_NOT_FOUND.value, HttpCode.BAD_REQUEST.value)
+
+class DatabaseVerificationException(BisonCoinException):
+    def __init__(self, error_messsage= "Unknown Error"):
+        self.error_message = error_messsage
+        super().__init__(FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, HttpCode.BAD_REQUEST.value)

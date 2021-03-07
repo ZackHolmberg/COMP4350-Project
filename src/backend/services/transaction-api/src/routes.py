@@ -12,9 +12,9 @@ if os.environ.get('SERVICE_IN_DOCKER', False):
 else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
-from shared.exceptions import IncorrectPayloadException, TransactionVerificationException, BisonCoinException, WalletVerificationException, ReceiverException
+from shared.exceptions import IncorrectPayloadException, TransactionVerificationException, BisonCoinException, ReceiverException
 from shared.utils import send_get_request, send_post_request, BisonCoinUrls
-from shared import HttpCode
+from shared import HttpCode, FailureReturnString
 
 blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
 mining_url = BisonCoinUrls.mining_url
@@ -42,13 +42,16 @@ def validate_signature(id, signature, address):
 # Service Requests
 ##############################
 
-def verify_wallet_amount(address, amount):
-    req_body = {"walletId": address, "amount": amount}
+def create_wallet_transaction(address, amount, receiver):
+    req_body = {"from": address, "amount": amount, "to": receiver}
 
-    response = send_post_request(blockchain_wallet_url.format("verifyAmount"), req_body)
+    response = send_post_request(blockchain_wallet_url.format("createTransaction"), req_body)
 
-    if response.status_code is not HttpCode.OK.value or not response.json()["valid"]:
-        raise WalletVerificationException()
+    if response.status_code is not HttpCode.OK.value:
+        if "error" not in response.json():
+            raise BisonCoinException(FailureReturnString.TRANSACTION_CREATION_FAILURE.value, response.status_code)
+        else:
+            raise BisonCoinException(response.json()["error"], response.status_code)
 
 def send_to_mine(body):
     response = send_post_request(mining_url.format("queue"), body)
@@ -103,9 +106,8 @@ def createTransaction():
         raise TransactionVerificationException() 
 
     # TODO do verification if the user is logged in
-    verify_wallet_amount(from_address, amount)
     verify_receiver(to_address)
-
+    create_wallet_transaction(from_address, amount, to_address)
     send_to_mine(data)
 
     remaining_amount = get_remaining_wallet_amount(from_address, amount)
@@ -114,7 +116,6 @@ def createTransaction():
 
 @app.errorhandler(IncorrectPayloadException)
 @app.errorhandler(TransactionVerificationException)
-@app.errorhandler(WalletVerificationException)
 @app.errorhandler(BisonCoinException)
 @app.errorhandler(ReceiverException)
 def handle_transactions_error(e):

@@ -56,11 +56,13 @@ def test_add_wallet(test_client):
 
 
 def test_verify_amount(test_client):
-    url = '/wallet/verifyAmount'
-    data1 = {'walletId': "fake_wallet_id",
-             'amount': 0}
-    data2 = {'walletId': "fake_wallet_id",
-             'amount': 15}
+    url = '/wallet/createTransaction'
+    data1 = {'from': "fake_wallet_id",
+             'amount': 0,
+             'to': "another"}
+    data2 = {'from': "fake_wallet_id",
+             'amount': 15,
+             'to': "another"}
 
     response = test_client.post(url, data=json.dumps(data1), headers=headers)
 
