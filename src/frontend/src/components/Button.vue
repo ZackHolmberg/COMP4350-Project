@@ -1,29 +1,42 @@
 <template>
   <div>
-    <router-link v-if="size == 'big' && type == 'default'" :to="dest" class="big-button default" tag="button">{{
-      label
-    }}</router-link>
-    <router-link v-else-if="size == 'small' && type == 'default'" :to="dest" class="button default" tag="button">{{
-      label
-    }}</router-link>
-    <router-link v-if="size == 'big' && type == 'cancel'" :to="dest" class="big-button cancel" tag="button">{{
-      label
-    }}</router-link>
-    <router-link v-else-if="size == 'small' && type == 'cancel'" :to="dest" class="button cancel" tag="button">{{
-      label
-    }}</router-link>
+    <router-link :to="dest" v-bind:class="getClass()" tag="button">
+      <Circle2 class="loading" v-if="loading" />
+      <span v-else>{{ label }}</span></router-link
+    >
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import Circle2 from "vue-loading-spinner/src/components/Circle2.vue";
 
-@Component
+@Component({
+  components: {
+    Circle2,
+  },
+})
 export default class Button extends Vue {
   @Prop() private label!: string;
   @Prop() private dest!: string;
   @Prop() private size!: string;
   @Prop() private type!: string;
+
+  get loading() {
+    return this.$store.getters.loading;
+  }
+
+  getClass() {
+    if (this.size == "big" && this.type == "default") {
+      return "big-button default";
+    } else if (this.size == "small" && this.type == "default") {
+      return "button default";
+    } else if (this.size == "big" && this.type == "cancel") {
+      return "big-button cancel";
+    } else if (this.size == "small" && this.type == "cancel") {
+      return "button cancel";
+    }
+  }
 }
 </script>
 
@@ -71,5 +84,9 @@ export default class Button extends Vue {
   cursor: pointer;
   transform: $hover-transform-button;
   box-shadow: $box-shadow-hover;
+}
+
+.loading {
+  margin-left: $loading-spinner-margin;
 }
 </style>
