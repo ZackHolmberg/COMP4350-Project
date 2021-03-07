@@ -5,25 +5,30 @@
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
-    <TextInput 
-      id="username" 
-      label="Username" 
-      :disable="false"
+    <TextInput id="umnetId" label="umnetId" ref="umnetId" :disable="loading" />
+    <TextInput
+      id="password"
+      label="Password"
+      ref="password"
+      :disable="loading"
     />
-    <TextInput 
-      id="password" 
-      label="Password" 
-      :disable="false"
-    />
+
     <Button
       class="login-button"
       id="button"
-      dest="/home"
       label="Login"
+      dest=""
       size="small"
       type="default"
+      @click.native="login"
     />
-    <a class="create-account-link" href="TODO">Don't have an account? Create one now!</a>
+    <router-link
+      class="create-account-link"
+      to="/createAccount"
+      id="create-account-link"
+      tag="a"
+      >Don't have an account? Create one now!</router-link
+    >
   </div>
 </template>
 
@@ -39,6 +44,20 @@ import Button from "../components/Button.vue";
   },
 })
 export default class LoginPage extends Vue {
+  get loading() {
+    return this.$store.getters.loading;
+  }
+
+  get userError() {
+    return this.$store.getters.userError;
+  }
+
+  login() {
+    const umnetId = this.$refs.umnetId.inputData();
+    const password = this.$refs.password.inputData();
+    const values = { umnetId: umnetId, password: password };
+    this.$store.dispatch("ACTION_LOGIN", values);
+  }
 }
 </script>
 

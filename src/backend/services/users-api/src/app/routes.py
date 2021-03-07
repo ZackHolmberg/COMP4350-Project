@@ -8,7 +8,7 @@ from shared.exceptions import IncorrectPayloadException, UserNotFoundException, 
 @app.route("/")
 def index():
     return jsonify(
-        status=True,
+        success=True,
         message="Hello Users of " + mongo.db.name
     )
 
@@ -22,55 +22,55 @@ def login():
     except KeyError as e:
         raise IncorrectPayloadException()
 
-    user = mongo.db.users.find_one({"umnetID":umnetID})
+    user = mongo.db.users.find_one({"umnetID": umnetID})
 
-    return jsonify(success = (user["password"] == password))
+    return jsonify(success=(user["password"] == password))
 
 @app.route("/umnetID/<umnetID>" , methods=['GET'])
 def get_user(umnetID):
-
-    user = mongo.db.users.find_one({'umnetID' : umnetID.upper()})
+    user = mongo.db.users.find_one({'umnetID': umnetID.upper()})
 
     try:
         data = {
-            'first_name' : user['first_name'],
-            'last_name' : user['last_name'],
-            'umnetID' : user['umnetID'],
-            'public_key' : user['public_key']
+            'first_name': user['first_name'],
+            'last_name': user['last_name'],
+            'umnetID': user['umnetID'],
+            'public_key': user['public_key']
         }
     except Exception as e:
         raise UserNotFoundException()
 
     return jsonify(
-        status=True,
-        data = data
+        success=True,
+        data=data
     )
 
 @app.route("/list" , methods=['GET'])
 def get_all_users():
     userList = mongo.db.users.find()
-    
+
     user = {}
     data = []
 
     for usr in userList:
         user = {
-            'first_name' : usr['first_name'],
-            'last_name' : usr['last_name'],
-            'umnetID' : usr['umnetID'],
-            'public_key' : usr['public_key']
+            'first_name': usr['first_name'],
+            'last_name': usr['last_name'],
+            'umnetID': usr['umnetID'],
+            'public_key': usr['public_key']
         }
         data.append(user)
 
     return jsonify(
-        status=True,
+        success=True,
         data=data
     )
+
 
 @app.route('/create', methods=['POST'])
 def create_user():
     data = request.get_json()
-    try: 
+    try:
         first_name = data["first_name"]
         last_name = data["last_name"]
         password = data["password"]
@@ -102,22 +102,21 @@ def create_user():
 @app.route('/update', methods=['POST'])
 def update_user():
     data = request.get_json()
-    try: 
+    try:
         first_name = data["first_name"]
         last_name = data["last_name"]
         curr_password = data["curr_password"]
         new_password = data["new_password"]
         umnetID = data["umnetID"].upper()
         public_key = data["public_key"]
-    
     except KeyError as e:
         raise IncorrectPayloadException()
 
     user = {
-        "first_name" : first_name,
-        "last_name" : last_name,
-        "password" : new_password,
-        "public_key" : public_key
+        "first_name": first_name,
+        "last_name": last_name,
+        "password": new_password,
+        "public_key": public_key
     }
 
     usr = mongo.db.users.find_one({"umnetID" : umnetID}) 
@@ -148,3 +147,4 @@ def handle_database_error(e):
 @app.errorhandler(IncorrectPayloadException)
 def handle_userapi_error(e):
     return jsonify(error=e.json_message), e.return_code
+  
