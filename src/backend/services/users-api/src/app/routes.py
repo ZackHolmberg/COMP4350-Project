@@ -95,7 +95,7 @@ def create_user():
         raise DatabaseVerificationException(str(e))
 
     return jsonify(
-        status = True,
+        success = True,
         message= 'User ' + first_name + ' ' + last_name + ' added successfully! :)'
     ), HttpCode.CREATED.value
 
@@ -134,7 +134,7 @@ def update_user():
         raise DatabaseVerificationException(str(e))
 
     return jsonify(
-        status = True,
+        success = True,
         message= 'User ' + umnetID +' updated successfully! :)'
     ), HttpCode.OK.value
 
