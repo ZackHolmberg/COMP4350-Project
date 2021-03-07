@@ -1,12 +1,7 @@
 import time
 from .block import Block
 from .transaction import Transaction
-
-
-class WalletException(Exception):
-    def __init__(self, *args, **kwargs):
-        Exception.__init__(self, *args, **kwargs)
-
+from .exceptions import WalletException
 
 class Blockchain:
 
@@ -17,6 +12,10 @@ class Blockchain:
         self.initialize_chain()
         self.wallets = {}
 
+    def check_id_present(self, id):
+        if id not in self.wallets:
+            raise WalletException("no corresponding wallet for id")
+
     def add_wallet(self, id):
         if id in self.wallets:
             raise WalletException("wallet ID already exists")
@@ -25,22 +24,21 @@ class Blockchain:
             return True
 
     def add_to_wallet(self, id, amount):
+        self.check_id_present(id)
         self.wallets[id] += amount
         return self.wallets[id]
 
     def subtract_from_wallet(self, id, amount):
+        self.check_id_present(id)
         self.wallets[id] -= amount
         return self.wallets[id]
 
     def get_wallet_amount(self, id):
-        if id not in self.wallets:
-            raise WalletException("no corresponding wallet for id")
-        else:
-            return self.wallets[id]
+        self.check_id_present(id)
+        return self.wallets[id]
 
     def verify_wallet_amount(self, id, amount):
-        if id not in self.wallets:
-            raise WalletException("no corresponding wallet for id")
+        self.check_id_present(id)
         if self.wallets[id] < amount:
             return False
         else:

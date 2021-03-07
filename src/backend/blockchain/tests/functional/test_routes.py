@@ -52,15 +52,34 @@ def test_add_wallet(test_client):
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
     assert response.status_code == 400
-    assert response.json['err'] == "wallet ID already exists"
+    assert response.json['error'] == "wallet ID already exists"
 
+def test_receiver_notpresent(test_client):
+    url = '/wallet/createTransaction'
+    data = {'from': "fake_wallet_id",
+             'amount': 0,
+             'to': "another"}
+
+    response = test_client.post(url, data=json.dumps(data), headers=headers)
+
+    assert response.status_code == 400
+    assert b'id' in response.data
 
 def test_verify_amount(test_client):
-    url = '/wallet/verifyAmount'
-    data1 = {'walletId': "fake_wallet_id",
-             'amount': 0}
-    data2 = {'walletId': "fake_wallet_id",
-             'amount': 15}
+
+    url = '/wallet/addWallet'
+    data = {'walletId': "another"}
+
+    response = test_client.post(url, data=json.dumps(data), headers=headers)
+
+    url = '/wallet/createTransaction'
+    data1 = {'from': "fake_wallet_id",
+             'amount': 0,
+             'to': "another"}
+
+    data2 = {'from': "fake_wallet_id",
+             'amount': 15,
+             'to': "another"}
 
     response = test_client.post(url, data=json.dumps(data1), headers=headers)
 
@@ -69,8 +88,45 @@ def test_verify_amount(test_client):
 
     response = test_client.post(url, data=json.dumps(data2), headers=headers)
 
+    assert response.status_code == 400
+    assert b"Not Enough Coins to create the transaction" in response.data
+
+
+def test_valid_transaction(test_client):
+    url = '/wallet/addWallet'
+    data = {'walletId': "user1"}
+
+    response = test_client.post(url, data=json.dumps(data), headers=headers)
+
+    url = '/wallet/addWallet'
+    data = {'walletId': "user2"}
+
+    response = test_client.post(url, data=json.dumps(data), headers=headers)
+
+    url = '/wallet/createTransaction'
+    data = {'from': "user1",
+             'amount': 5,
+             'to': "user2"}
+
+    response = test_client.post(url, data=json.dumps(data), headers=headers)
+
     assert response.status_code == 200
-    assert response.json['valid'] == False
+    assert response.json['valid'] == True
+
+    data1 = {'walletId': "user1"}
+    data2 = {'walletId': "user2"}
+    url = '/wallet/balance'
+    
+    response = test_client.get(url, data=json.dumps(data1), headers=headers)
+
+    assert response.status_code == 200
+    assert response.json['amount'] == 5
+
+    
+    response = test_client.get(url, data=json.dumps(data2), headers=headers)
+
+    assert response.status_code == 200
+    assert response.json['amount'] == 15
 
 
 def test_get_wallet_amount(test_client):
@@ -86,4 +142,4 @@ def test_get_wallet_amount(test_client):
     response = test_client.get(url, data=json.dumps(data2), headers=headers)
 
     assert response.status_code == 400
-    assert response.json['err'] == "no corresponding wallet for id"
+    assert response.json['error'] == "no corresponding wallet for id"

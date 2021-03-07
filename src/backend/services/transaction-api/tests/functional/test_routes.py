@@ -98,8 +98,11 @@ def test_create_transaction_wrong_wallet_amount(test_client, json_header, reques
     }
     url = '/create'
 
-    requests_mock.post("http://blockchain:5000/wallet/verifyAmount",
+    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
                        json={"valid": False}, status_code=400)
+    
+    requests_mock.post("http://blockchain:5000/wallet/checkWallet",
+                       json={"valid": True}, status_code=200)
 
     response = test_client.post(url, data=json.dumps(data), headers=json_header)
 
@@ -120,7 +123,10 @@ def test_create_transaction_mining_fail(test_client, json_header, requests_mock,
 
     url = '/create'
 
-    requests_mock.post("http://blockchain:5000/wallet/verifyAmount",
+    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
+                       json={"valid": True}, status_code=200)
+
+    requests_mock.post("http://blockchain:5000/wallet/checkWallet",
                        json={"valid": True}, status_code=200)
 
     requests_mock.post("http://mining:5000/queue",
@@ -135,7 +141,10 @@ def test_create_transaction_mining_fail(test_client, json_header, requests_mock,
 
 def test_create_transaction_correct_payload(test_client, json_header, requests_mock, signature, public_key):
 
-    requests_mock.post("http://blockchain:5000/wallet/verifyAmount",
+    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
+                       json={"valid": True}, status_code=200)
+
+    requests_mock.post("http://blockchain:5000/wallet/checkWallet",
                        json={"valid": True}, status_code=200)
 
     requests_mock.post("http://mining:5000/queue",
@@ -159,7 +168,7 @@ def test_create_transaction_correct_payload(test_client, json_header, requests_m
 
 def test_create_transaction_incorrect_verification(test_client, json_header, requests_mock, signature, public_key):
 
-    requests_mock.post("http://blockchain:5000/wallet/verifyAmount",
+    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
                        json={"valid": True}, status_code=200)
 
     requests_mock.post("http://mining:5000/queue",
@@ -180,3 +189,30 @@ def test_create_transaction_incorrect_verification(test_client, json_header, req
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert b"err" in response.data
     assert b"verification" in response.data
+
+
+def test_create_transaction_receiver_verification_failure(test_client, json_header, requests_mock, signature, public_key):
+
+    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
+                       json={"valid": True}, status_code=200)
+
+    requests_mock.post("http://blockchain:5000/wallet/checkWallet",
+                       json={"valid": True}, status_code=500)
+
+    requests_mock.post("http://mining:5000/queue",
+                       json={"success": True}, status_code=201)
+    data = {
+        'id' : "TestSomethingElse",
+        'from' : public_key,
+        'to' : 'user2',
+        'amount' : 99,
+        'signature' : signature
+    }
+
+    url = '/create'
+
+
+    response = test_client.post(url, data=json.dumps(data), headers=json_header)
+
+    assert response.status_code == HttpCode.BAD_REQUEST.value
+    assert b"err" in response.data

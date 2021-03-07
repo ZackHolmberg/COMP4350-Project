@@ -1,16 +1,9 @@
 from src.app import app
 from flask import request, jsonify
 from src.app import mongo
-import sys
-import os
-
-if os.environ.get('SERVICE_IN_DOCKER', False):
-    sys.path.append(os.path.abspath(os.path.join('..', '')))
-else:
-    sys.path.append(os.path.abspath(os.path.join('../..', '')))
-
-from shared import HttpCode, FailureReturnString
-
+import sys, os
+from src.app import HttpCode
+from shared.exceptions import IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
 
 @app.route("/")
 def index():
@@ -23,21 +16,18 @@ def index():
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
-
     try:
         umnetID = data['umnetID'].upper()
         password = data['password']
-    except Exception as e:
-        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
+    except KeyError as e:
+        raise IncorrectPayloadException()
 
     user = mongo.db.users.find_one({"umnetID": umnetID})
 
     return jsonify(success=(user["password"] == password))
 
-
-@app.route("/umnetID/<umnetID>", methods=['GET'])
-def getUser(umnetID):
-
+@app.route("/umnetID/<umnetID>" , methods=['GET'])
+def get_user(umnetID):
     user = mongo.db.users.find_one({'umnetID': umnetID.upper()})
 
     try:
@@ -48,16 +38,15 @@ def getUser(umnetID):
             'public_key': user['public_key']
         }
     except Exception as e:
-        data = "user not found!"
+        raise UserNotFoundException()
 
     return jsonify(
         success=True,
         data=data
     )
 
-
-@app.route("/list", methods=['GET'])
-def getUsers():
+@app.route("/list" , methods=['GET'])
+def get_all_users():
     userList = mongo.db.users.find()
 
     user = {}
@@ -79,49 +68,48 @@ def getUsers():
 
 
 @app.route('/create', methods=['POST'])
-def createUser():
+def create_user():
     data = request.get_json()
     try:
         first_name = data["first_name"]
         last_name = data["last_name"]
         password = data["password"]
-        umnetID = data["umnetID"]
+        umnetID = data["umnetID"].upper()
         public_key = data["public_key"]
-
-    except Exception as e:
-        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
+    
+    except KeyError as e:
+        raise IncorrectPayloadException()
 
     user = {
-        "first_name": first_name,
-        "last_name": last_name,
-        "umnetID": umnetID.upper(),
-        "password": password,
-        "public_key": public_key
+        "first_name" : first_name,
+        "last_name" : last_name,
+        "umnetID" : umnetID,
+        "password" : password,
+        "public_key" : public_key
     }
 
     try:
         mongo.db.users.insert_one(user)
+
     except Exception as e:
-        return jsonify(error=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, err=str(e)), HttpCode.BAD_REQUEST.value
+        raise DatabaseVerificationException(str(e))
 
     return jsonify(
-        success=True,
-    ), 201
-
+        success = True,
+    ), HttpCode.CREATED.value
 
 @app.route('/update', methods=['POST'])
-def updateUser():
+def update_user():
     data = request.get_json()
     try:
         first_name = data["first_name"]
         last_name = data["last_name"]
         curr_password = data["curr_password"]
         new_password = data["new_password"]
-        umnetID = data["umnetID"]
+        umnetID = data["umnetID"].upper()
         public_key = data["public_key"]
-
-    except Exception as e:
-        return jsonify(error=FailureReturnString.INCORRECT_PAYLOAD.value), HttpCode.BAD_REQUEST.value
+    except KeyError as e:
+        raise IncorrectPayloadException()
 
     user = {
         "first_name": first_name,
@@ -130,19 +118,31 @@ def updateUser():
         "public_key": public_key
     }
 
-    try:
-        usr = mongo.db.users.find_one({"umnetID": umnetID.upper()})
-        if usr is None:
-            raise Exception("user doesn't exist")
+    usr = mongo.db.users.find_one({"umnetID" : umnetID}) 
 
-        if usr["password"] != curr_password:
-            raise Exception("password verification failed")
+    if usr is None:
+        raise DatabaseVerificationException("user doesn't exist")
 
-        res = mongo.db.users.update_one(
-            {"umnetID": umnetID.upper()}, {"$set": user})
+    if usr["password"] != curr_password:
+        raise DatabaseVerificationException("password verification failed")
+
+    try:        
+        res = mongo.db.users.update_one({"umnetID" : umnetID}, {"$set" : user})
+
     except Exception as e:
-        return jsonify(error=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, err=str(e)), HttpCode.BAD_REQUEST.value
+        raise DatabaseVerificationException(str(e))
 
     return jsonify(
-        success=True,
-    ), 200
+        success = True
+    ), HttpCode.OK.value
+
+
+@app.errorhandler(DatabaseVerificationException)
+def handle_database_error(e):
+    return jsonify(database_error=e.error_message, error=e.json_message), e.return_code
+
+@app.errorhandler(UserNotFoundException)
+@app.errorhandler(IncorrectPayloadException)
+def handle_userapi_error(e):
+    return jsonify(error=e.json_message), e.return_code
+  

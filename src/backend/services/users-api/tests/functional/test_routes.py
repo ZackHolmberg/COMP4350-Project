@@ -115,7 +115,7 @@ def test_create_error_duplicate_umnetID_and_password(test_client, test_db_patch,
     response = test_client.post(
         url, data=json.dumps(payload), headers=json_header)
 
-    assert b"Database schema validation failed! Please check your input and try again." in response.data
+    assert b"Database validation failed! Please check your input and try again." in response.data
 
     # duplicate private key
     payload = {
@@ -129,7 +129,7 @@ def test_create_error_duplicate_umnetID_and_password(test_client, test_db_patch,
     response = test_client.post(
         url, data=json.dumps(payload), headers=json_header)
 
-    assert b"Database schema validation failed! Please check your input and try again." in response.data
+    assert b"Database validation failed! Please check your input and try again." in response.data
 
 
 def test_create_error_incomplete_payload(test_client, test_db_patch, json_header):
@@ -162,7 +162,7 @@ def test_failure_get_user_by_umnetID_user_not_found(test_client, test_db_patch):
 
     response = test_client.get(url)
 
-    assert b'"user not found!"' in response.data
+    assert b'user not found' in response.data
 
 
 def test_success_update_user(test_client, test_db_patch, json_header):
@@ -250,7 +250,7 @@ def test_failure_update_user_user_not_found(test_client, test_db_patch, json_hea
     response = test_client.post(
         url, data=json.dumps(payload), headers=json_header)
 
-    assert b"Database schema validation failed! Please check your input and try again." in response.data
+    assert b"Database validation failed! Please check your input and try again." in response.data
 
 
 def test_failure_update_user_incomplete_payload(test_client, test_db_patch, json_header):

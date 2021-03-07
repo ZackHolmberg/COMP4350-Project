@@ -1,5 +1,5 @@
 import pytest
-from src.MiningPool import MiningPool 
+from src.miningpool import MiningPool 
 import mock
 import time
 import threading
@@ -42,7 +42,7 @@ def test_pool_start_mining (test_pool, test_receiver):
 
 def test_enter_new_data(test_pool, test_receiver):
     data = "Test"
-    test_pool.addToPool(data)
+    test_pool.add_to_pool(data)
     test_pool.start_thread()
     assert test_pool._mining_thread.is_alive()
     try_call_check(test_receiver)
@@ -50,7 +50,7 @@ def test_enter_new_data(test_pool, test_receiver):
 
 def test_enter_new_data_not_ready(test_pool, test_receiver):
     data = "Test"
-    test_pool.addToPool(data)
+    test_pool.add_to_pool(data)
     test_pool.start_thread()
     assert test_pool._mining_thread.is_alive()
     try_call_check(test_receiver)

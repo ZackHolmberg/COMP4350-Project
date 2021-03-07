@@ -4,7 +4,7 @@ from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 import codecs
 from Crypto.Random import get_random_bytes
-from src.routes import validateSignature
+from src.routes import validate_signature
 
 @pytest.fixture(scope='module')
 def key():
@@ -36,21 +36,21 @@ def test_validate_signature_non_encoded(public_key):
     signature = "A Non encoded Signature"
     id_ = "Something that was signed"
     try:
-        validateSignature(id_, signature, public_key)
+        validate_signature(id_, signature, public_key)
         assert False
     except Exception as e:
         assert True
 
 def test_validate_signature_correct(public_key, signature):
     try:
-        validateSignature("Test", signature, public_key)
+        validate_signature("Test", signature, public_key)
         assert True
     except Exception as e:
         assert False
 
 def test_validate_signature_incorrect(public_key, signature):
     try:
-        validateSignature("TestIncorrect", signature, public_key)
+        validate_signature("TestIncorrect", signature, public_key)
         assert True
     except Exception as e:
         assert False
@@ -59,7 +59,7 @@ def test_validate_signature_wrong_public_key(signature):
     key = RSA.generate(bits=1024, randfunc=get_random_bytes)
     public_key = key.public_key().exportKey()
     try:
-        validateSignature("Test", signature, public_key)
+        validate_signature("Test", signature, public_key)
         assert False
     except Exception as e:
         assert True
