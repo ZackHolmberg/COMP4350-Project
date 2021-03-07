@@ -56,6 +56,7 @@ Vue.use(VueToast);
 
 const EMPTY_TEXT_FIELD_ERROR =
   "One or more input fields are empty. Please fill out all input fields.";
+const ERROR_STRING = "An error occurred. Please try again.";
 
 export default new Vuex.Store({
   state: {
@@ -149,19 +150,17 @@ export default new Vuex.Store({
             commit("MUTATATION_SET_FIRST_NAME", firstName);
             commit("MUTATATION_SET_LAST_NAME", lastName);
             commit("MUTATATION_SET_PASSWORD", password);
-
-
           },
           (err) => {
             commit("MUTATATION_SET_LOADING", false);
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : ERROR_STRING
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -185,7 +184,7 @@ export default new Vuex.Store({
           (err) => {
             const message = err.response && err.response.data.error
               ? err.response.data.error
-              : "An error occurred. Please try again."
+              : ERROR_STRING
             Vue.$toast.error(message
               ,
               {
@@ -213,7 +212,7 @@ export default new Vuex.Store({
           (err) => {
             const message = err.response && err.response.data.error
               ? err.response.data.error
-              : "An error occurred. Please try again."
+              : ERROR_STRING
             Vue.$toast.error(message
               ,
               {
@@ -266,11 +265,11 @@ export default new Vuex.Store({
             Vue.$toast.error(
               err.response.data.error
                 ? err.response.data.error
-                : "An error occurred. Please try again.",
+                : ERROR_STRING,
               {
                 message: err.response.data.error
                   ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                  : ERROR_STRING,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -325,7 +324,7 @@ export default new Vuex.Store({
 
             const message = err.response && err.response.data.error
               ? err.response.data.error
-              : "An error occurred. Please try again."
+              : ERROR_STRING
             Vue.$toast.error(message
               ,
               {
@@ -391,7 +390,7 @@ export default new Vuex.Store({
 
             const message = err.response && err.response.data.error
               ? err.response.data.error
-              : "An error occurred. Please try again."
+              : ERROR_STRING
             Vue.$toast.error(message
               ,
               {

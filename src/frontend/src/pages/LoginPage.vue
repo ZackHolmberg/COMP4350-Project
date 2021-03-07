@@ -42,14 +42,6 @@ import Button from "../components/Button.vue";
     TextInput,
     Button,
   },
-  methods: {
-    login: function() {
-      const umnetId = this.$refs.umnetId.inputData();
-      const password = this.$refs.password.inputData();
-      const values = { umnetId: umnetId, password: password };
-      this.$store.dispatch("ACTION_LOGIN", values);
-    },
-  },
 })
 export default class LoginPage extends Vue {
   get loading() {
