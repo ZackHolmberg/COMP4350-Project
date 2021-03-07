@@ -183,14 +183,13 @@ export default new Vuex.Store({
             dispatch("ACTION_FETCH_WALLET_AMOUNT");
           },
           (err) => {
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : "An error occurred. Please try again."
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -212,14 +211,13 @@ export default new Vuex.Store({
             commit("MUTATATION_SET_LOADING", false);
           },
           (err) => {
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : "An error occurred. Please try again."
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -297,9 +295,6 @@ export default new Vuex.Store({
         });
         return;
       }
-
-      dispatch("ACTION_FETCH_WALLET_AMOUNT");
-
       // If we have two valid fields, send off to auth service for login
 
       commit("MUTATATION_SET_LOADING", true);
@@ -321,19 +316,20 @@ export default new Vuex.Store({
               position: "top",
               dismissible: true,
             });
+            dispatch("ACTION_FETCH_WALLET_AMOUNT");
+
             router.push("/home");
           },
           (err) => {
             commit("MUTATATION_SET_LOADING", false);
 
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : "An error occurred. Please try again."
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -393,14 +389,13 @@ export default new Vuex.Store({
           (err) => {
             commit("MUTATATION_SET_LOADING", false);
 
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : "An error occurred. Please try again."
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,

@@ -102,7 +102,7 @@ def createUser():
     try:
         mongo.db.users.insert_one(user)
     except Exception as e:
-        return jsonify(error=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, erroror=str(e)), HttpCode.BAD_REQUEST.value
+        return jsonify(error=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, err=str(e)), HttpCode.BAD_REQUEST.value
 
     return jsonify(
         success=True,
@@ -141,7 +141,7 @@ def updateUser():
         res = mongo.db.users.update_one(
             {"umnetID": umnetID.upper()}, {"$set": user})
     except Exception as e:
-        return jsonify(error=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, erroror=str(e)), HttpCode.BAD_REQUEST.value
+        return jsonify(error=FailureReturnString.DATABASE_VERIFICATION_FAILURE.value, err=str(e)), HttpCode.BAD_REQUEST.value
 
     return jsonify(
         success=True,

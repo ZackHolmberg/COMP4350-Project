@@ -22,7 +22,11 @@
       type="default"
       @click.native="login"
     />
-    <router-link to="/createAccount" id="create-account-link" tag="a"
+    <router-link
+      class="create-account-link"
+      to="/createAccount"
+      id="create-account-link"
+      tag="a"
       >Don't have an account? Create one now!</router-link
     >
   </div>
@@ -54,6 +58,13 @@ export default class LoginPage extends Vue {
 
   get userError() {
     return this.$store.getters.userError;
+  }
+
+  login() {
+    const umnetId = this.$refs.umnetId.inputData();
+    const password = this.$refs.password.inputData();
+    const values = { umnetId: umnetId, password: password };
+    this.$store.dispatch("ACTION_LOGIN", values);
   }
 }
 </script>
