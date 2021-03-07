@@ -15,17 +15,16 @@ import Circle2 from "vue-loading-spinner/src/components/Circle2.vue";
   components: {
     Circle2,
   },
-  computed: {
-    loading() {
-      return this.$store.getters.loading;
-    },
-  },
 })
 export default class Button extends Vue {
   @Prop() private label!: string;
   @Prop() private dest!: string;
   @Prop() private size!: string;
   @Prop() private type!: string;
+
+  get loading() {
+    return this.$store.getters.loading;
+  }
 
   getClass() {
     if (this.size == "big" && this.type == "default") {
@@ -88,6 +87,6 @@ export default class Button extends Vue {
 }
 
 .loading {
-  margin-left: 25%;
+  margin-left: $loading-spinner-margin;
 }
 </style>

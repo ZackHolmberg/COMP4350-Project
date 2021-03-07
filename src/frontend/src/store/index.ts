@@ -123,14 +123,13 @@ export default new Vuex.Store({
             dispatch("ACTION_FETCH_WALLET_AMOUNT");
           },
           (err) => {
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : "An error occurred. Please try again."
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -152,14 +151,13 @@ export default new Vuex.Store({
             commit("MUTATATION_SET_LOADING", false);
           },
           (err) => {
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : "An error occurred. Please try again."
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -201,21 +199,21 @@ export default new Vuex.Store({
             commit("MUTATATION_SET_LOADING", false);
           }
         },
-        (err) => {
-          Vue.$toast.error(
-            err.response.data.error
-              ? err.response.data.error
-              : "An error occurred. Please try again.",
-            {
-              message: err.response.data.error
+          (err) => {
+            Vue.$toast.error(
+              err.response.data.error
                 ? err.response.data.error
                 : "An error occurred. Please try again.",
-              duration: 3000,
-              position: "top",
-              dismissible: true,
-            }
-          );
-        });
+              {
+                message: err.response.data.error
+                  ? err.response.data.error
+                  : "An error occurred. Please try again.",
+                duration: 3000,
+                position: "top",
+                dismissible: true,
+              }
+            );
+          });
     },
 
     async ACTION_LOGIN({ commit, dispatch }, values) {
@@ -235,7 +233,6 @@ export default new Vuex.Store({
         return;
       }
 
-      dispatch("ACTION_FETCH_WALLET_AMOUNT");
 
       // If we have two valid fields, send off to auth service for login
 
@@ -258,17 +255,20 @@ export default new Vuex.Store({
               position: "top",
               dismissible: true,
             });
+            dispatch("ACTION_FETCH_WALLET_AMOUNT");
+
             router.push("/home");
           },
           (err) => {
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+            commit("MUTATATION_SET_LOADING", false);
+
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : "An error occurred. Please try again."
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,
@@ -326,14 +326,15 @@ export default new Vuex.Store({
             });
           },
           (err) => {
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : "An error occurred. Please try again.",
+            commit("MUTATATION_SET_LOADING", false);
+
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : "An error occurred. Please try again."
+            Vue.$toast.error(message
+              ,
               {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : "An error occurred. Please try again.",
+                message: message,
                 duration: 3000,
                 position: "top",
                 dismissible: true,

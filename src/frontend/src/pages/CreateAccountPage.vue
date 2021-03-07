@@ -1,8 +1,7 @@
 <template>
-  <div class="home">
+  <div class="create-account">
     <img
-      width="300px"
-      height="300px"
+      class="login-logo"
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
@@ -36,7 +35,7 @@
     />
 
     <Button
-      class="login-button"
+      class="create-account-button"
       id="create-account-button"
       dest=""
       label="Create Account"
@@ -78,29 +77,28 @@ export default class CreateAccountPage extends Vue {
 <style lang="scss">
 @import "../style.scss";
 
-.home {
+.create-account {
   text-align: center;
-  padding: 25px;
+  padding: $create-account-padding;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.login-button {
-  margin-top: 100px;
-  margin-bottom: 50px;
+.login-logo {
+  margin-bottom: $login-logo-margin;
+  margin-top: $login-logo-margin;
+  width: $login-logo-size;
+  height: $login-logo-size;
 }
 
-body {
-  background-color: $background-color;
+.create-account-button {
+  margin-top: $create-account-button-margin-top;
+  margin-bottom: $create-account-button-margin-bottom;
 }
 
-img {
-  margin-bottom: 100px;
-  margin-top: 100px;
-}
-
-a {
-  color: $link-color;
+.create-accounnt-image {
+  margin-bottom: $create-account-image-size;
+  margin-top: $create-account-image-size;
 }
 </style>
