@@ -3,6 +3,8 @@ from flask import request, jsonify
 from .miningpool import MiningPool
 import sys, os
 import threading
+import json
+from time import sleep
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -16,13 +18,16 @@ from shared import HttpCode
 COINBASE_AMOUNT = 10
 
 blockchain_url = BisonCoinUrls.blockchain_url
+blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
+
+ongoing_proof = None
+ongoing_transaction = None
+connected_clients = 0
 
 # This is temporary till we move mining to user devices
 
 difficulty = 4
 def mine(transaction):
-    # TODO actually mine
-
     # send transactions to blockchain
     response = send_post_request(blockchain_url.format("proof"), transaction)
    
@@ -31,12 +36,19 @@ def mine(transaction):
 
 def send_to_connected_clients(transaction):
     # ToDo
-    print("To Be Sent to Miner", transaction)
-    ongoing_proof_for_id = transaction["id"]
-    socketio.emit("find_proof", transaction)
+    global ongoing_proof, ongoing_transaction, connected_clients
 
-# transactions = MiningPool(sendToConnectedClients, True)
-transactions = MiningPool(mine, True)
+    print("To Be Sent to Miner", transaction)
+    ongoing_proof = transaction["id"]
+    ongoing_transaction = transaction
+
+    while (connected_clients == 0) : 
+        sleep(0.5)
+
+    socketio.emit("findProof", transaction)
+
+transactions = MiningPool(send_to_connected_clients, True)
+# transactions = MiningPool(mine, True)
 
 @app.route("/")
 def index():
@@ -45,7 +57,7 @@ def index():
 @app.route("/queue", methods= ["POST"])
 def add_data_to_queue():
     data = request.get_json()
-
+    
     if data is None:
         raise IncorrectPayloadException()
     
@@ -54,20 +66,54 @@ def add_data_to_queue():
     return jsonify(success=True), HttpCode.OK.value
     
 
+def valid_proof(hash):
+    return (hash.startswith('0' * difficulty))
+
+@socketio.on('connect')
+def client_connect():
+    global connected_clients
+    connected_clients += 1
+    print(connected_clients)
+
+@socketio.on('disconnect')
+def client_disconnect():
+    global connected_clients
+    connected_clients -= 1
+    print(connected_clients)
+
 @socketio.on('echo')
 def handle(message):
     socketio.emit("response", message)
 
 @socketio.on('proof')
 def handle_proofs(message):
-    transactions.ready_to_mine()
-    # TODO if proof for wrong id is received compare it with the current ongoing proof
+    global ongoing_proof, ongoing_transaction, COINBASE_AMOUNT, blockchain_url, blockchain_wallet_url, transactions
 
-    # TODO send the transaction to blockchain
+    if (ongoing_proof == message['id']):
+        if valid_proof(message["proof"]):
+            socketio.emit("stopProof", {})            
+            # send transactions to blockchain
+            block_data = {
+                    "proof": message["proof"], 
+                    "mining_data": {
+                        "miner" : message["walletId"],
+                        "reward" : COINBASE_AMOUNT
+                        }
+                    }
+            for key, value in ongoing_transaction.items():
+                block_data[key] = value
+            
+            response = send_post_request(blockchain_url.format("addBlock"), block_data)
+            if (response.status_code != HttpCode.OK.value):
+                # do not reward the miner if adding the block failed
+                return;
 
-    # TODO reward the miner (create a new transaction and send it to blockchain)
-
-    socketio.emit("stop_finding", message)
+            # reward the miner
+            reward = {"miner" : message["walletId"], "amount": COINBASE_AMOUNT}
+            send_post_request(blockchain_wallet_url.format("reward"), reward)
+            # new transactions are now ready to be mined
+            transactions.ready_to_mine()
+            emit('fetchWallet', {})
 
 @app.errorhandler(IncorrectPayloadException)
 def handle_payload_error(e):

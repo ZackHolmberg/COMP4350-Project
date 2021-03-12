@@ -25,17 +25,19 @@ def get_chain():
     return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
 
 
-@app.route('/proof', methods=['POST'])
+@app.route('/addBlock', methods=['POST'])
 def proof():
     data = request.get_json()
-    proof = '0' * Blockchain.difficulty
-    # proof = data["proof"]
     try :
         new_transaction = Transaction(
             data["from"], 
             data["to"], 
-            data["amount"]
+            data["amount"],
+            data["mining_data"]
         )
+
+        proof = data["proof"]
+        
     except KeyError as e:
         raise IncorrectPayloadException()
 
@@ -43,9 +45,8 @@ def proof():
                 len(blockchain.chain), 
                 new_transaction, 
                 time.time(), 
-                "somehash",
+                proof,
                 blockchain.get_last_block().hash)
-    
 
     blockchain.append_block_to_chain(new_block, proof)
 
@@ -95,6 +96,19 @@ def create_transaction():
     blockchain.subtract_from_wallet(wallet_id, amount)
     blockchain.add_to_wallet(receiver, amount)
     
+    return jsonify(valid=valid), HttpCode.OK.value
+
+@app.route('/wallet/reward', methods=['POST'])
+def create_transaction():
+    try:
+        data = request.get_json()
+        amount = data["amount"]
+        receiver = data["miner"]
+
+    except KeyError as e:
+        raise IncorrectPayloadException()
+
+    blockchain.add_to_wallet(receiver, amount)    
     return jsonify(valid=valid), HttpCode.OK.value
 
 @app.route('/wallet/balance', methods=['GET'])
