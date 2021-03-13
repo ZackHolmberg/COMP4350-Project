@@ -6,6 +6,7 @@ import threading
 import json
 from time import sleep
 from hashlib import sha256
+from flask_socketio import emit
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -90,7 +91,7 @@ def handle(message):
 @socketio.on('proof')
 def handle_proofs(message):
     global ongoing_proof, ongoing_transaction, COINBASE_AMOUNT, blockchain_url, blockchain_wallet_url, transactions
-
+    
     if (ongoing_proof == message['id']):
         if valid_proof(message["proof"], message["nonce"]):
 
