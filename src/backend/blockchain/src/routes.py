@@ -1,5 +1,3 @@
-from shared.exceptions import IncorrectPayloadException
-from shared import HttpCode
 from src import app
 from .transaction import Transaction
 from .block import Block
@@ -12,6 +10,8 @@ import time
 
 sys.path.append(os.path.abspath(os.path.join('..', '')))
 
+from shared.exceptions import IncorrectPayloadException
+from shared import HttpCode
 
 @app.route("/")
 def index():
