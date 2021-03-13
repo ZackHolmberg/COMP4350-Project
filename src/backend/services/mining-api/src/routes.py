@@ -17,7 +17,6 @@ from shared.utils import BisonCoinUrls, send_post_request
 from shared import HttpCode
 
 blockchain_url = BisonCoinUrls.blockchain_url
-blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
 
 ongoing_proof = None
 ongoing_transaction = None
