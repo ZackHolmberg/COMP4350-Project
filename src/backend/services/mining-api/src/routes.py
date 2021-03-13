@@ -27,14 +27,15 @@ connected_clients = 0
 
 difficulty = 4
 def mine(transaction):
-    # send transactions to blockchain
-    response = send_post_request(blockchain_url.format("proof"), transaction)
-   
+    # send transactions to blockchain directly without mining
+    transaction["nonce"] = 0
+    transaction["proof"] = "bypass"
+    transaction["minerId"] = "network"
+    response = send_post_request(blockchain_url.format("addBlock"), transaction)
     transactions.ready_to_mine()
 
 
 def send_to_connected_clients(transaction):
-    # ToDo
     global ongoing_proof, ongoing_transaction, connected_clients
 
     print("To Be Sent to Miner", transaction)
@@ -76,13 +77,11 @@ def valid_proof(hash_, nonce):
 def client_connect():
     global connected_clients
     connected_clients += 1
-    print(connected_clients)
 
 @socketio.on('disconnect')
 def client_disconnect():
     global connected_clients
     connected_clients -= 1
-    print(connected_clients)
 
 @socketio.on('echo')
 def handle(message):
@@ -90,8 +89,8 @@ def handle(message):
 
 @socketio.on('proof')
 def handle_proofs(message):
-    global ongoing_proof, ongoing_transaction, COINBASE_AMOUNT, blockchain_url, blockchain_wallet_url, transactions
-    
+    global ongoing_proof, ongoing_transaction, blockchain_url, blockchain_wallet_url, transactions
+
     if (ongoing_proof == message['id']):
         if valid_proof(message["proof"], message["nonce"]):
 
@@ -99,7 +98,7 @@ def handle_proofs(message):
             ongoing_proof = None
             ongoing_transaction = None
             
-            socketio.emit("stopProof", {})
+            socketio.emit("stopProof", None)
             # new transactions are now ready to be mined    
             transactions.ready_to_mine()
 
@@ -112,7 +111,7 @@ def handle_proofs(message):
                 block_data[key] = value
             
             send_post_request(blockchain_url.format("addBlock"), block_data)    
-            emit('reward', {})
+            emit('reward', None)
 
 @app.errorhandler(IncorrectPayloadException)
 def handle_payload_error(e):

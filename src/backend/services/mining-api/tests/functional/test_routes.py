@@ -1,6 +1,7 @@
 import pytest
 from src import app, socketio
 import json
+from time import sleep
 
 @pytest.fixture(scope='module')
 def test_client():
@@ -34,7 +35,6 @@ def test_home_page(test_client):
     assert b"Hello From the Mining" in response.data
 
 def test_queueing(test_client, json_header):
-    # test GET query on '/' route
     url = '/queue'
     req_data = {"id" : "test"}
     response = test_client.post(url, data=json.dumps(req_data), headers=json_header)
@@ -43,7 +43,6 @@ def test_queueing(test_client, json_header):
 
 
 def test_queueing_incorrect_payload(test_client, json_header):
-    # test GET query on '/' route
     url = '/queue'
     response = test_client.post(url, data=None, headers=json_header)
     assert response.status_code == 400

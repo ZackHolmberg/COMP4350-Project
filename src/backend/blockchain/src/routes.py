@@ -52,7 +52,7 @@ def proof():
                     Blockchain.COINBASE_AMOUNT
                 )
 
-     # We guarantee that all the necessary validation has been done by this point, so simply add the
+    # We guarantee that all the necessary validation has been done by this point, so simply add the
     # new block to the chain
     blockchain.chain.append(new_block)
 
