@@ -2,7 +2,7 @@ from src.transaction import Transaction
 from src.block import Block
 from src.blockchain import Blockchain
 from hashlib import sha256
-from datetime import datetime
+import time
 import sys
 import os
 
@@ -15,7 +15,7 @@ Transaction Tests
 
 
 def test_transaction_constructor():
-    test_transaction = Transaction("fromAddress","toAddress", 5)
+    test_transaction = Transaction("fromAddress", "toAddress", 5)
     assert (
         test_transaction.to_address == "toAddress" and
         test_transaction.from_address == "fromAddress" and
@@ -31,19 +31,25 @@ def test_block_constructor():
     test_index = 0
     test_transaction = Transaction(
         "toAddress", "fromAddress", 5)
-    test_timestamp = datetime.now().time().strftime("%m/%d/%Y, %H:%M:%S")
+    test_timestamp = time.time()
+    test_nonce = 0
     test_hash = "0000abc"
     test_prev_hash = "prevHash"
+    test_miner_id = "miner_id"
+    test_reward = 5
 
     test_block = Block(test_index, test_transaction,
-                       test_timestamp, test_hash, test_prev_hash)
+                       test_timestamp, test_nonce, test_hash, test_prev_hash, test_miner_id, test_reward)
     assert (
         test_block.index == test_index and
         test_block.transaction != None and
-        test_block.timestamp == test_timestamp and
-        test_block.prev_hash == test_prev_hash and
+        test_block.timestamp == str(test_timestamp) and
         test_block.nonce == 0 and
-        len(test_block.hash) != 0)
+        len(test_block.hash) != 0 and
+        test_block.prev_hash == test_prev_hash and
+        test_block.miner_id == "miner_id" and
+        test_block.reward_amount == test_reward
+    )
 
 
 """
@@ -61,26 +67,6 @@ test_blockchain = Blockchain()
 
 def test_get_last_block():
     assert test_blockchain.get_last_block().index == 0
-
-
-def test_append_block_to_chain():
-    test_index = 1
-    test_transaction = Transaction(
-        "toAddress", "fromAddress", 5)
-    test_timestamp = datetime.now().time().strftime("%m/%d/%Y, %H:%M:%S")
-    test_hash = "0000abc"
-    test_prev_hash = "0"*test_blockchain.difficulty
-
-    test_block = Block(test_index, test_transaction,
-                       test_timestamp, test_hash, test_prev_hash)
-    test_blockchain.append_block_to_chain(test_block, "0000abcdefg")
-    assert len(test_blockchain.chain) == 2
-
-
-def test_valid_proof():
-
-    assert test_blockchain.valid_proof("0000123abcdefg") == True
-
 
 test_wallet_id = "walletId"
 

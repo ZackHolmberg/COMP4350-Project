@@ -30,26 +30,33 @@ def proof():
     data = request.get_json()
     try :
         new_transaction = Transaction(
-            data["from"], 
-            data["to"], 
-            data["amount"],
-            data["mining_data"]
+            transaction["from"],
+            transaction["to"],
+            transaction["amount"]
         )
-
-        proof = data["proof"]
+        miner_id = data["minerId"]
+        _hash = data["proof"]
+        nonce = data["nonce"]
         
     except KeyError as e:
         raise IncorrectPayloadException()
 
     new_block = Block(
-                len(blockchain.chain), 
-                new_transaction, 
-                time.time(), 
-                proof,
-                blockchain.get_last_block().hash)
+        len(blockchain.chain),
+        new_transaction,
+        time.time(),
+        nonce,
+        hash,
+        blockchain.get_last_block().hash,
+        miner_id, 
+        Blockchain.COINBASE_AMOUNT)
 
-    blockchain.append_block_to_chain(new_block, proof)
+     # We guarantee that all the necessary validation has been done by this point, so simply add the
+    # new block to the chain
+    blockchain.chain.append(new_block)
 
+    blockchain.add_to_wallet(miner_id, Blockchain.COINBASE_AMOUNT)
+    
     return jsonify(success=True), HttpCode.CREATED.value
 
 @app.route('/wallet/checkWallet', methods=['POST'])
@@ -96,19 +103,6 @@ def create_transaction():
     blockchain.subtract_from_wallet(wallet_id, amount)
     blockchain.add_to_wallet(receiver, amount)
     
-    return jsonify(valid=valid), HttpCode.OK.value
-
-@app.route('/wallet/reward', methods=['POST'])
-def create_transaction():
-    try:
-        data = request.get_json()
-        amount = data["amount"]
-        receiver = data["miner"]
-
-    except KeyError as e:
-        raise IncorrectPayloadException()
-
-    blockchain.add_to_wallet(receiver, amount)    
     return jsonify(valid=valid), HttpCode.OK.value
 
 @app.route('/wallet/balance', methods=['GET'])

@@ -5,6 +5,7 @@ import sys, os
 import threading
 import json
 from time import sleep
+from hashlib import sha256
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -14,8 +15,6 @@ else:
 from shared.exceptions import IncorrectPayloadException 
 from shared.utils import BisonCoinUrls, send_post_request
 from shared import HttpCode
-
-COINBASE_AMOUNT = 10
 
 blockchain_url = BisonCoinUrls.blockchain_url
 blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
@@ -66,8 +65,12 @@ def add_data_to_queue():
     return jsonify(success=True), HttpCode.OK.value
     
 
-def valid_proof(hash):
-    return (hash.startswith('0' * difficulty))
+def valid_proof(hash_, nonce):
+    
+    valid = (hash_.startswith('0' * difficulty))
+    return valid and hash_ == sha256(
+        (str(nonce) + ongoing_transaction["to"] + ongoing_transaction["from"] + str(ongoing_transaction["amount"]) + ongoing_transaction["id"] + ongoing_transaction["signature"]).encode('utf-8')
+      ).hexdigest();
 
 @socketio.on('connect')
 def client_connect():
@@ -90,30 +93,26 @@ def handle_proofs(message):
     global ongoing_proof, ongoing_transaction, COINBASE_AMOUNT, blockchain_url, blockchain_wallet_url, transactions
 
     if (ongoing_proof == message['id']):
-        if valid_proof(message["proof"]):
-            socketio.emit("stopProof", {})            
+        if valid_proof(message["proof"], message["nonce"]):
+
+            # ignore the rest of the clients that try to send the proof
+            ongoing_proof = None
+            ongoing_transaction = None
+            
+            socketio.emit("stopProof", {})
+            # new transactions are now ready to be mined    
+            transactions.ready_to_mine()
+
+            block_data = {}
             # send transactions to blockchain
-            block_data = {
-                    "proof": message["proof"], 
-                    "mining_data": {
-                        "miner" : message["walletId"],
-                        "reward" : COINBASE_AMOUNT
-                        }
-                    }
+            for key, value in message.items():
+                block_data[key] = value
+            
             for key, value in ongoing_transaction.items():
                 block_data[key] = value
             
-            response = send_post_request(blockchain_url.format("addBlock"), block_data)
-            if (response.status_code != HttpCode.OK.value):
-                # do not reward the miner if adding the block failed
-                return;
-
-            # reward the miner
-            reward = {"miner" : message["walletId"], "amount": COINBASE_AMOUNT}
-            send_post_request(blockchain_wallet_url.format("reward"), reward)
-            # new transactions are now ready to be mined
-            transactions.ready_to_mine()
-            emit('fetchWallet', {})
+            send_post_request(blockchain_url.format("addBlock"), block_data)    
+            emit('reward', {})
 
 @app.errorhandler(IncorrectPayloadException)
 def handle_payload_error(e):
