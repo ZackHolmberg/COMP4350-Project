@@ -43,12 +43,12 @@ def test_block_constructor():
     assert (
         test_block.index == test_index and
         test_block.transaction != None and
-        test_block.timestamp == test_timestamp and
+        test_block.timestamp == str(test_timestamp) and
         test_block.nonce == 0 and
         len(test_block.hash) != 0 and
         test_block.prev_hash == test_prev_hash and
-        test.miner_id == "miner_id" and
-        test_reward == 5
+        test_block.miner_id == "miner_id" and
+        test_block.reward_amount == test_reward
     )
 
 
@@ -67,24 +67,6 @@ test_blockchain = Blockchain()
 
 def test_get_last_block():
     assert test_blockchain.get_last_block().index == 0
-
-
-def test_append_block_to_chain():
-    test_index = 0
-    test_transaction = Transaction(
-        "toAddress", "fromAddress", 5)
-    test_timestamp = time.time()
-    test_nonce = 0
-    test_hash = "0000abc"
-    test_prev_hash = "prevHash"
-    test_miner_id = "miner_id"
-    test_reward = 5
-
-    test_block = Block(test_index, test_transaction,
-                       test_timestamp, test_nonce, test_hash, test_prev_hash, test_miner_id, test_reward)
-    test_blockchain.append_block_to_chain(test_block, "0000abcdefg")
-    assert len(test_blockchain.chain) == 2
-
 
 test_wallet_id = "walletId"
 

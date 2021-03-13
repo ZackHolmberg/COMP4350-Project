@@ -4,6 +4,8 @@ import mock
 import time
 import threading
 import queue
+from src import routes
+from hashlib import sha256
 
 @pytest.fixture(scope='function')
 def test_receiver():
@@ -60,3 +62,32 @@ def test_ready_to_mine(test_pool_nm):
     assert not test_pool_nm._ready_to_mine
     test_pool_nm.ready_to_mine()
     assert test_pool_nm._ready_to_mine
+
+def setup_test_transaction():
+    routes.difficulty = 0
+    routes.ongoing_transaction = {"from" : "test2", "to": "test1", "amount": 10, "id":"test3", "signature": "test4"}
+
+
+def teardown_test_transaction():
+    routes.difficulty = 4
+    routes.ongoing_transaction = None
+
+def test_valid_proof():
+    setup_test_transaction()
+    hash_ = sha256((str(5) + "test1" + "test2" + str(10) + "test3" + "test4").encode('utf-8')).hexdigest()
+    assert routes.valid_proof(hash_, 5)
+    teardown_test_transaction()
+
+def test_invalid_proof():    
+    setup_test_transaction()
+    hash_ = sha256((str(5) + "test2" + "test3" + str(10) + "test3" + "test4").encode('utf-8')).hexdigest()
+    assert not routes.valid_proof(hash_, 5)
+    teardown_test_transaction()
+
+
+def test_invalid_difficulty():    
+    setup_test_transaction()
+    hash_ = sha256((str(5) + "test2" + "test3" + str(10) + "test3" + "test4").encode('utf-8')).hexdigest()
+    routes.difficulty = 100 
+    assert not routes.valid_proof(hash_, 5)
+    teardown_test_transaction()

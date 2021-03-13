@@ -1,7 +1,7 @@
 import json
 
 class Block:
-    def __init__(self, index, transaction, timestamp, nonce, hash, prev_hash, miner_id, rewardAmount):
+    def __init__(self, index, transaction, timestamp, nonce, hash, prev_hash, miner_id, reward_amount):
 
         self.index = int(index)
         self.transaction = transaction
@@ -10,7 +10,7 @@ class Block:
         self.nonce = int(nonce)
         self.hash = str(hash)
         self.miner_id = str(miner_id)
-        self.rewardAmount = int(rewardAmount)
+        self.reward_amount = int(reward_amount)
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,

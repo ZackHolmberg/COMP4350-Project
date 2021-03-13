@@ -53,7 +53,7 @@ class Blockchain:
 
         # create the genesis block
         genesis_block = Block(0, empty_transaction,
-                              time.time(), "0"*self.difficulty, "0", "miner_id", 0)
+                              time.time(), 0, "0"*self.difficulty, "0", "miner_id", 0)
 
         # append it to the chain
         self.chain.append(genesis_block)

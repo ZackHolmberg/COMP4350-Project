@@ -26,7 +26,7 @@ def test_client():
 
 
 def test_get_chain(test_client):
-    # test GET query on '/' route
+    # test GET query on '/chain' route
     url = '/chain'
     response = test_client.get(url)
     data = json.loads(response.json['chain'][0])
@@ -38,8 +38,8 @@ def test_get_chain(test_client):
     assert data['prev_hash'] == "0"
     assert data['transaction'] == {"amount": 0,
                                    "from_address": "", "to_address": ""}
-    assert data['minerId'] == "miner_id"
-    assert data['reward'] == 0
+    assert data['miner_id'] == "miner_id"
+    assert data['reward_amount'] == 0
 
 
 def test_add_wallet(test_client):

@@ -29,17 +29,14 @@ def get_chain():
 @app.route('/addBlock', methods=['POST'])
 def proof():
     data = request.get_json()
-    transaction = data["transaction"]
-
     try:
         new_transaction = Transaction(
-            transaction["from"],
-            transaction["to"],
-            transaction["amount"]
+            data["from"],
+            data["to"],
+            data["amount"]
         )
-
         miner_id = data["minerId"]
-        hash = data["hash"]
+        proof = data["proof"]
         nonce = data["nonce"]
 
     except KeyError as e:
@@ -50,9 +47,11 @@ def proof():
         new_transaction,
         time.time(),
         nonce,
-        hash,
+        proof,
         blockchain.get_last_block().hash,
-        miner_id, Blockchain.COINBASE_AMOUNT)
+        miner_id,
+        Blockchain.COINBASE_AMOUNT
+    )
 
     # We guarantee that all the necessary validation has been done by this point, so simply add the
     # new block to the chain
