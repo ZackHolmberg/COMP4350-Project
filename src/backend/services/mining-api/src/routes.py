@@ -67,7 +67,6 @@ def add_data_to_queue():
     
 
 def valid_proof(hash_, nonce):
-    
     valid = (hash_.startswith('0' * difficulty))
     return valid and hash_ == sha256(
         (str(nonce) + ongoing_transaction["to"] + ongoing_transaction["from"] + str(ongoing_transaction["amount"]) + ongoing_transaction["id"] + ongoing_transaction["signature"]).encode('utf-8')
@@ -90,18 +89,13 @@ def handle(message):
 @socketio.on('proof')
 def handle_proofs(message):
     global ongoing_proof, ongoing_transaction, blockchain_url, blockchain_wallet_url, transactions
-
+    
     if (ongoing_proof == message['id']):
         if valid_proof(message["proof"], message["nonce"]):
-
             # ignore the rest of the clients that try to send the proof
             ongoing_proof = None
-            ongoing_transaction = None
-            
             socketio.emit("stopProof", None)
             # new transactions are now ready to be mined    
-            transactions.ready_to_mine()
-
             block_data = {}
             # send transactions to blockchain
             for key, value in message.items():
@@ -110,6 +104,9 @@ def handle_proofs(message):
             for key, value in ongoing_transaction.items():
                 block_data[key] = value
             
+            ongoing_transaction = None
+            transactions.ready_to_mine()
+
             send_post_request(blockchain_url.format("addBlock"), block_data)    
             emit('reward', None)
 

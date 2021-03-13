@@ -2,6 +2,9 @@ import pytest
 from src import app, socketio
 import json
 from time import sleep
+from src.routes import send_to_connected_clients, difficulty
+from src import routes
+from hashlib import sha256
 
 @pytest.fixture(scope='module')
 def test_client():
@@ -35,6 +38,7 @@ def test_home_page(test_client):
     assert b"Hello From the Mining" in response.data
 
 def test_queueing(test_client, json_header):
+    global ongoing_proof, ongoing_transaction
     url = '/queue'
     req_data = {"id" : "test"}
     response = test_client.post(url, data=json.dumps(req_data), headers=json_header)
@@ -66,3 +70,107 @@ def test_emit_events(test_client):
 
     assert received[0]['name'] == 'response'
     assert received[0]['args'][0]['a'] == 'b'
+
+def test_emit_events(test_client, json_header):
+    socketio_test_client = socketio.test_client(app, flask_test_client=test_client)
+    send_to_connected_clients({'id': 'test'})
+    received = socketio_test_client.get_received()
+    assert received[0]['name'] == 'findProof'
+    assert received[0]['args'][0]['id'] == 'test'
+
+def test_wrong_payload(test_client, json_header):
+    socketio_test_client = socketio.test_client(app, flask_test_client=test_client)
+    try:
+        send_to_connected_clients({'not_id': 'test'})
+        assert fail
+    except:
+        received = socketio_test_client.get_received()
+        assert received == []
+
+def test_proof_incorrect_payload(test_client, json_header):
+    socketio_test_client = socketio.test_client(app, flask_test_client=test_client)
+    socketio_test_client.emit('proof', {'id':'something'})
+    received = socketio_test_client.get_received()
+    assert received == []
+
+def test_proof_correct_payload(test_client, json_header, requests_mock):
+    socketio_test_client = socketio.test_client(app, flask_test_client=test_client)
+    routes.difficulty = 0
+    transaction = {
+        'id':'test3',
+        'to' : 'test1',
+        'from' : 'test2',
+        'amount' : 10,
+        'signature' : 'test4'
+        }
+    send_to_connected_clients(transaction)
+    
+    received = socketio_test_client.get_received()
+    assert received[0]['name'] == 'findProof'
+    
+    requests_mock.post("http://blockchain:5000/addBlock",
+                       json={"success": True}, status_code=201)
+
+    hash_ = sha256((str(5) + "test1" + "test2" + str(10) + "test3" + "test4").encode('utf-8')).hexdigest()
+    socketio_test_client.emit('proof', {
+        "id" : "test3",
+        "proof" : hash_,
+        "nonce": 5,
+        "minerId": "test"
+    })
+    
+    received = socketio_test_client.get_received()
+    assert received[0]['name'] == 'stopProof'
+    assert received[1]['name'] == 'reward'
+
+    routes.difficulty = 4
+
+def test_proof_incorrect_id(test_client, json_header, requests_mock):
+    socketio_test_client = socketio.test_client(app, flask_test_client=test_client)
+    transaction = {
+        'id':'test3',
+        'to' : 'test1',
+        'from' : 'test2',
+        'amount' : 10,
+        'signature' : 'test4'
+        }
+    send_to_connected_clients(transaction)
+    
+    received = socketio_test_client.get_received()
+    assert received[0]['name'] == 'findProof'
+    
+    hash_ = sha256((str(5) + "test1" + "test2" + str(10) + "test3" + "test4").encode('utf-8')).hexdigest()
+    socketio_test_client.emit('proof', {
+        "id" : "test2",
+        "proof" : hash_,
+        "nonce": 5,
+        "minerId": "test"
+    })
+    
+    received = socketio_test_client.get_received()
+    assert received == []
+
+def test_proof_incorrect_hash(test_client, json_header, requests_mock):
+    socketio_test_client = socketio.test_client(app, flask_test_client=test_client)
+    transaction = {
+        'id':'test3',
+        'to' : 'test1',
+        'from' : 'test2',
+        'amount' : 10,
+        'signature' : 'test4'
+        }
+    send_to_connected_clients(transaction)
+    
+    received = socketio_test_client.get_received()
+    assert received[0]['name'] == 'findProof'
+    
+    hash_ = sha256((str(5) + "test2" + "test2" + str(10) + "test3" + "test4").encode('utf-8')).hexdigest()
+    socketio_test_client.emit('proof', {
+        "id" : "test3",
+        "proof" : hash_,
+        "nonce": 5,
+        "minerId": "test"
+    })
+    
+    received = socketio_test_client.get_received()
+    assert received == []
