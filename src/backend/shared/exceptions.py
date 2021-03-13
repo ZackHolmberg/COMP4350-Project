@@ -6,9 +6,9 @@ class BisonCoinException(Exception):
     client_error = HttpCode.BAD_REQUEST.value
 
     def __init__(self, json_message=FailureReturnString.UNKNOWN_FAILURE.value, return_code=HttpCode.INTERNAL_SERVER_ERROR.value):
-        super(Exception, self).__init__()
         self.json_message = json_message
         self.return_code = return_code
+        super(Exception, self).__init__()
 
 
 class IncorrectPayloadException(BisonCoinException):
