@@ -30,9 +30,9 @@ def proof():
     data = request.get_json()
     try :
         new_transaction = Transaction(
-            transaction["from"],
-            transaction["to"],
-            transaction["amount"]
+            data["from"],
+            data["to"],
+            data["amount"]
         )
         miner_id = data["minerId"]
         _hash = data["proof"]
