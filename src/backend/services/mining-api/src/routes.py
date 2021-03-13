@@ -23,9 +23,8 @@ ongoing_proof = None
 ongoing_transaction = None
 connected_clients = 0
 
-# This is temporary till we move mining to user devices
-
 difficulty = 4
+
 def mine(transaction):
     # send transactions to blockchain directly without mining
     transaction["nonce"] = 0
@@ -48,7 +47,6 @@ def send_to_connected_clients(transaction):
     socketio.emit("findProof", transaction)
 
 transactions = MiningPool(send_to_connected_clients, True)
-# transactions = MiningPool(mine, True)
 
 @app.route("/")
 def index():
