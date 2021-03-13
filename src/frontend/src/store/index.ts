@@ -266,15 +266,15 @@ export default new Vuex.Store({
           "signature": transaction.signature,
         })
         .then((response) => {
-          if (response.data.success) {
-            Vue.$toast.success("Transaction sent successfully!", {
-              message: "Transaction sent successfully!",
-              duration: 3000,
-              position: "top",
-              dismissible: true,
-            });
-            commit("MUTATION_SET_LOADING", false);
-          }
+          Vue.$toast.success("Transaction sent successfully!", {
+            message: "Transaction sent successfully!",
+            duration: 3000,
+            position: "top",
+            dismissible: true,
+          });
+          commit("MUTATION_SET_LOADING", false);
+          commit("MUTATION_SET_WALLET_AMOUNT", response.data.remaining_amount);
+
         },
           (err) => {
             commit("MUTATION_SET_LOADING", false);
