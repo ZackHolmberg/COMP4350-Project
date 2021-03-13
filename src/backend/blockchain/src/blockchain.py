@@ -3,9 +3,11 @@ from .block import Block
 from .transaction import Transaction
 from .exceptions import WalletException
 
+
 class Blockchain:
 
     difficulty = 4
+    COINBASE_AMOUNT = 10
 
     def __init__(self):
         self.chain = []
@@ -47,34 +49,17 @@ class Blockchain:
     def initialize_chain(self):
 
         # create empty transaction
-        empty_transaction = Transaction( "", "", 0)
+        empty_transaction = Transaction("", "", 0)
 
         # create the genesis block
         genesis_block = Block(0, empty_transaction,
-                              time.time(), "0"*self.difficulty, "0")
+                              time.time(), 0, "0"*self.difficulty, "0", "miner_id", 0)
 
         # append it to the chain
         self.chain.append(genesis_block)
 
     def get_last_block(self):
         return self.chain[-1]
-
-    def append_block_to_chain(self, block, proof):
-
-        prev_hash = self.get_last_block().hash
-
-        if prev_hash != block.prev_hash:
-            return False
-
-        if not self.valid_proof(proof):
-            return False
-
-        block.hash = proof
-        self.chain.append(block)
-        return True
-
-    def valid_proof(self, hash):
-        return (hash.startswith('0' * self.difficulty))
 
 
 blockchain = Blockchain()

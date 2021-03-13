@@ -25,30 +25,39 @@ def get_chain():
     return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
 
 
-@app.route('/proof', methods=['POST'])
+@app.route('/addBlock', methods=['POST'])
 def proof():
     data = request.get_json()
-    proof = '0' * Blockchain.difficulty
-    # proof = data["proof"]
     try :
         new_transaction = Transaction(
-            data["from"], 
-            data["to"], 
+            data["from"],
+            data["to"],
             data["amount"]
         )
+        miner_id = data["minerId"]
+        _hash = data["proof"]
+        nonce = data["nonce"]
+        
     except KeyError as e:
         raise IncorrectPayloadException()
 
     new_block = Block(
-                len(blockchain.chain), 
-                new_transaction, 
-                time.time(), 
-                "somehash",
-                blockchain.get_last_block().hash)
+                    len(blockchain.chain),
+                    new_transaction,
+                    time.time(),
+                    nonce,
+                    hash,
+                    blockchain.get_last_block().hash,
+                    miner_id, 
+                    Blockchain.COINBASE_AMOUNT
+                )
+
+    # We guarantee that all the necessary validation has been done by this point, so simply add the
+    # new block to the chain
+    blockchain.chain.append(new_block)
+
+    blockchain.add_to_wallet(miner_id, Blockchain.COINBASE_AMOUNT)
     
-
-    blockchain.append_block_to_chain(new_block, proof)
-
     return jsonify(success=True), HttpCode.CREATED.value
 
 @app.route('/wallet/checkWallet', methods=['POST'])
