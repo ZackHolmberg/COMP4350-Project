@@ -82,7 +82,7 @@ def test_wrong_payload(test_client, json_header):
     socketio_test_client = socketio.test_client(app, flask_test_client=test_client)
     try:
         send_to_connected_clients({'not_id': 'test'})
-        assert fail
+        assert False
     except:
         received = socketio_test_client.get_received()
         assert received == []
