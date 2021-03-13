@@ -42,14 +42,15 @@ def proof():
         raise IncorrectPayloadException()
 
     new_block = Block(
-        len(blockchain.chain),
-        new_transaction,
-        time.time(),
-        nonce,
-        hash,
-        blockchain.get_last_block().hash,
-        miner_id, 
-        Blockchain.COINBASE_AMOUNT)
+                    len(blockchain.chain),
+                    new_transaction,
+                    time.time(),
+                    nonce,
+                    hash,
+                    blockchain.get_last_block().hash,
+                    miner_id, 
+                    Blockchain.COINBASE_AMOUNT
+                )
 
      # We guarantee that all the necessary validation has been done by this point, so simply add the
     # new block to the chain
