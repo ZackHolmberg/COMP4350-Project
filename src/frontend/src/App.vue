@@ -21,26 +21,28 @@ export default class App extends Vue {
     return this.$store.getters.walletId
   }
 
+  get findProof(){
+    return this.$store.getters.findProof
+  }
+
   validHash (hash: string): boolean  {
       return hash.startsWith("0000", 0);
   }
 
   computeHash(nonce: number, transaction: Transaction): string {
-    
-      const toHash
-      return sha256(
-        `${nonce}${transaction.amount}${transaction.id}${transaction.signature}`
-      );
+
+      const toHash = (nonce.toString()+transaction.amount.toString()+transaction.id+transaction.signature).replace(/(\r\n|\n|\r)/gm, "");
+      return sha256(toHash);
   }
 
   proofOfWork(transaction: Transaction): any  {
-      let nonce = 0;
+      let nonce = -1;
       let hash = "";
-      while (!this.validHash(hash) && this.$store.getters.mining) {
-        hash = this.computeHash(nonce, transaction);
+      while (!this.validHash(hash) && this.findProof) {
         nonce += 1;
+        hash = this.computeHash(nonce, transaction);
       }
-
+      console.log("Returning: ",{proof: hash, nonce: nonce})
       return {proof: hash, nonce: nonce}
   }
 
@@ -50,6 +52,8 @@ export default class App extends Vue {
       socket.on("findProof", (...args: any) => {
 
         console.log("Received findProof! Args:",args)
+        this.$store.commit('MUTATION_SET_FIND_PROOF', true);
+
         const transaction: Transaction = {
           "to": args[0].to,
           "from": args[0].from,
@@ -61,7 +65,7 @@ export default class App extends Vue {
 
         const temp = this.proofOfWork(transaction);
         console.log("Finished computing hash!")
-        console.log("toHash: ",`${temp.nonce}${transaction.to}${transaction.from}${transaction.amount}${transaction.id}${transaction.signature}`)
+        console.log("used the following to compute hash: ",(temp.nonce+transaction.amount+transaction.id+transaction.signature).replace(/(\r\n|\n|\r)/gm, ""))
 
         if(this.validHash(temp.proof)){
           const toSend = {
@@ -73,17 +77,19 @@ export default class App extends Vue {
 
           console.log("Sending: ",toSend)
           socket.emit("proof",toSend)
+          this.$store.commit('MUTATION_SET_FIND_PROOF', false);
+
         }
       });
 
-      socket.on("reward", (...args: any) => {
+      socket.on("reward", () => {
           console.log("Received reward");
           this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
       });
 
-      socket.on("stopProof", (...args: any) => {
+      socket.on("stopProof", () => {
         console.log("Received stopProof");
-        this.$store.commit('MUTATION_SET_MINING', false);
+        this.$store.commit('MUTATION_SET_FIND_PROOF', false);
 
       });
     }

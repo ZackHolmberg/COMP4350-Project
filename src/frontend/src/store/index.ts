@@ -69,6 +69,7 @@ export default new Vuex.Store({
     lastName: "",
     mining: false,
     editing: false,
+    findProof: false
   },
   getters: {
     loading: (state) => {
@@ -100,6 +101,9 @@ export default new Vuex.Store({
     },
     editing: (state) => {
       return state.editing;
+    },
+    findProof: (state) => {
+      return state.findProof;
     },
   },
   mutations: {
@@ -135,7 +139,9 @@ export default new Vuex.Store({
     },
     MUTATION_SET_MINING(state, mining) {
       state.mining = mining
-
+    },
+    MUTATION_SET_FIND_PROOF(state, findProof) {
+      state.mining = findProof
     }
   },
   actions: {

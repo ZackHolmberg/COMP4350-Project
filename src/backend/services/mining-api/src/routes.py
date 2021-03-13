@@ -3,8 +3,7 @@ from flask import request, jsonify
 from .miningpool import MiningPool
 import sys
 import os
-import threading
-import json
+
 from time import sleep
 from hashlib import sha256
 from flask_socketio import emit
@@ -72,10 +71,12 @@ def add_data_to_queue():
 
 def valid_proof(hash_, nonce):
     valid = (hash_.startswith('0' * difficulty))
-    return valid and hash_ == sha256(
-        (str(nonce) + ongoing_transaction["to"] + ongoing_transaction["from"] + str(
-            ongoing_transaction["amount"]) + ongoing_transaction["id"] + ongoing_transaction["signature"]).encode('utf-8')
-    ).hexdigest()
+    toHash = (str(nonce) + str(
+        ongoing_transaction["amount"]) + ongoing_transaction["id"] + ongoing_transaction["signature"])
+    toHash = toHash.replace("\n", "")
+    toHash = toHash.replace("\r", "")
+    computedHash = sha256(toHash.encode('utf-8')).hexdigest()
+    return valid and hash_ == computedHash
 
 
 @socketio.on('connect')
@@ -97,7 +98,7 @@ def handle(message):
 
 @socketio.on('proof')
 def handle_proofs(message):
-    global ongoing_proof, ongoing_transaction, blockchain_url, blockchain_wallet_url, transactions
+    global ongoing_proof, ongoing_transaction, blockchain_url, transactions
     print("ZACK OUTPUT - GETTING HERE 0", file=sys.stderr)
     if (ongoing_proof == message['id']):
         print("ZACK OUTPUT - GETTING HERE 0 but before 1", file=sys.stderr)
@@ -106,6 +107,7 @@ def handle_proofs(message):
             print("ZACK OUTPUT - GETTING HERE 1", file=sys.stderr)
             # ignore the rest of the clients that try to send the proof
             ongoing_proof = None
+
             socketio.emit("stopProof", None)
             print("ZACK OUTPUT - GETTING HERE 2", file=sys.stderr)
             # new transactions are now ready to be mined
@@ -127,6 +129,7 @@ def handle_proofs(message):
 
             emit('reward', None)
             print("ZACK OUTPUT - GETTING HERE 7", file=sys.stderr)
+            return
 
 
 @app.errorhandler(IncorrectPayloadException)
