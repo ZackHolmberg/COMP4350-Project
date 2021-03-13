@@ -114,7 +114,6 @@ def test_proof_incorrect_payload(test_client, json_header):
 def test_proof_correct_payload(test_client, json_header, requests_mock):
     socketio_test_client = socketio.test_client(
         app, flask_test_client=test_client)
-    routes.difficulty = 0
     transaction = {
         "from": "test2", "to": "test1", "amount": 1, "id": "d3a5dab0199356d8260b9f94c1b783601b3d337e692d6abca8ad2e8cc8e7c4a7", "signature": "6104ebba3a1df561d522f5f5c165698ae1f0152a3ca1613d5e2d0e5bd606733cc6e60df4bcf3e3d6c791f2b1e1ce217cb498c69d0dbfe563139a81f063b6fdb24421c63765ce34d193ea0a92e0e98132e4d5e992a30c25b622e1d287e524960f49dea74826227a59c17021ae446d4fe87ce491d34d7d6d014bb4c7f2928b6641"}
     send_to_connected_clients(transaction)
@@ -139,8 +138,6 @@ def test_proof_correct_payload(test_client, json_header, requests_mock):
     print("RECEIVED: ", received)
     assert received[0]['name'] == 'stopProof'
     assert received[1]['name'] == 'reward'
-
-    routes.difficulty = 4
 
 
 def test_proof_incorrect_id(test_client, json_header, requests_mock):

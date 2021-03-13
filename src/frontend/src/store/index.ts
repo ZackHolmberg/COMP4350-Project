@@ -251,15 +251,11 @@ export default new Vuex.Store({
         "id": "",
         "signature": "",
       };
-      console.log("GETTING HERE 1")
       transaction.id = getTransactionId(transaction);
-      console.log("GETTING HERE 2")
 
       transaction.signature = sign(transaction, getters.privateKey);
-      console.log("GETTING HERE 3")
 
       commit("MUTATION_SET_LOADING", true);
-      console.log("GETTING HERE 4")
 
       axios
         .post("http://localhost/transactions/create", {
@@ -422,11 +418,9 @@ export default new Vuex.Store({
           () => {
             commit("MUTATION_SET_LOADING", false);
 
-            const blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
-            saveAs(blob, "privateKeys.txt")
-
-            commit("MUTATION_SET_WALLETID", walletId)
-
+            // TODO: Uncomment when we read in and set privateKey on login
+            // const blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
+            // saveAs(blob, "privateKeys.txt")
 
             dispatch("ACTION_INITIALIZE_WALLET").then(() => {
 
