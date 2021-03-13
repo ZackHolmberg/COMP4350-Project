@@ -69,7 +69,7 @@ def add_data_to_queue():
     return jsonify(success=True), HttpCode.OK.value
 
 
-def valid_proof(hash_, nonce):
+def valid_proof(hash_, nonce) -> bool:
     valid = (hash_.startswith('0' * difficulty))
     toHash = (str(nonce) + str(
         ongoing_transaction["amount"]) + ongoing_transaction["id"] + ongoing_transaction["signature"])
@@ -99,36 +99,36 @@ def handle(message):
 @socketio.on('proof')
 def handle_proofs(message):
     global ongoing_proof, ongoing_transaction, blockchain_url, transactions
-    print("ZACK OUTPUT - GETTING HERE 0", file=sys.stderr)
+    # print("ZACK OUTPUT - GETTING HERE 0", file=sys.stderr)
     if (ongoing_proof == message['id']):
-        print("ZACK OUTPUT - GETTING HERE 0 but before 1", file=sys.stderr)
+        # print("ZACK OUTPUT - GETTING HERE 0 but before 1", file=sys.stderr)
 
         if valid_proof(message["proof"], message["nonce"]):
-            print("ZACK OUTPUT - GETTING HERE 1", file=sys.stderr)
+            # print("ZACK OUTPUT - GETTING HERE 1", file=sys.stderr)
             # ignore the rest of the clients that try to send the proof
             ongoing_proof = None
 
             socketio.emit("stopProof", None)
-            print("ZACK OUTPUT - GETTING HERE 2", file=sys.stderr)
+            # print("ZACK OUTPUT - GETTING HERE 2", file=sys.stderr)
             # new transactions are now ready to be mined
             block_data = {}
             # send transactions to blockchain
             for key, value in message.items():
                 block_data[key] = value
-            print("ZACK OUTPUT - GETTING HERE 3", file=sys.stderr)
+            # print("ZACK OUTPUT - GETTING HERE 3", file=sys.stderr)
             for key, value in ongoing_transaction.items():
                 block_data[key] = value
-            print("ZACK OUTPUT - GETTING HERE 4", file=sys.stderr)
+            # print("ZACK OUTPUT - GETTING HERE 4", file=sys.stderr)
 
             ongoing_transaction = None
             transactions.ready_to_mine()
-            print("ZACK OUTPUT - GETTING HERE 5", file=sys.stderr)
+            # print("ZACK OUTPUT - GETTING HERE 5", file=sys.stderr)
 
             send_post_request(blockchain_url.format("addBlock"), block_data)
-            print("ZACK OUTPUT - GETTING HERE 6", file=sys.stderr)
+            # print("ZACK OUTPUT - GETTING HERE 6", file=sys.stderr)
 
             emit('reward', None)
-            print("ZACK OUTPUT - GETTING HERE 7", file=sys.stderr)
+            # print("ZACK OUTPUT - GETTING HERE 7", file=sys.stderr)
             return
 
 
