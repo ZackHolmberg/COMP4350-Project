@@ -39,6 +39,8 @@
       id="create-account-button"
       dest=""
       label="Create Account"
+      size="small"
+      type="default"
       @click.native="createAccount"
     />
   </div>

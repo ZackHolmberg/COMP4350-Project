@@ -36,7 +36,7 @@ export default class Mining extends Vue {
   }
 
   onChange() {
-      this.$store.commit('MUTATATION_SET_MINING', this.$data.miningValue);
+      this.$store.commit('MUTATION_SET_MINING', this.$data.miningValue);
   }
 }
 </script>

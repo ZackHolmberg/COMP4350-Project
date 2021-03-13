@@ -11,3 +11,4 @@ class FailureReturnString(Enum):
     SIGNATURE_VERFICATION_FAILURE = "signature verification failed"
     USER_NOT_FOUND = "user not found in the database"
     TRANSACTION_CREATION_FAILURE = "Unable to create a transaction"
+    INCORRECT_CREDENTIALS = "Incorrect password for corresponding UMnetId"

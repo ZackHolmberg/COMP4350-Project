@@ -6,18 +6,12 @@ import { sha256 } from "js-sha256";
 import "vue-toast-notification/dist/theme-sugar.css";
 import * as rs from "jsrsasign";
 import { router } from "../main";
+import type { Transaction } from "../types";
+import { saveAs } from 'file-saver';
 
 // ---------------------------------------------------------------
 //  TRANSACTION SIGNING
 // ---------------------------------------------------------------
-
-type Transaction = {
-  to: string;
-  from: string;
-  amount: number;
-  id: string;
-  signature: string;
-};
 
 const genKeyPair = (): string[] => {
   const keyPair = rs.KEYUTIL.generateKeypair("RSA", 1024);
@@ -26,10 +20,6 @@ const genKeyPair = (): string[] => {
     rs.KEYUTIL.getPEM(keyPair.pubKeyObj),
   ];
 };
-
-const keyPair = genKeyPair();
-const privateKey = keyPair[0];
-const publicKey = keyPair[1];
 
 const getTransactionId = (transaction: Transaction): string => {
   return sha256(
@@ -62,12 +52,12 @@ export default new Vuex.Store({
   state: {
     loading: false,
     walletAmount: 0,
-    walletId: publicKey,
-    privateKey: privateKey,
-    umnetId: "example12",
-    password: "12345",
-    firstName: "FirstName",
-    lastName: "LastName",
+    walletId: "",
+    privateKey: "",
+    umnetId: "",
+    password: "",
+    firstName: "",
+    lastName: "",
     mining: false,
     editing: false,
   },
@@ -104,31 +94,40 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    MUTATATION_SET_LOADING(state, loading) {
+    MUTATION_SET_LOADING(state, loading) {
       state.loading = loading;
     },
     MUTATION_SET_WALLET_AMOUNT(state, amount) {
       state.walletAmount = amount;
     },
-    MUTATATION_SET_MINING(state, mining) {
+    MUTATION_SET_(state, mining) {
       state.mining = mining;
     },
-    MUTATATION_SET_EDITING(state, editing) {
+    MUTATION_SET_EDITING(state, editing) {
       state.editing = editing;
     },
-    MUTATATION_SET_FIRST_NAME(state, firstName) {
+    MUTATION_SET_FIRST_NAME(state, firstName) {
       state.firstName = firstName;
     },
-    MUTATATION_SET_LAST_NAME(state, lastName) {
+    MUTATION_SET_LAST_NAME(state, lastName) {
       state.lastName = lastName;
     },
-    MUTATATION_SET_PASSWORD(state, password) {
+    MUTATION_SET_PASSWORD(state, password) {
       state.password = password;
     },
+    MUTATION_SET_UMNETID(state, umnetId) {
+      state.umnetId = umnetId
+    },
+    MUTATION_SET_WALLETID(state, walletId) {
+      state.walletId = walletId
+    },
+    MUTATION_SET_PRIVATE_KEY(state, privateKey) {
+      state.privateKey = privateKey
+    }
   },
   actions: {
     ACTION_UPDATE_USER({ commit, getters }, values) {
-      commit("MUTATATION_SET_LOADING", true);
+      commit("MUTATION_SET_LOADING", true);
 
       const password = values.password ? values.password : getters.password;
       const firstName = values.firstName ? values.firstName : getters.firstName;
@@ -146,13 +145,13 @@ export default new Vuex.Store({
         .then(
           () => {
             commit("MUTATION_SET_WALLET_CREATED", true);
-            commit("MUTATATION_SET_LOADING", false);
-            commit("MUTATATION_SET_FIRST_NAME", firstName);
-            commit("MUTATATION_SET_LAST_NAME", lastName);
-            commit("MUTATATION_SET_PASSWORD", password);
+            commit("MUTATION_SET_LOADING", false);
+            commit("MUTATION_SET_FIRST_NAME", firstName);
+            commit("MUTATION_SET_LAST_NAME", lastName);
+            commit("MUTATION_SET_PASSWORD", password);
           },
           (err) => {
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
 
             const message = err.response && err.response.data.error
               ? err.response.data.error
@@ -170,7 +169,7 @@ export default new Vuex.Store({
         );
     },
     ACTION_INITIALIZE_WALLET({ commit, getters, dispatch }) {
-      commit("MUTATATION_SET_LOADING", true);
+      commit("MUTATION_SET_LOADING", true);
       axios
         .post("http://localhost/wallet/create", {
           "walletId": getters.walletId,
@@ -178,7 +177,7 @@ export default new Vuex.Store({
         .then(
           () => {
             commit("MUTATION_SET_WALLET_CREATED", true);
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
             dispatch("ACTION_FETCH_WALLET_AMOUNT");
           },
           (err) => {
@@ -194,12 +193,12 @@ export default new Vuex.Store({
                 dismissible: true,
               }
             );
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
           }
         );
     },
     ACTION_FETCH_WALLET_AMOUNT({ commit, getters }) {
-      commit("MUTATATION_SET_LOADING", true);
+      commit("MUTATION_SET_LOADING", true);
       axios
         .post("http://localhost/wallet/amount", {
           "walletId": getters.walletId,
@@ -207,7 +206,7 @@ export default new Vuex.Store({
         .then(
           (response) => {
             commit("MUTATION_SET_WALLET_AMOUNT", response.data.amount);
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
           },
           (err) => {
             const message = err.response && err.response.data.error
@@ -222,14 +221,14 @@ export default new Vuex.Store({
                 dismissible: true,
               }
             );
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
           }
         );
     },
-    ACTION_SEND_TRANSACTION({ getters, dispatch, commit }, values) {
+    ACTION_SEND_TRANSACTION({ getters, commit }, values) {
       const recipient = values.contact;
       const transaction: Transaction = {
-        "to": "687", // stubbed
+        "to": recipient,
         "from": getters.walletId,
         "amount": parseFloat(values.amount),
         "id": "",
@@ -238,7 +237,7 @@ export default new Vuex.Store({
 
       transaction.id = getTransactionId(transaction);
       transaction.signature = sign(transaction, getters.privateKey);
-      commit("MUTATATION_SET_LOADING", true);
+      commit("MUTATION_SET_LOADING", true);
 
       axios
         .post("http://localhost/transactions/create", {
@@ -256,11 +255,11 @@ export default new Vuex.Store({
               position: "top",
               dismissible: true,
             });
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
           }
         },
           (err) => {
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
 
             Vue.$toast.error(
               err.response.data.error
@@ -278,14 +277,14 @@ export default new Vuex.Store({
           });
     },
 
-    async ACTION_LOGIN({ commit, dispatch }, values) {
+    ACTION_LOGIN({ commit, dispatch }, values) {
       const umnetId = values.umnetId;
       const password = values.password;
 
       // Do some validation first, ensure both fields were filled out
       if (umnetId == "" || password == "") {
         // If not, return and inform user
-        commit("MUTATATION_SET_LOADING", false);
+        commit("MUTATION_SET_LOADING", false);
         Vue.$toast.warning(EMPTY_TEXT_FIELD_ERROR, {
           message: EMPTY_TEXT_FIELD_ERROR,
           duration: 3000,
@@ -296,7 +295,7 @@ export default new Vuex.Store({
       }
       // If we have two valid fields, send off to auth service for login
 
-      commit("MUTATATION_SET_LOADING", true);
+      commit("MUTATION_SET_LOADING", true);
 
       axios
         .post("http://localhost/users/login", {
@@ -306,8 +305,19 @@ export default new Vuex.Store({
         // Inform user whether or not login was succesfful. If it wasnt, let them know why
 
         .then(
-          () => {
-            commit("MUTATATION_SET_LOADING", false);
+          (response) => {
+            commit("MUTATION_SET_LOADING", false);
+            commit("MUTATION_SET_FIRST_NAME", response.data.user.first_name)
+            commit("MUTATION_SET_LAST_NAME", response.data.user.last_name)
+            commit("MUTATION_SET_UMNETID", umnetId)
+            commit("MUTATION_SET_PASSWORD", password)
+            commit("MUTATION_SET_WALLETID", response.data.user.public_key)
+
+            let reader = new FileReader();
+            
+            const privateKey = ""
+            commit("MUTATION_SET_PRIVATE_KEY", )
+
 
             Vue.$toast.success("Login successful!", {
               message: "Login successful!",
@@ -315,12 +325,13 @@ export default new Vuex.Store({
               position: "top",
               dismissible: true,
             });
-            dispatch("ACTION_FETCH_WALLET_AMOUNT");
+            dispatch("ACTION_FETCH_WALLET_AMOUNT").then(() => {
+              router.push("/home");
+            });
 
-            router.push("/home");
           },
           (err) => {
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
 
             const message = err.response && err.response.data.error
               ? err.response.data.error
@@ -338,8 +349,8 @@ export default new Vuex.Store({
         );
     },
 
-    async ACTION_CREATE_ACCOUNT({ commit, getters, dispatch }, values) {
-      commit("MUTATATION_SET_LOADING", true);
+    ACTION_CREATE_ACCOUNT({ commit, getters, dispatch }, values) {
+      commit("MUTATION_SET_LOADING", true);
 
       const umnetId = values.umnetId;
       const password = values.password;
@@ -356,7 +367,7 @@ export default new Vuex.Store({
         lastName == ""
       ) {
         // If not, return and inform user
-        commit("MUTATATION_SET_LOADING", false);
+        commit("MUTATION_SET_LOADING", false);
         Vue.$toast.warning(EMPTY_TEXT_FIELD_ERROR, {
           message: EMPTY_TEXT_FIELD_ERROR,
           duration: 3000,
@@ -370,23 +381,38 @@ export default new Vuex.Store({
 
       axios
         .post("http://localhost/users/create", {
-          "firstName": firstName,
-          "lastName": lastName,
+          "first_name": firstName,
+          "last_name": lastName,
           "umnetID": umnetId,
           "public_key": getters.walletId,
           "password": password,
         })
         .then(
           () => {
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
 
-            const data = { umnetId: umnetId, password: password };
+            const keyPair = genKeyPair();
+            const privateKey = keyPair[0];
+            const walletId = keyPair[1];
+            const privateKeyHash = `${umnetId}${password}${walletId}`
+
+
+
+            var blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, "privateKeys.txt")
+
+            commit("MUTATION_SET_WALLETID", walletId)
+
+
             dispatch("ACTION_INITIALIZE_WALLET").then(() => {
+
+              const data = { umnetId: umnetId, password: password };
+
               dispatch("ACTION_LOGIN", data);
             });
           },
           (err) => {
-            commit("MUTATATION_SET_LOADING", false);
+            commit("MUTATION_SET_LOADING", false);
 
             const message = err.response && err.response.data.error
               ? err.response.data.error

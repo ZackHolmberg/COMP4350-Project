@@ -38,6 +38,8 @@ def test_get_chain(test_client):
     assert data['prev_hash'] == "0"
     assert data['transaction'] == {"amount": 0,
                                    "from_address": "", "to_address": ""}
+    assert data['minerId'] == "miner_id"
+    assert data['reward'] == 0
 
 
 def test_add_wallet(test_client):
@@ -54,16 +56,18 @@ def test_add_wallet(test_client):
     assert response.status_code == 400
     assert response.json['error'] == "wallet ID already exists"
 
+
 def test_receiver_notpresent(test_client):
     url = '/wallet/createTransaction'
     data = {'from': "fake_wallet_id",
-             'amount': 0,
-             'to': "another"}
+            'amount': 0,
+            'to': "another"}
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
     assert response.status_code == 400
     assert b'id' in response.data
+
 
 def test_verify_amount(test_client):
 
@@ -105,8 +109,8 @@ def test_valid_transaction(test_client):
 
     url = '/wallet/createTransaction'
     data = {'from': "user1",
-             'amount': 5,
-             'to': "user2"}
+            'amount': 5,
+            'to': "user2"}
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
@@ -116,13 +120,12 @@ def test_valid_transaction(test_client):
     data1 = {'walletId': "user1"}
     data2 = {'walletId': "user2"}
     url = '/wallet/balance'
-    
+
     response = test_client.get(url, data=json.dumps(data1), headers=headers)
 
     assert response.status_code == 200
     assert response.json['amount'] == 5
 
-    
     response = test_client.get(url, data=json.dumps(data2), headers=headers)
 
     assert response.status_code == 200
