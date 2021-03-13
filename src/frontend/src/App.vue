@@ -17,17 +17,23 @@ const socket = io("http://localhost");
 
 export default class App extends Vue {
 
+  get walletId(){
+    return this.$store.getters.walletId
+  }
+
   validHash (hash: string): boolean  {
       return hash.startsWith("0000", 0);
   }
 
   computeHash(nonce: number, transaction: Transaction): string {
+    
+      const toHash
       return sha256(
-        nonce.toString() + transaction.to + transaction.from + transaction.amount.toString() + transaction.id + transaction.signature
+        `${nonce}${transaction.amount}${transaction.id}${transaction.signature}`
       );
   }
 
-  proofOfWork(transaction: Transaction): string  {
+  proofOfWork(transaction: Transaction): any  {
       let nonce = 0;
       let hash = "";
       while (!this.validHash(hash) && this.$store.getters.mining) {
@@ -35,28 +41,38 @@ export default class App extends Vue {
         nonce += 1;
       }
 
-      return hash;
+      return {proof: hash, nonce: nonce}
   }
 
   get mining() {
     const mining = this.$store.getters.mining;
     if (mining) {
       socket.on("findProof", (...args: any) => {
+
+        console.log("Received findProof! Args:",args)
         const transaction: Transaction = {
-        "to": args.to,
-        "from": args.from,
-        "amount": parseFloat(args.transaction.amount),
-        "id": args.transaction.id,
-        "signature": args.transaction.signature,
+          "to": args[0].to,
+          "from": args[0].from,
+          "amount": parseFloat(args[0].amount),
+          "id": args[0].id,
+          "signature": args[0].signature,
         };
+        console.log("About to compute hash! Using:",transaction)
 
-        const hash = this.proofOfWork(transaction);
+        const temp = this.proofOfWork(transaction);
+        console.log("Finished computing hash!")
+        console.log("toHash: ",`${temp.nonce}${transaction.to}${transaction.from}${transaction.amount}${transaction.id}${transaction.signature}`)
 
-        if(this.validHash(hash)){
+        if(this.validHash(temp.proof)){
           const toSend = {
-
+            "proof":temp.proof,
+            "nonce":temp.nonce,
+            "id": transaction.id,
+            "minerId": this.walletId
           }
-            socket.emit("proof",hash)
+
+          console.log("Sending: ",toSend)
+          socket.emit("proof",toSend)
         }
       });
 

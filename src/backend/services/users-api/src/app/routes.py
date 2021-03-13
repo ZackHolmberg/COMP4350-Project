@@ -1,7 +1,5 @@
-from src.app import app
+from src.app import app, mongo, HttpCode
 from flask import request, jsonify
-from src.app import mongo
-from src.app import HttpCode
 from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
 
 
@@ -29,13 +27,13 @@ def login():
         raise UserNotFoundException()
 
     if not correct_credentials:
-        raise IncorrectCredentialsException()
+        return jsonify(error="Incorrect password for corresponding UMnetId"), HttpCode.BAD_REQUEST.value
+        # raise IncorrectCredentialsException() >>> I want to do something like this but
+        # not sure the best way to do it! Suggestions please!
 
     data = {
         'first_name': user['first_name'],
         'last_name': user['last_name'],
-        'umnetID': user['umnetID'],
-        'password': user["password"],
         'public_key': user['public_key']
     }
 

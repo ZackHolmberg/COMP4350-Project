@@ -8,6 +8,8 @@ import * as rs from "jsrsasign";
 import { router } from "../main";
 import type { Transaction } from "../types";
 import { saveAs } from 'file-saver';
+import createPersistedState from "vuex-persistedstate";
+import * as Cookies from 'js-cookie'
 
 // ---------------------------------------------------------------
 //  TRANSACTION SIGNING
@@ -49,6 +51,13 @@ const EMPTY_TEXT_FIELD_ERROR =
 const ERROR_STRING = "An error occurred. Please try again.";
 
 export default new Vuex.Store({
+  // Keeps the VueX state persistent between page reloads
+  plugins: [
+    createPersistedState({
+      getState: (key) => Cookies.getJSON(key),
+      setState: (key, state) => Cookies.set(key, state, { expires: 3, secure: true })
+    })
+  ],
   state: {
     loading: false,
     walletAmount: 0,
@@ -123,6 +132,10 @@ export default new Vuex.Store({
     },
     MUTATION_SET_PRIVATE_KEY(state, privateKey) {
       state.privateKey = privateKey
+    },
+    MUTATION_SET_MINING(state, mining) {
+      state.mining = mining
+
     }
   },
   actions: {
@@ -144,7 +157,6 @@ export default new Vuex.Store({
         })
         .then(
           () => {
-            commit("MUTATION_SET_WALLET_CREATED", true);
             commit("MUTATION_SET_LOADING", false);
             commit("MUTATION_SET_FIRST_NAME", firstName);
             commit("MUTATION_SET_LAST_NAME", lastName);
@@ -176,7 +188,6 @@ export default new Vuex.Store({
         })
         .then(
           () => {
-            commit("MUTATION_SET_WALLET_CREATED", true);
             commit("MUTATION_SET_LOADING", false);
             dispatch("ACTION_FETCH_WALLET_AMOUNT");
           },
@@ -234,10 +245,15 @@ export default new Vuex.Store({
         "id": "",
         "signature": "",
       };
-
+      console.log("GETTING HERE 1")
       transaction.id = getTransactionId(transaction);
+      console.log("GETTING HERE 2")
+
       transaction.signature = sign(transaction, getters.privateKey);
+      console.log("GETTING HERE 3")
+
       commit("MUTATION_SET_LOADING", true);
+      console.log("GETTING HERE 4")
 
       axios
         .post("http://localhost/transactions/create", {
@@ -313,10 +329,11 @@ export default new Vuex.Store({
             commit("MUTATION_SET_PASSWORD", password)
             commit("MUTATION_SET_WALLETID", response.data.user.public_key)
 
-            let reader = new FileReader();
-            
-            const privateKey = ""
-            commit("MUTATION_SET_PRIVATE_KEY", )
+            // TODO: Figure out reading privateKey from file
+
+            // let reader = new FileReader();
+
+            // const privateKey = ""
 
 
             Vue.$toast.success("Login successful!", {
@@ -378,27 +395,28 @@ export default new Vuex.Store({
       }
 
       // If we have valid fields, send off to user service for account creation
+      const keyPair = genKeyPair();
+      const privateKey = keyPair[0];
+      const walletId = keyPair[1];
+      const privateKeyHash = sha256(`${umnetId}${password}${walletId}`)
+
+      // TODO: Remove when we read in and set privateKey on login
+      commit("MUTATION_SET_PRIVATE_KEY", privateKey)
+      commit("MUTATION_SET_WALLETID", walletId)
 
       axios
         .post("http://localhost/users/create", {
           "first_name": firstName,
           "last_name": lastName,
           "umnetID": umnetId,
-          "public_key": getters.walletId,
+          "public_key": walletId,
           "password": password,
         })
         .then(
           () => {
             commit("MUTATION_SET_LOADING", false);
 
-            const keyPair = genKeyPair();
-            const privateKey = keyPair[0];
-            const walletId = keyPair[1];
-            const privateKeyHash = `${umnetId}${password}${walletId}`
-
-
-
-            var blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
+            const blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
             saveAs(blob, "privateKeys.txt")
 
             commit("MUTATION_SET_WALLETID", walletId)

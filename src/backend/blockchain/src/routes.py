@@ -1,3 +1,4 @@
+
 from src import app
 from .transaction import Transaction
 from .block import Block
@@ -66,11 +67,9 @@ def proof():
 def check_wallet_exists():
     try:
         data = request.get_json()
-        wallet_id = data["walledId"]
-        exists = False
-        if wallet_id in blockchain.wallets:
-            exists = True
-        return jsonify(valid=exists), HttpCode.Ok.value
+        wallet_id = data["walletId"]
+        exists = wallet_id in blockchain.wallets
+        return jsonify(valid=exists), HttpCode.OK.value
 
     except KeyError as e:
         raise IncorrectPayloadException()
@@ -112,7 +111,7 @@ def create_transaction():
 @app.route('/wallet/balance', methods=['GET'])
 def get_wallet_amount():
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)
         wallet_id = data["walletId"]
         amount = blockchain.get_wallet_amount(wallet_id)
         return jsonify(amount=amount), HttpCode.OK.value

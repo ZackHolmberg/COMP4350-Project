@@ -95,7 +95,11 @@
 ### Response
 
 ```json
-{ "success": true }
+{
+  "first_name": string,
+  "last_name": string,
+  "public_key": string
+}
 ```
 
 -or-
