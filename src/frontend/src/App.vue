@@ -57,8 +57,7 @@ export default class App extends Vue {
       }
 
       socket.on("findProof", (...args: any) => {
-
-        // console.log("Received findProof! Args:",args)
+        console.log("Received findProof! Args:",args)
         this.$store.commit('MUTATION_SET_FIND_PROOF', true);
 
         const transaction: Transaction = {
@@ -68,10 +67,11 @@ export default class App extends Vue {
           "id": args[0].id,
           "signature": args[0].signature,
         };
-        // console.log("About to compute hash! Using:",transaction)
+        console.log("About to compute hash! Using:",transaction)
 
         const temp = this.proofOfWork(transaction);
-        // console.log("Finished computing hash!")
+        console.log("Finished computing hash!")
+        console.log("Proof is",temp.proof)
         // console.log("used the following to compute hash: ",(temp.nonce+transaction.amount+transaction.id+transaction.signature).replace(/(\r\n|\n|\r)/gm, ""))
 
         if(this.validHash(temp.proof)){
@@ -82,10 +82,13 @@ export default class App extends Vue {
             "minerId": this.walletId
           }
 
-          // console.log("Sending: ",toSend)
+          console.log("Sending: ",toSend)
           socket.emit("proof",toSend)
           this.$store.commit('MUTATION_SET_FIND_PROOF', false);
 
+        }
+        else {
+         console.log("Proof is not valid",temp.proof)
         }
       });
 
