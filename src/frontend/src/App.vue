@@ -41,7 +41,7 @@ export default class App extends Vue {
         nonce += 1;
         hash = this.computeHash(nonce, transaction);
       }
-      // console.log("Returning: ",{proof: hash, nonce: nonce})
+      console.log("Returning: ",{proof: hash, nonce: nonce})
       return {proof: hash, nonce: nonce}
   }
 
