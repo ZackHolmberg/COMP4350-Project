@@ -103,7 +103,7 @@ def handle_proofs(message):
     if (ongoing_proof == message['id']):
         # print("ZACK OUTPUT - GETTING HERE 0 but before 1", file=sys.stderr)
 
-        if valid_proof(message["proof"], message["nonce"]):
+        if not valid_proof(message["proof"], message["nonce"]):
             # print("ZACK OUTPUT - GETTING HERE 1", file=sys.stderr)
             # ignore the rest of the clients that try to send the proof
             ongoing_proof = None
