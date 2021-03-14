@@ -15,7 +15,7 @@
 
     <Button
       class="login-button"
-      id="button"
+      id="login-button"
       label="Login"
       dest=""
       size="small"

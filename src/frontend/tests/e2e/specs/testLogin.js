@@ -1,4 +1,4 @@
-describe("After loading the app", () => {
+describe("App Login", () => {
   context("1080p resolution", () => {
     beforeEach(() => {
       // run these tests as if in a desktop
@@ -9,13 +9,13 @@ describe("After loading the app", () => {
     it("Successfully logs into the app and navigates to home page", () => {
       cy.get("#umnetId").type("umnetId");
       cy.get("#password").type("Password");
-      cy.intercept("POST", "/users/login", { fixture: "success.json" }).as(
+      cy.intercept("POST", "/users/login", { fixture: "loginSuccess.json" }).as(
         "userLogin"
       );
       cy.intercept("POST", "/wallet/amount", {
         fixture: "walletAmountEmpty.json",
       }).as("getWalletAmount");
-      cy.get("#button").click();
+      cy.get("#login-button").click();
       cy.wait(["@userLogin"]);
       cy.wait(["@getWalletAmount"]);
       cy.url().should("eq", "http://localhost:8080/home");
@@ -23,7 +23,7 @@ describe("After loading the app", () => {
 
     it("Displays empty field toast when trying to login with one empty input field", () => {
       cy.get("#umnetId").type("umnetId");
-      cy.get("#button").click();
+      cy.get("#login-button").click();
       transaction = cy.get('[class="v-toast__text"]');
       transaction.should("be.visible");
       transaction.contains(
@@ -40,7 +40,7 @@ describe("After loading the app", () => {
           error: "An error occured!",
         },
       }).as("userLogin");
-      cy.get("#button").click();
+      cy.get("#login-button").click();
       cy.wait(["@userLogin"]);
       transaction = cy.get('[class="v-toast__text"]');
       transaction.should("be.visible");

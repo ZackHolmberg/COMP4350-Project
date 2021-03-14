@@ -1,6 +1,6 @@
 <template>
   <div id="wallet">
-    <h1 class="wallet-header">{{ walletAmount }} BSC</h1>
+    <h1 id="walletAmount" class="wallet-header">{{ walletAmount }} BSC</h1>
   </div>
 </template>
 

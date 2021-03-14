@@ -7,13 +7,12 @@
 
 <script lang="ts">
 import { Vue } from "vue-property-decorator";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import { sha256 } from "js-sha256";
 import type { Transaction } from "./types";
+import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 
-const socket = io("http://localhost");
-
-
+let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default class App extends Vue {
 
@@ -42,16 +41,24 @@ export default class App extends Vue {
         nonce += 1;
         hash = this.computeHash(nonce, transaction);
       }
-      console.log("Returning: ",{proof: hash, nonce: nonce})
+      // console.log("Returning: ",{proof: hash, nonce: nonce})
       return {proof: hash, nonce: nonce}
   }
+
 
   get mining() {
     const mining = this.$store.getters.mining;
     if (mining) {
+      if(!socket){
+        socket = io("http://localhost");
+      }
+      if(!socket.connected){
+        socket.connect()
+      }
+
       socket.on("findProof", (...args: any) => {
 
-        console.log("Received findProof! Args:",args)
+        // console.log("Received findProof! Args:",args)
         this.$store.commit('MUTATION_SET_FIND_PROOF', true);
 
         const transaction: Transaction = {
@@ -61,11 +68,11 @@ export default class App extends Vue {
           "id": args[0].id,
           "signature": args[0].signature,
         };
-        console.log("About to compute hash! Using:",transaction)
+        // console.log("About to compute hash! Using:",transaction)
 
         const temp = this.proofOfWork(transaction);
-        console.log("Finished computing hash!")
-        console.log("used the following to compute hash: ",(temp.nonce+transaction.amount+transaction.id+transaction.signature).replace(/(\r\n|\n|\r)/gm, ""))
+        // console.log("Finished computing hash!")
+        // console.log("used the following to compute hash: ",(temp.nonce+transaction.amount+transaction.id+transaction.signature).replace(/(\r\n|\n|\r)/gm, ""))
 
         if(this.validHash(temp.proof)){
           const toSend = {
@@ -75,7 +82,7 @@ export default class App extends Vue {
             "minerId": this.walletId
           }
 
-          console.log("Sending: ",toSend)
+          // console.log("Sending: ",toSend)
           socket.emit("proof",toSend)
           this.$store.commit('MUTATION_SET_FIND_PROOF', false);
 
@@ -92,6 +99,10 @@ export default class App extends Vue {
         this.$store.commit('MUTATION_SET_FIND_PROOF', false);
 
       });
+    } else{
+        if(socket && socket.connected){
+          socket.disconnect()
+      }
     }
 
     return null;
