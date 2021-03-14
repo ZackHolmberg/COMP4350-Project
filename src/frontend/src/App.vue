@@ -54,7 +54,7 @@ export default class App extends Vue {
       }
       if(!socket.connected){
         socket.connect()
-              socket.on("findProof", (...args: any) => {
+        socket.on("findProof", (...args: any) => {
         console.log("Received findProof! Args:",args)
         this.$store.commit('MUTATION_SET_FIND_PROOF', true);
 
