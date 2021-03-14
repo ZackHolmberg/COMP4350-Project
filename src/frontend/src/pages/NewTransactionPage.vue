@@ -52,7 +52,7 @@ export default class NewTransactionPage extends Vue {
     const values = {
       amount: 1,
       contact:
-        "-----BEGIN PUBLIC KEY-----\r\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCzxHqQZkmQWc2nYmuIvoZVz66j\r\nKqMlNr1nN+1wA6wF6fLUHq/hgF0ypGTrYxvc57aeVOsxnwndqqFMxBj9mBH+97fr\r\nDpsaFJsfBlsvxgCyNgRfZmqsAEZL0dQV+GubNldjfqjYfklDAshyooTxwV/SLnSD\r\nF/tkpRM6r5Ng0dT04QIDAQAB\r\n-----END PUBLIC KEY-----\r\n",
+        "-----BEGIN PUBLIC KEY-----\r\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCW1uJl//zviO3aCpEw8Z6XyWjd\r\nkJ8BZvH29e/3Ca5wuxkK/XoE9DOeYsKB/GMFp/hwmUAbTT/Os7HLtPurCG5pn7uK\r\nLtgTHwliYGiqVJ3Q5EfJBBwjTncFreFeMvlwt7DATT04H6QX9i9Ri8/rWdHG0AF4\r\nLexkUaWcHBcdYWL4VQIDAQAB\r\n-----END PUBLIC KEY-----\r\n",
     };
     this.$store.dispatch("ACTION_SEND_TRANSACTION", values);
   }
