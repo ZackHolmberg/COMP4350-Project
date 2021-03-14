@@ -1,4 +1,4 @@
-describe('Loads the web app', () => {
+describe('App Startup', () => {
   context('1080p resolution', () => {
     beforeEach(() => {
       // run these tests as if in a desktop

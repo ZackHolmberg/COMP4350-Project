@@ -31,10 +31,17 @@ const getTransactionId = (transaction: Transaction): string => {
 
 const sign = (transaction: Transaction, privateKey: string): string => {
   const dataToSign = transaction.id;
+  console.log("GETTING HERE 4")
+
   const sig = new rs.KJUR.crypto.Signature({ alg: "SHA256withRSA" });
+  console.log("GETTING HERE 5")
 
   sig.init(privateKey);
+  console.log("GETTING HERE 6")
+
   sig.updateString(dataToSign);
+  console.log("GETTING HERE 7")
+
 
   return sig.sign();
 };
@@ -110,8 +117,8 @@ export default new Vuex.Store({
     MUTATION_SET_LOADING(state, loading) {
       state.loading = loading;
     },
-    MUTATION_SET_WALLET_AMOUNT(state, amount) {
-      state.walletAmount = amount;
+    MUTATION_SET_WALLET_AMOUNT(state, walletAmount) {
+      state.walletAmount = walletAmount;
     },
     MUTATION_SET_(state, mining) {
       state.mining = mining;
@@ -222,6 +229,7 @@ export default new Vuex.Store({
         })
         .then(
           (response) => {
+            console.log("Data: ", response.data)
             commit("MUTATION_SET_WALLET_AMOUNT", response.data.amount);
             commit("MUTATION_SET_LOADING", false);
           },
@@ -244,6 +252,8 @@ export default new Vuex.Store({
     },
     ACTION_SEND_TRANSACTION({ getters, commit }, values) {
       const recipient = values.contact;
+      console.log("GETTING HERE0")
+
       const transaction: Transaction = {
         "to": recipient,
         "from": getters.walletId,
@@ -251,10 +261,14 @@ export default new Vuex.Store({
         "id": "",
         "signature": "",
       };
+      console.log("GETTING HERE1")
+
       transaction.id = getTransactionId(transaction);
+      console.log("GETTING HERE2, privateKey is: ", getters.privateKey, " transaction is: ", transaction)
 
       transaction.signature = sign(transaction, getters.privateKey);
 
+      console.log("GETTING HERE3")
       commit("MUTATION_SET_LOADING", true);
 
       axios
@@ -273,6 +287,7 @@ export default new Vuex.Store({
             dismissible: true,
           });
           commit("MUTATION_SET_LOADING", false);
+          console.log("Data: ", response.data)
           commit("MUTATION_SET_WALLET_AMOUNT", response.data.remaining_amount);
 
         },
@@ -295,7 +310,7 @@ export default new Vuex.Store({
           });
     },
 
-    ACTION_LOGIN({ commit, dispatch }, values) {
+    ACTION_LOGIN({ commit, dispatch, getters }, values) {
       const umnetId = values.umnetId;
       const password = values.password;
 
@@ -337,6 +352,10 @@ export default new Vuex.Store({
 
             // const privateKey = ""
 
+            // TODO: Remove once we have a better way to do this
+            if (getters.privateKey == "") {
+              commit("MUTATION_SET_PRIVATE_KEY", "-----BEGIN RSA PRIVATE KEY-----\r\nMIICWwIBAAKBgQDTVUqBAh2WiuxoACXfK+qppy6J2lttoNywfwesv0Sg9KHIbSEf\r\nduRSq0J53ajQo/s2KeHvW8oyNlZcCi+FSB5S052urxW1E/ozoVGqdelGS86h07zm\r\nSRVxUQCKexZbS3LrXXfs4yv3Gdko2+cDaM+OQnNbQWTAu/6f8PrgXS579wIDAQAB\r\nAoGAPqUiz7kz0iNeTrn0gAJBroa7WevbfFTZ9ovBV6jfDCNYLdSDpBMXPZY8v2lA\r\nmJBzcCvcKJr6BgZrdR8j1Qt6ySLAChnFV9Y5DimN/x6cmW6xt8MhUcGhAAMzAP1m\r\nZx5+b0scdOzfeRVwPKJHRNqGtHMtyPgsoZxIE7PkU/Ilb/ECQQDq2e9r260uhmcZ\r\niFuOyET5EXzWkPDAWYHNdaYg4+OMIr5EmqN5ia+o9RsiOSlrS41RjgQZ1ElFTW3n\r\nj/CodakZAkEA5l0wNbNf8O5v7IALn54+b853iPiblb5aEJTdamZ8X74NoplsBpK3\r\nix+CfBNNuzZLynrxbKwujbDrP1pcdDMfjwJAAU/CRInvh6j8fmoCiOOZbwKn/dLF\r\nZW2aifk0Ok7LgIbZJSzv6MfaEUl9I03Ka2z6lxAB+drzpc1u5bIqF+bAUQJAHqeN\r\n78dz3+rKyAzt/wqewmAWNgrnIVEYSRaWND95E4CF7fo+js1dUU0bHwmukVgTU9ly\r\nYQS0mTROybprjSb0bwJAE1TOGPKyrtf3YEOFGJctAjn0Zlz7tpout72zrHw27FjH\r\nBq9ocxcFGWKGa8Go1Ohfy2nvBJPGypgJOK+jTv56zQ==\r\n-----END RSA PRIVATE KEY-----\r\n")
+            }
 
             Vue.$toast.success("Login successful!", {
               message: "Login successful!",
