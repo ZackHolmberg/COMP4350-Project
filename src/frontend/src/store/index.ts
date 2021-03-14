@@ -31,16 +31,12 @@ const getTransactionId = (transaction: Transaction): string => {
 
 const sign = (transaction: Transaction, privateKey: string): string => {
   const dataToSign = transaction.id;
-  console.log("GETTING HERE 4")
 
   const sig = new rs.KJUR.crypto.Signature({ alg: "SHA256withRSA" });
-  console.log("GETTING HERE 5")
 
   sig.init(privateKey);
-  console.log("GETTING HERE 6")
 
   sig.updateString(dataToSign);
-  console.log("GETTING HERE 7")
 
 
   return sig.sign();
@@ -148,7 +144,7 @@ export default new Vuex.Store({
       state.mining = mining
     },
     MUTATION_SET_FIND_PROOF(state, findProof) {
-      state.mining = findProof
+      state.findProof = findProof
     }
   },
   actions: {
@@ -229,7 +225,6 @@ export default new Vuex.Store({
         })
         .then(
           (response) => {
-            console.log("Data: ", response.data)
             commit("MUTATION_SET_WALLET_AMOUNT", response.data.amount);
             commit("MUTATION_SET_LOADING", false);
           },
@@ -252,7 +247,6 @@ export default new Vuex.Store({
     },
     ACTION_SEND_TRANSACTION({ getters, commit }, values) {
       const recipient = values.contact;
-      console.log("GETTING HERE0")
 
       const transaction: Transaction = {
         "to": recipient,
@@ -261,14 +255,11 @@ export default new Vuex.Store({
         "id": "",
         "signature": "",
       };
-      console.log("GETTING HERE1")
 
       transaction.id = getTransactionId(transaction);
-      console.log("GETTING HERE2, privateKey is: ", getters.privateKey, " transaction is: ", transaction)
 
       transaction.signature = sign(transaction, getters.privateKey);
 
-      console.log("GETTING HERE3")
       commit("MUTATION_SET_LOADING", true);
 
       axios
@@ -287,7 +278,6 @@ export default new Vuex.Store({
             dismissible: true,
           });
           commit("MUTATION_SET_LOADING", false);
-          console.log("Data: ", response.data)
           commit("MUTATION_SET_WALLET_AMOUNT", response.data.remaining_amount);
 
         },
