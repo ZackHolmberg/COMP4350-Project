@@ -6,6 +6,7 @@
         id="contact-input"
         class="new-transaction-input"
         label="Email"
+        ref="recipient"
         :disable="false"
       />
       <p class="transaction-text">Amount:</p>
@@ -13,6 +14,7 @@
         id="amount-input"
         class="new-transaction-input"
         label="0.0 BSC"
+        ref="amount"
         :disable="false"
       />
       <Button
@@ -49,10 +51,11 @@ import Button from "../components/Button.vue";
 })
 export default class NewTransactionPage extends Vue {
   newTransaction() {
+    const recipient = this.$refs.recipient.inputData();
+    const amount = this.$refs.amount.inputData();
     const values = {
-      amount: 1,
-      contact:
-        "-----BEGIN PUBLIC KEY-----\r\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCW1uJl//zviO3aCpEw8Z6XyWjd\r\nkJ8BZvH29e/3Ca5wuxkK/XoE9DOeYsKB/GMFp/hwmUAbTT/Os7HLtPurCG5pn7uK\r\nLtgTHwliYGiqVJ3Q5EfJBBwjTncFreFeMvlwt7DATT04H6QX9i9Ri8/rWdHG0AF4\r\nLexkUaWcHBcdYWL4VQIDAQAB\r\n-----END PUBLIC KEY-----\r\n",
+      amount: amount,
+      recipient: recipient,
     };
     this.$store.dispatch("ACTION_SEND_TRANSACTION", values);
   }

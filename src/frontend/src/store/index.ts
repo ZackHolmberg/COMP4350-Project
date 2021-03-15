@@ -23,6 +23,7 @@ const genKeyPair = (): string[] => {
   ];
 };
 
+// TODO: This should include timestamp too 
 const getTransactionId = (transaction: Transaction): string => {
   return sha256(
     transaction.to + transaction.from + transaction.amount
@@ -148,7 +149,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    ACTION_UPDATE_USER({ commit, getters }, values) {
+    ACTION_UPDATE_USER({ commit, getters, dispatch }, values) {
       commit("MUTATION_SET_LOADING", true);
 
       const password = values.password ? values.password : getters.password;
@@ -177,15 +178,7 @@ export default new Vuex.Store({
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
-            Vue.$toast.error(message
-              ,
-              {
-                message: message,
-                duration: 3000,
-                position: "top",
-                dismissible: true,
-              }
-            );
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
           }
         );
     },
@@ -204,20 +197,12 @@ export default new Vuex.Store({
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
-            Vue.$toast.error(message
-              ,
-              {
-                message: message,
-                duration: 3000,
-                position: "top",
-                dismissible: true,
-              }
-            );
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
             commit("MUTATION_SET_LOADING", false);
           }
         );
     },
-    ACTION_FETCH_WALLET_AMOUNT({ commit, getters }) {
+    ACTION_FETCH_WALLET_AMOUNT({ commit, getters, dispatch }) {
       commit("MUTATION_SET_LOADING", true);
       axios
         .post("http://localhost/wallet/amount", {
@@ -232,26 +217,18 @@ export default new Vuex.Store({
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
-            Vue.$toast.error(message
-              ,
-              {
-                message: message,
-                duration: 3000,
-                position: "top",
-                dismissible: true,
-              }
-            );
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
             commit("MUTATION_SET_LOADING", false);
           }
         );
     },
-    ACTION_SEND_TRANSACTION({ getters, commit }, values) {
-      const recipient = values.contact;
-
+    ACTION_SEND_TRANSACTION({ getters, commit, dispatch }, values) {
+      const recipient = values.recipient;
+      const amount = values.amount
       const transaction: Transaction = {
         "to": recipient,
         "from": getters.walletId,
-        "amount": parseFloat(values.amount),
+        "amount": parseFloat(amount),
         "id": "",
         "signature": "",
       };
@@ -271,12 +248,8 @@ export default new Vuex.Store({
           "signature": transaction.signature,
         })
         .then((response) => {
-          Vue.$toast.success("Transaction sent successfully!", {
-            message: "Transaction sent successfully!",
-            duration: 3000,
-            position: "top",
-            dismissible: true,
-          });
+          const message = "Transaction sent successfully!"
+          dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
           commit("MUTATION_SET_LOADING", false);
           commit("MUTATION_SET_WALLET_AMOUNT", response.data.remaining_amount);
 
@@ -284,19 +257,10 @@ export default new Vuex.Store({
           (err) => {
             commit("MUTATION_SET_LOADING", false);
 
-            Vue.$toast.error(
-              err.response.data.error
-                ? err.response.data.error
-                : ERROR_STRING,
-              {
-                message: err.response.data.error
-                  ? err.response.data.error
-                  : ERROR_STRING,
-                duration: 3000,
-                position: "top",
-                dismissible: true,
-              }
-            );
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : ERROR_STRING
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
           });
     },
 
@@ -308,12 +272,7 @@ export default new Vuex.Store({
       if (umnetId == "" || password == "") {
         // If not, return and inform user
         commit("MUTATION_SET_LOADING", false);
-        Vue.$toast.warning(EMPTY_TEXT_FIELD_ERROR, {
-          message: EMPTY_TEXT_FIELD_ERROR,
-          duration: 3000,
-          position: "top",
-          dismissible: true,
-        });
+        dispatch("ACTION_DISPLAY_TOAST", { message: EMPTY_TEXT_FIELD_ERROR, type: 'warning' })
         return;
       }
       // If we have two valid fields, send off to auth service for login
@@ -346,13 +305,8 @@ export default new Vuex.Store({
             if (getters.privateKey == "") {
               commit("MUTATION_SET_PRIVATE_KEY", "-----BEGIN RSA PRIVATE KEY-----\r\nMIICWwIBAAKBgQDTVUqBAh2WiuxoACXfK+qppy6J2lttoNywfwesv0Sg9KHIbSEf\r\nduRSq0J53ajQo/s2KeHvW8oyNlZcCi+FSB5S052urxW1E/ozoVGqdelGS86h07zm\r\nSRVxUQCKexZbS3LrXXfs4yv3Gdko2+cDaM+OQnNbQWTAu/6f8PrgXS579wIDAQAB\r\nAoGAPqUiz7kz0iNeTrn0gAJBroa7WevbfFTZ9ovBV6jfDCNYLdSDpBMXPZY8v2lA\r\nmJBzcCvcKJr6BgZrdR8j1Qt6ySLAChnFV9Y5DimN/x6cmW6xt8MhUcGhAAMzAP1m\r\nZx5+b0scdOzfeRVwPKJHRNqGtHMtyPgsoZxIE7PkU/Ilb/ECQQDq2e9r260uhmcZ\r\niFuOyET5EXzWkPDAWYHNdaYg4+OMIr5EmqN5ia+o9RsiOSlrS41RjgQZ1ElFTW3n\r\nj/CodakZAkEA5l0wNbNf8O5v7IALn54+b853iPiblb5aEJTdamZ8X74NoplsBpK3\r\nix+CfBNNuzZLynrxbKwujbDrP1pcdDMfjwJAAU/CRInvh6j8fmoCiOOZbwKn/dLF\r\nZW2aifk0Ok7LgIbZJSzv6MfaEUl9I03Ka2z6lxAB+drzpc1u5bIqF+bAUQJAHqeN\r\n78dz3+rKyAzt/wqewmAWNgrnIVEYSRaWND95E4CF7fo+js1dUU0bHwmukVgTU9ly\r\nYQS0mTROybprjSb0bwJAE1TOGPKyrtf3YEOFGJctAjn0Zlz7tpout72zrHw27FjH\r\nBq9ocxcFGWKGa8Go1Ohfy2nvBJPGypgJOK+jTv56zQ==\r\n-----END RSA PRIVATE KEY-----\r\n")
             }
-
-            Vue.$toast.success("Login successful!", {
-              message: "Login successful!",
-              duration: 3000,
-              position: "top",
-              dismissible: true,
-            });
+            const message = "Login successful!"
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
             dispatch("ACTION_FETCH_WALLET_AMOUNT").then(() => {
               router.push("/home");
             });
@@ -364,15 +318,8 @@ export default new Vuex.Store({
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
-            Vue.$toast.error(message
-              ,
-              {
-                message: message,
-                duration: 3000,
-                position: "top",
-                dismissible: true,
-              }
-            );
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
+
           }
         );
     },
@@ -396,12 +343,7 @@ export default new Vuex.Store({
       ) {
         // If not, return and inform user
         commit("MUTATION_SET_LOADING", false);
-        Vue.$toast.warning(EMPTY_TEXT_FIELD_ERROR, {
-          message: EMPTY_TEXT_FIELD_ERROR,
-          duration: 3000,
-          position: "top",
-          dismissible: true,
-        });
+        dispatch("ACTION_DISPLAY_TOAST", { message: EMPTY_TEXT_FIELD_ERROR, type: 'warning' })
         return;
       }
 
@@ -444,17 +386,23 @@ export default new Vuex.Store({
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
-            Vue.$toast.error(message
-              ,
-              {
-                message: message,
-                duration: 3000,
-                position: "top",
-                dismissible: true,
-              }
-            );
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
           }
         );
+    },
+
+    ACTION_DISPLAY_TOAST({ getters }, values) {
+      const message: string = values.message.toString()
+      const type: string = values.type
+
+      // Can accept an Object of options
+      Vue.$toast.open({
+        message: message,
+        type: type,
+        duration: 3000,
+        position: "top",
+        dismissible: true,
+      });
     },
   },
 });

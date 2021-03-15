@@ -39,7 +39,6 @@ def mine(transaction):
 def send_to_connected_clients(transaction):
     global ongoing_proof, ongoing_transaction, connected_clients
 
-    print("To Be Sent to Miner", transaction)
     ongoing_proof = transaction["id"]
     ongoing_transaction = transaction
 
@@ -55,6 +54,7 @@ transactions = MiningPool(send_to_connected_clients, True)
 @app.route("/")
 def index():
     return "Hello From the Mining"
+
 
 @app.route("/queue", methods=["POST"])
 def add_data_to_queue():
@@ -82,13 +82,12 @@ def valid_proof(hash_, nonce) -> bool:
 def client_connect():
     global connected_clients
     connected_clients += 1
-    print("MINING CLIENT CONNECTED", connected_clients)
+
 
 @socketio.on('disconnect')
 def client_disconnect():
     global connected_clients
     connected_clients -= 1
-    print("MINING CLIENT DISCONNECTED", connected_clients)
 
 
 @socketio.on('echo')

@@ -27,9 +27,7 @@ def login():
         raise UserNotFoundException()
 
     if not correct_credentials:
-        return jsonify(error="Incorrect password for corresponding UMnetId"), HttpCode.BAD_REQUEST.value
-        # raise IncorrectCredentialsException() >>> I want to do something like this but
-        # not sure the best way to do it! Suggestions please!
+        raise IncorrectCredentialsException()
 
     data = {
         'first_name': user['first_name'],
