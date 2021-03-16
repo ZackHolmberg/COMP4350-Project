@@ -1,4 +1,4 @@
-describe("After loading the app", () => {
+describe("Create Account", () => {
   context("1080p resolution", () => {
     beforeEach(() => {
       // run these tests as if in a desktop
@@ -17,7 +17,7 @@ describe("After loading the app", () => {
       cy.intercept("POST", "/users/create", { fixture: "success.json" }).as(
         "createAccount"
       );
-      cy.intercept("POST", "/users/login", { fixture: "success.json" }).as(
+      cy.intercept("POST", "/users/login", { fixture: "loginSuccess.json" }).as(
         "userLogin"
       );
       cy.intercept("POST", "/wallet/create", { fixture: "success.json" }).as(

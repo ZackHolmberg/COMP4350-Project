@@ -12,12 +12,12 @@ import sys
 import os
 
 
-from shared import HttpCode, FailureReturnString
-
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
 else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
+
+from shared import FailureReturnString
 
 
 @pytest.fixture(scope='module')
@@ -68,7 +68,7 @@ def test_home_page(test_client, test_db_patch):
     assert resp_msg.encode('utf-8') in response.data
 
 
-def test_create_user(test_client, test_db_patch, json_header):
+def test_create_user(test_client, json_header):
     url = '/create'
 
     payload = {
@@ -85,8 +85,54 @@ def test_create_user(test_client, test_db_patch, json_header):
     user = mongo.db.users.find_one({"umnetID": "FINESM1"})
     assert user is not None
 
-    # remove the added user to maintain the state of the db
+
+def test_login_success(test_client, json_header):
+    url = '/login'
+
+    payload = {
+        "umnetID": "FINESM1",
+        "password": "madison123",
+    }
+
+    expected_return = {
+        "first_name": "Madison",
+        "last_name": "Fines",
+        "public_key": "madison_pk"
+    }
+
+    response = test_client.post(
+        url, data=json.dumps(payload), headers=json_header)
+    assert response.json['user'] == expected_return
+
+
+def test_login_user_not_in_db(test_client, json_header):
+    url = '/login'
+
+    payload = {
+        "umnetID": "FINESM1",
+        "password": "wrongPassword",
+    }
+
+    response = test_client.post(
+        url, data=json.dumps(payload), headers=json_header)
+    assert response.json['error'] == FailureReturnString.INCORRECT_CREDENTIALS.value
+
+
+def test_login_user_not_in_db(test_client, json_header):
+
+    # remove the added user to cause unsuccessful login
     mongo.db.users.delete_one({"umnetID": "FINESM1"})
+
+    url = '/login'
+
+    payload = {
+        "umnetID": "FINESM1",
+        "password": "madison123",
+    }
+
+    response = test_client.post(
+        url, data=json.dumps(payload), headers=json_header)
+    assert response.json['error'] == FailureReturnString.USER_NOT_FOUND.value
 
 
 def test_get_all_users(test_client, test_db_patch):
@@ -162,7 +208,7 @@ def test_failure_get_user_by_umnetID_user_not_found(test_client, test_db_patch):
 
     response = test_client.get(url)
 
-    assert b'user not found' in response.data
+    assert response.json['error'] == FailureReturnString.USER_NOT_FOUND.value
 
 
 def test_success_update_user(test_client, test_db_patch, json_header):

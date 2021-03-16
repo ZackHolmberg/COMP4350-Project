@@ -1,4 +1,4 @@
-describe("Sends a transaction", () => {
+describe("Sends a transaction successfully", () => {
   context("1080p resolution", () => {
     beforeEach(() => {
       // run these tests as if in a desktop
@@ -6,13 +6,13 @@ describe("Sends a transaction", () => {
       cy.visit("http://localhost:8080/");
       cy.get("#umnetId").type("umnetId");
       cy.get("#password").type("Password");
-      cy.intercept("POST", "/users/login", { fixture: "success.json" }).as(
+      cy.intercept("POST", "/users/login", { fixture: "loginSuccess.json" }).as(
         "userLogin"
       );
       cy.intercept("POST", "/wallet/amount", {
         fixture: "walletAmountEmpty.json",
       }).as("getWalletAmount");
-      cy.get("#button").click();
+      cy.get("#login-button").click();
       cy.wait(["@userLogin"]);
       cy.wait(["@getWalletAmount"]);
     });
@@ -35,6 +35,8 @@ describe("Sends a transaction", () => {
       transaction = cy.get('[class="v-toast__text"]');
       transaction.should("be.visible");
       transaction.contains("Transaction sent successfully!");
+      cy.get("#walletAmount")
+
       cy.url().should("eq", "http://localhost:8080/home");
     });
   });

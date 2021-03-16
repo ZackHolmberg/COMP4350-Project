@@ -9,5 +9,6 @@ class FailureReturnString(Enum):
     RECEIVER_NOT_PRESENT = "The receiver you are trying to send the money to doesn't exist"
     DATABASE_VERIFICATION_FAILURE = "Database validation failed! Please check your input and try again."
     SIGNATURE_VERFICATION_FAILURE = "signature verification failed"
-    USER_NOT_FOUND = "user not found in the database"
+    USER_NOT_FOUND = "No corresponding user for UMnetID!"
     TRANSACTION_CREATION_FAILURE = "Unable to create a transaction"
+    INCORRECT_CREDENTIALS = "Incorrect password for corresponding UMnetId"

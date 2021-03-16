@@ -17,7 +17,7 @@ export const router = new VueRouter({
     { path: "/home", component: HomePage },
     { path: "/transaction", component: NewTransactionPage },
     { path: "/createAccount", component: CreateAccountPage },
-    { path: '/account', component: ViewAccountPage},
+    { path: '/account', component: ViewAccountPage },
   ],
 });
 

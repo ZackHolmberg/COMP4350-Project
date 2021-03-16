@@ -1,6 +1,12 @@
 <template>
   <div>
-    <input class="textInput" :placeholder="label" v-model="input" :disabled="disable"/>
+    <input
+      class="textInput"
+      :placeholder="label"
+      v-model="input"
+      :disabled="disable"
+      :type="type"
+    />
   </div>
 </template>
 
@@ -11,18 +17,17 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class TextInput extends Vue {
   @Prop() private label!: string;
   @Prop() private disable!: boolean;
+  @Prop() private type?: string;
 
   data() {
     return {
       input: "",
-    }
+    };
   }
 
-// TODO: Grab user input and send it to the parent component
   inputData() {
     return this.$data.input;
   }
-
 }
 </script>
 

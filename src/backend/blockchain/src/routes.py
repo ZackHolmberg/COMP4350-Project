@@ -1,3 +1,4 @@
+
 from src import app
 from .transaction import Transaction
 from .block import Block
@@ -9,8 +10,9 @@ import os
 import time
 
 sys.path.append(os.path.abspath(os.path.join('..', '')))
-from shared import HttpCode
+
 from shared.exceptions import IncorrectPayloadException
+from shared import HttpCode
 
 @app.route("/")
 def index():
@@ -28,51 +30,50 @@ def get_chain():
 @app.route('/addBlock', methods=['POST'])
 def proof():
     data = request.get_json()
-    try :
+    try:
         new_transaction = Transaction(
             data["from"],
             data["to"],
             data["amount"]
         )
         miner_id = data["minerId"]
-        _hash = data["proof"]
+        proof = data["proof"]
         nonce = data["nonce"]
-        
+
     except KeyError as e:
         raise IncorrectPayloadException()
 
     new_block = Block(
-                    len(blockchain.chain),
-                    new_transaction,
-                    time.time(),
-                    nonce,
-                    hash,
-                    blockchain.get_last_block().hash,
-                    miner_id, 
-                    Blockchain.COINBASE_AMOUNT
-                )
+        len(blockchain.chain),
+        new_transaction,
+        time.time(),
+        nonce,
+        proof,
+        blockchain.get_last_block().hash,
+        miner_id,
+        Blockchain.COINBASE_AMOUNT
+    )
 
     # We guarantee that all the necessary validation has been done by this point, so simply add the
     # new block to the chain
     blockchain.chain.append(new_block)
 
     blockchain.add_to_wallet(miner_id, Blockchain.COINBASE_AMOUNT)
-    
+
     return jsonify(success=True), HttpCode.CREATED.value
+
 
 @app.route('/wallet/checkWallet', methods=['POST'])
 def check_wallet_exists():
     try:
         data = request.get_json()
-        wallet_id = data["walledId"]
-        exists = False
-        if wallet_id in blockchain.wallets:
-            exists =True
-        return jsonify(valid=exists), HttpCode.Ok.value
+        wallet_id = data["walletId"]
+        exists = wallet_id in blockchain.wallets
+        return jsonify(valid=exists), HttpCode.OK.value
 
     except KeyError as e:
         raise IncorrectPayloadException()
-    
+
 
 @app.route('/wallet/addWallet', methods=['POST'])
 def add_wallet():
@@ -103,13 +104,14 @@ def create_transaction():
 
     blockchain.subtract_from_wallet(wallet_id, amount)
     blockchain.add_to_wallet(receiver, amount)
-    
+
     return jsonify(valid=valid), HttpCode.OK.value
+
 
 @app.route('/wallet/balance', methods=['GET'])
 def get_wallet_amount():
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)
         wallet_id = data["walletId"]
         amount = blockchain.get_wallet_amount(wallet_id)
         return jsonify(amount=amount), HttpCode.OK.value
@@ -117,10 +119,12 @@ def get_wallet_amount():
     except KeyError as e:
         raise IncorrectPayloadException()
 
+
 @app.errorhandler(WalletException)
 def handle_wallet_exception(e):
-    return jsonify(error=e.message) , HttpCode.BAD_REQUEST.value
+    return jsonify(error=e.message), HttpCode.BAD_REQUEST.value
+
 
 @app.errorhandler(IncorrectPayloadException)
 def handle_wallet_exception(e):
-    return jsonify(error=e.json_message) , e.return_code
+    return jsonify(error=e.json_message), e.return_code

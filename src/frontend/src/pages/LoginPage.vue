@@ -10,12 +10,13 @@
       id="password"
       label="Password"
       ref="password"
+      type="password"
       :disable="loading"
     />
 
     <Button
       class="login-button"
-      id="button"
+      id="login-button"
       label="Login"
       dest=""
       size="small"

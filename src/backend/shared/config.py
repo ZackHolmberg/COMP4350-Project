@@ -13,4 +13,4 @@ class Config:
         self.MONGODB_USERNAME = os.getenv('MONGODB_USERNAME')
         self.MONGODB_PASSWORD = os.getenv('MONGODB_PASSWORD')
         self.MONGODB_HOSTNAME = os.getenv('MONGODB_HOSTNAME')
-        self.MONGO_URI = 'mongodb://' + self.MONGODB_USERNAME + ':' + self.MONGODB_PASSWORD + '@' + self.MONGODB_HOSTNAME + ':27017/' + self.MONGODB_DATABASE
+        self.MONGO_URI = 'mongodb://' + self.MONGODB_USERNAME + ':' + self.MONGODB_PASSWORD + '@' + self.MONGODB_HOSTNAME + ':27017/' + self.MONGODB_DATABASE + "?authSource=admin"

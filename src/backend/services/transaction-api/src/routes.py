@@ -23,6 +23,7 @@ mining_url = BisonCoinUrls.mining_url
 # Transaction Sign Verification
 ################################
 
+
 def validate_signature(id, signature, address):
 
     try:
@@ -32,9 +33,9 @@ def validate_signature(id, signature, address):
 
         verifier = PKCS1_v1_5.new(public_key)
         verified = verifier.verify(SHA256.new(str.encode(id)), signature)
-    
+
         return verified
-    
+
     except Exception as e:
         raise TransactionVerificationException(json_message=str(e))
 
@@ -42,32 +43,42 @@ def validate_signature(id, signature, address):
 # Service Requests
 ##############################
 
+
 def create_wallet_transaction(address, amount, receiver):
     req_body = {"from": address, "amount": amount, "to": receiver}
 
-    response = send_post_request(blockchain_wallet_url.format("createTransaction"), req_body)
+    response = send_post_request(
+        blockchain_wallet_url.format("createTransaction"), req_body)
 
     if response.status_code is not HttpCode.OK.value:
         if "error" not in response.json():
-            raise BisonCoinException(FailureReturnString.TRANSACTION_CREATION_FAILURE.value, response.status_code)
+            raise BisonCoinException(
+                FailureReturnString.TRANSACTION_CREATION_FAILURE.value, response.status_code)
         else:
-            raise BisonCoinException(response.json()["error"], response.status_code)
+            raise BisonCoinException(
+                response.json()["error"], response.status_code)
+
 
 def send_to_mine(body):
     response = send_post_request(mining_url.format("queue"), body)
-    
+
     if response.status_code is not HttpCode.OK.value:
-        raise BisonCoinException(json_message=response.json(), return_code=response.status_code)
+        raise BisonCoinException(
+            json_message=response.json(), return_code=response.status_code)
+
 
 def get_remaining_wallet_amount(address, amount):
-    req_body = {"walletId": address}    
-    response = send_get_request(blockchain_wallet_url.format("balance"), req_body)
+    req_body = {"walletId": address}
+    response = send_get_request(
+        blockchain_wallet_url.format("balance"), req_body)
 
     return float(response.json()["amount"]) - float(amount)
 
+
 def verify_receiver(address):
-    req_body = {"walletId": address}    
-    response = send_post_request( blockchain_wallet_url.format("checkWallet"), req_body)
+    req_body = {"walletId": address}
+    response = send_post_request(
+        blockchain_wallet_url.format("checkWallet"), req_body)
 
     try:
         valid = response.json()["valid"]
@@ -86,6 +97,7 @@ def verify_receiver(address):
 def index():
     return "Hello Transactions"
 
+
 @cross_origin()
 @app.route("/create", methods=['POST'])
 def createTransaction():
@@ -103,14 +115,17 @@ def createTransaction():
 
     isVerified = validate_signature(transaction_id, signature, from_address)
     if not isVerified:
-        raise TransactionVerificationException() 
+        raise TransactionVerificationException()
 
     # TODO do verification if the user is logged in
     verify_receiver(to_address)
+
     create_wallet_transaction(from_address, amount, to_address)
+
     send_to_mine(data)
 
     remaining_amount = get_remaining_wallet_amount(from_address, amount)
+
     return jsonify(success=True, remaining_amount=remaining_amount), HttpCode.CREATED.value
 
 
@@ -119,8 +134,9 @@ def createTransaction():
 @app.errorhandler(BisonCoinException)
 @app.errorhandler(ReceiverException)
 def handle_transactions_error(e):
-    return jsonify(error=e.json_message) , e.return_code
+    return jsonify(error=e.json_message), e.return_code
+
 
 @app.errorhandler(Exception)
 def handle_request_error(e):
-    return jsonify(error=str(e)), BisonCoinException.client_error 
+    return jsonify(error=str(e)), BisonCoinException.client_error

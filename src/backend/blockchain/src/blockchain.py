@@ -3,7 +3,6 @@ from .block import Block
 from .transaction import Transaction
 from .exceptions import WalletException
 
-
 class Blockchain:
 
     difficulty = 4

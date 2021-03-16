@@ -6,13 +6,13 @@ describe("Fails to send a transaction", () => {
       cy.visit("http://localhost:8080/");
       cy.get("#umnetId").type("umnetId");
       cy.get("#password").type("Password");
-      cy.intercept("POST", "/users/login", { fixture: "success.json" }).as(
+      cy.intercept("POST", "/users/login", { fixture: "loginSuccess.json" }).as(
         "userLogin"
       );
       cy.intercept("POST", "/wallet/amount", {
         fixture: "walletAmountEmpty.json",
       }).as("getWalletAmount");
-      cy.get("#button").click();
+      cy.get("#login-button").click();
       cy.wait(["@userLogin"]);
       cy.wait(["@getWalletAmount"]);
     });

@@ -12,6 +12,8 @@ services:
       - ./shared:/src/shared
     environment:
       - APP_NAME=TransactionService
+      - PYTHONUNBUFFERED=1
+
     expose:
       - 5000
 
@@ -23,6 +25,7 @@ services:
     restart: always
     environment:
       - APP_NAME=MiningService
+      - PYTHONUNBUFFERED=1
     volumes:
       - ./services/mining-api:/src/mining-api
       - ./shared:/src/shared
@@ -37,6 +40,8 @@ services:
     restart: always
     environment:
       - APP_NAME=WalletService
+      - PYTHONUNBUFFERED=1
+
     volumes:
       - ./services/wallet-api:/src/wallet-api
       - ./shared:/src/shared
@@ -96,6 +101,8 @@ services:
     restart: always
     environment:
       - APP_NAME=Blockchain
+      - PYTHONUNBUFFERED=1
+
     volumes:
       - ./blockchain:/src/blockchain
       - ./shared:/src/shared

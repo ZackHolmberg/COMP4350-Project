@@ -11,6 +11,7 @@
       label="Password"
       ref="password"
       :disable="loading"
+      type="password"
     />
 
     <TextInput
@@ -18,6 +19,7 @@
       label="Reenter Password"
       ref="password2"
       :disable="loading"
+      type="password"
     />
 
     <TextInput
@@ -39,6 +41,8 @@
       id="create-account-button"
       dest=""
       label="Create Account"
+      size="small"
+      type="default"
       @click.native="createAccount"
     />
   </div>

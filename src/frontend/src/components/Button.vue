@@ -22,10 +22,6 @@ export default class Button extends Vue {
   @Prop() private size!: string;
   @Prop() private type!: string;
 
-  get loading() {
-    return this.$store.getters.loading;
-  }
-
   getClass() {
     if (this.size == "big" && this.type == "default") {
       return "big-button default";
@@ -36,6 +32,10 @@ export default class Button extends Vue {
     } else if (this.size == "small" && this.type == "cancel") {
       return "button cancel";
     }
+  }
+
+  get loading() {
+    return this.$store.getters.loading;
   }
 }
 </script>
