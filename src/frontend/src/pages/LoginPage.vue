@@ -10,6 +10,7 @@
       id="password"
       label="Password"
       ref="password"
+      type="password"
       :disable="loading"
     />
 
