@@ -72,7 +72,8 @@ export default new Vuex.Store({
     lastName: "",
     mining: false,
     editing: false,
-    findProof: false
+    findProof: false,
+    transactions: [],
   },
   getters: {
     loading: (state) => {
@@ -105,6 +106,9 @@ export default new Vuex.Store({
     findProof: (state) => {
       return state.findProof;
     },
+    transactions: (state) => {
+      return state.transactions;
+    }
   },
   mutations: {
     MUTATION_SET_LOADING(state, loading) {
@@ -129,16 +133,19 @@ export default new Vuex.Store({
       state.password = password;
     },
     MUTATION_SET_UMNETID(state, umnetId) {
-      state.umnetId = umnetId
+      state.umnetId = umnetId;
     },
     MUTATION_SET_PRIVATE_KEY(state, privateKey) {
-      state.privateKey = privateKey
+      state.privateKey = privateKey;
     },
     MUTATION_SET_MINING(state, mining) {
-      state.mining = mining
+      state.mining = mining;
     },
     MUTATION_SET_FIND_PROOF(state, findProof) {
-      state.findProof = findProof
+      state.findProof = findProof;
+    },
+    MUTATION_SET_TRANSACTIONS(state, transactions) {
+      state.transactions = transactions;
     }
   },
   actions: {

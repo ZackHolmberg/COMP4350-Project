@@ -27,6 +27,8 @@ export default class Button extends Vue {
       return "big-button default";
     } else if (this.size == "small" && this.type == "default") {
       return "button default";
+    } else if (this.size == "long" && this.type == "other") {
+      return "long-button other";
     } else if (this.size == "big" && this.type == "cancel") {
       return "big-button cancel";
     } else if (this.size == "small" && this.type == "cancel") {
@@ -50,8 +52,24 @@ export default class Button extends Vue {
   background-color: $button-background-color;
 }
 
+.other {
+  background-color: rgba(173, 2, 59, 0.521);
+}
+
 .big-button {
   width: $big-button-width;
+  height: $big-button-height;
+  border-radius: $big-button-border-radius;
+  box-shadow: $box-shadow;
+  font-size: $big-button-font-size;
+  font-family: $default-font;
+  transition: $hover-transition;
+  border: $border-color;
+  color: $button-text;
+}
+
+.long-button {
+  width: 90%;
   height: $big-button-height;
   border-radius: $big-button-border-radius;
   box-shadow: $box-shadow;
@@ -81,6 +99,12 @@ export default class Button extends Vue {
 }
 
 .big-button:hover {
+  cursor: pointer;
+  transform: $hover-transform-button;
+  box-shadow: $box-shadow-hover;
+}
+
+.long-button:hover {
   cursor: pointer;
   transform: $hover-transform-button;
   box-shadow: $box-shadow-hover;

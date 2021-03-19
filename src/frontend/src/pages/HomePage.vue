@@ -5,6 +5,7 @@
     <Wallet class="wallet-component"/>
     <CreateTransaction class="transaction-component"/>
     <Mining class="mining-component"/>
+    <Collapsible class="transaction-history-component"/>
   </div>
 </div>
 </template>
@@ -15,6 +16,7 @@ import Wallet from "../components/Wallet.vue";
 import CreateTransaction from "../components/CreateTransaction.vue";
 import NavBar from "../components/NavBar.vue";
 import Mining from "../components/Mining.vue";
+import Collapsible from "../components/Collapsible.vue";
 
 @Component({
   components: {
@@ -22,6 +24,7 @@ import Mining from "../components/Mining.vue";
     CreateTransaction,
     NavBar,
     Mining,
+    Collapsible,
   },
 })
 export default class HomePage extends Vue {}
@@ -45,12 +48,14 @@ export default class HomePage extends Vue {}
   max-width: $home-page-wrapper-max-width;
   height: $home-page-wrapper-size;
   min-height: $home-page-wrapper-min-height;
-  max-height: $home-page-wrapper-max-height;
+  //max-height: $home-page-wrapper-max-height;
   border: $home-page-border;
 }
 
 .wallet-component {
-  position: relative;
+  position: absolute;
+  width: 100%;
+  bottom: 45%;
 }
 
 .transaction-component {
@@ -63,5 +68,11 @@ export default class HomePage extends Vue {}
   position: absolute;
   bottom: $home-page-button-bottom;
   right: $home-page-button-position;
+}
+
+.transaction-history-component {
+  position: absolute;
+  width: 100%;
+  bottom: 10%;
 }
 </style>
