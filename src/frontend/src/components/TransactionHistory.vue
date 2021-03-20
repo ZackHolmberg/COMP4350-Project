@@ -1,88 +1,92 @@
 <template>
-  <div class="transaction-history">
-      <div v-for="item in transactions" :key="item.transaction.id">
-        <p v-if="item.type == 'receive'" 
-          class="received"> 
-          Date: {{ item.transaction.date }} From: {{ item.transaction.from }} Amount: {{ item.transaction.amount }} BSC 
-        </p>
-        <p v-else-if="item.type == 'send'"  
-          class="sent"> 
-          Date: {{ item.transaction.date }} To: {{ item.transaction.to }} Amount: {{ item.transaction.amount }} BSC
-        </p>
-         <p v-else-if="item.type == 'reward'"  
-          class="reward"> 
-          Date: {{ item.transaction.date }} From: {{ item.transaction.from }} Amount: {{ item.transaction.amount }} BSC
-        </p>
+  <div>
+    <Button 
+      id="transaction-history-button" 
+      dest="" 
+      label="Transaction History" 
+      size="long"
+      type="other"
+      @click.native="collapse"
+    />
+      <!------- OPENS COLLAPSIBLE ------->
+      <div v-if="active" class="content">
+        <div v-for="item in transactions" :key="item.transaction.id">
+          <p v-if="item.type == 'receive'" class="received content-text"> 
+            Date: {{ item.transaction.date }} From: {{ item.transaction.from }} Amount: {{ item.transaction.amount }} BSC 
+          </p>
+          <p v-else-if="item.type == 'send'" class="sent content-text"> 
+            Date: {{ item.transaction.date }} To: {{ item.transaction.to }} Amount: {{ item.transaction.amount }} BSC
+          </p>
+          <p v-else-if="item.type == 'reward'" class="reward content-text"> 
+            Date: {{ item.transaction.date }} From: {{ item.transaction.from }} Amount: {{ item.transaction.amount }} BSC
+          </p>
+        </div>
       </div>
+      <!------- END -- OPENS COLLAPSIBLE ------->
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
+import Button from "./Button.vue";
 
-@Component
-export default class TransactionHistory extends Vue {  
+@Component({
+  components: {
+    Button
+  },
+})
+export default class TransactionHistory extends Vue {
   data() {
     return {
-      transactions: [
-        {
-          transaction: {
-            id: 1,
-            date: "Thursday, March 11th",
-            from: "fromPerson",
-            amount: 10
-          },
-          type: "receive"
-        },
-        {
-          transaction: {
-            id: 2,
-            date: "Thursday, March 10th",
-            to: "toPerson",
-            amount: 200
-          },
-          type: "send"
-        },
-        {
-          transaction: {
-            id: 3,
-            date: "Thursday, March 9th",
-            from: "fromPerson",
-            amount: 5
-          },
-          type: "reward"
-        }
-      ],
+      active: false,
     }
+  }
+
+  collapse() {
+    if(this.$data.active) {
+      this.$data.active = false;
+    }
+    else {
+      this.$data.active = true;
+    }  
+  }
+
+  mounted() {
+    this.$store.dispatch("ACTION_GET_TRANSACTION_HISTORY");
+  }
+
+  get transactions() {
+    return this.$store.getters.transactions;
   }
 }
 </script>
 
 <style lang="scss">
 @import "../style.scss";
+.content {
+  text-align: center;
+  overflow: hidden;
+  padding: 18px;
+  display: 'none';
+  background-color: lightgrey;
+  font-size: 18px;
+}
 
 .received {
   background-color: lightgreen;
-  color: black;
 }
 
 .sent {
   background-color: lightsalmon;
-  color: black;
 }
 
 .reward {
   background-color: lightblue;
-  color: black;
 }
 
-.transaction-history {
-  background-color: lightgray;
-}
-
-.header {
-  font-size: 20px;
-  font-weight: bold;
+.content-text {
   color: black;
+  padding: 5px;
+  margin: auto;
 }
 </style>

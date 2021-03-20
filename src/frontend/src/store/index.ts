@@ -144,7 +144,7 @@ export default new Vuex.Store({
     MUTATION_SET_FIND_PROOF(state, findProof) {
       state.findProof = findProof;
     },
-    MUTATION_SET_TRANSACTIONS(state, transactions) {
+    MUTATION_SET_TRANSACTION_HISTORY(state, transactions) {
       state.transactions = transactions;
     }
   },
@@ -372,6 +372,40 @@ export default new Vuex.Store({
         position: "top",
         dismissible: true,
       });
+    },
+
+    ACTION_GET_TRANSACTION_HISTORY({ commit }) {
+      const transactions = [
+        {
+          transaction: {
+            id: 1,
+            date: "Thursday, March 11th",
+            from: "fromPerson",
+            amount: 10
+          },
+          type: "receive"
+        },
+        {
+          transaction: {
+            id: 2,
+            date: "Thursday, March 10th",
+            to: "toPerson",
+            amount: 200
+          },
+          type: "send"
+        },
+        {
+          transaction: {
+            id: 3,
+            date: "Thursday, March 9th",
+            from: "fromPerson",
+            amount: 5
+          },
+          type: "reward"
+        }
+      ];
+
+      commit("MUTATION_SET_TRANSACTION_HISTORY", transactions);
     },
   },
 });

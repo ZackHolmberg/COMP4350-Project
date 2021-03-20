@@ -5,7 +5,7 @@
     <Wallet class="wallet-component"/>
     <CreateTransaction class="transaction-component"/>
     <Mining class="mining-component"/>
-    <Collapsible class="transaction-history-component"/>
+    <TransactionHistory class="transaction-history-component"/>
   </div>
 </div>
 </template>
@@ -16,7 +16,7 @@ import Wallet from "../components/Wallet.vue";
 import CreateTransaction from "../components/CreateTransaction.vue";
 import NavBar from "../components/NavBar.vue";
 import Mining from "../components/Mining.vue";
-import Collapsible from "../components/Collapsible.vue";
+import TransactionHistory from "../components/TransactionHistory.vue";
 
 @Component({
   components: {
@@ -24,7 +24,7 @@ import Collapsible from "../components/Collapsible.vue";
     CreateTransaction,
     NavBar,
     Mining,
-    Collapsible,
+    TransactionHistory,
   },
 })
 export default class HomePage extends Vue {}
