@@ -48,7 +48,7 @@ export default class HomePage extends Vue {}
   max-width: $home-page-wrapper-max-width;
   height: $home-page-wrapper-size;
   min-height: $home-page-wrapper-min-height;
-  //max-height: $home-page-wrapper-max-height;
+  max-height: $home-page-wrapper-max-height;
   border: $home-page-border;
 }
 
@@ -73,6 +73,6 @@ export default class HomePage extends Vue {}
 .transaction-history-component {
   position: absolute;
   width: 100%;
-  bottom: 10%;
+  top: 70%;
 }
 </style>

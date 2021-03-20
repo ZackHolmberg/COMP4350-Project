@@ -69,7 +69,7 @@ export default class Button extends Vue {
 }
 
 .long-button {
-  width: 90%;
+  width: 85%;
   height: $big-button-height;
   border-radius: $big-button-border-radius;
   box-shadow: $box-shadow;
@@ -106,7 +106,7 @@ export default class Button extends Vue {
 
 .long-button:hover {
   cursor: pointer;
-  transform: $hover-transform-button;
+  transform: scale(1.1);
   box-shadow: $box-shadow-hover;
 }
 

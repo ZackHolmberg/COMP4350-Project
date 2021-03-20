@@ -70,6 +70,8 @@ export default class TransactionHistory extends Vue {
   display: 'none';
   background-color: lightgrey;
   font-size: 18px;
+  border-radius: 5px;
+  border: $border-color;
 }
 
 .received {
