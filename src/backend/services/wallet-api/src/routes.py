@@ -1,6 +1,5 @@
 from src import app, cross_origin
 from flask import request, jsonify
-import requests
 import sys
 import os
 
@@ -10,9 +9,11 @@ else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
 from shared.utils import BisonCoinUrls
-from shared.exceptions import IncorrectPayloadException
+from shared.exceptions import IncorrectPayloadException, UserNotFoundException 
+from shared.utils import send_get_request, send_post_request
 
 blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
+user_api_url = BisonCoinUrls.user_api_url
 
 @cross_origin()
 @app.route("/")
@@ -22,13 +23,20 @@ def index():
 @cross_origin()
 @app.route("/create", methods=['POST'])
 def createWallet():
-    #TODO users should only be able to create a wallet when they exist in the database
     data = request.get_json()    
     
     if (data is None) or ("walletId" not in data):
         raise IncorrectPayloadException()
     
-    response = requests.post( blockchain_wallet_url.format("addWallet"), json=data)
+    walletId = data["walletId"]
+    response = send_get_request( user_api_url.format("umnetID/"+ walletId), None)
+    try:
+        user_data = response.json()
+        success = user_data["success"]
+    except KeyError as e:
+        raise UserNotFoundException()
+    
+    response = send_post_request( blockchain_wallet_url.format("addWallet"), data)
     return jsonify(response.json()), response.status_code
 
 @cross_origin()
@@ -39,11 +47,12 @@ def getWalletAmount():
     if (data is None) or ("walletId" not in data):
         raise IncorrectPayloadException()
 
-    response = requests.get( blockchain_wallet_url.format("balance"), json=data)
+    response = send_get_request( blockchain_wallet_url.format("balance"), data)
     return jsonify(response.json()), response.status_code
 
 
 @app.errorhandler(IncorrectPayloadException)
+@app.errorhandler(UserNotFoundException)
 def handle_wallet_error(e):
     return jsonify(error=e.json_message), e.return_code
 

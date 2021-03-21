@@ -39,6 +39,9 @@ def test_create_wallet_success(test_client, requests_mock):
     requests_mock.post(
         "http://blockchain:5000/wallet/addWallet", json={"success": True}, status_code=201)
 
+    requests_mock.get("http://users:5000/umnetID/to_be_genetated_elsewhere",
+                       json={"success": True, "data": {}}, status_code=200)
+    
     response = test_client.post(
         url, json={"walletId": 'to_be_genetated_elsewhere'})
 
@@ -51,7 +54,10 @@ def test_create_wallet_error(test_client, requests_mock):
 
     requests_mock.post("http://blockchain:5000/wallet/addWallet",
                        json={"error": "wallet ID already exists"}, status_code=400)
-
+    
+    requests_mock.get("http://users:5000/umnetID/to_be_genetated_elsewhere",
+                       json={"success": True, "data": {}}, status_code=200)
+    
     response = test_client.post(
         url, json={"walletId": 'to_be_genetated_elsewhere'})
 
