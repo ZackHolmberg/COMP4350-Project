@@ -12,3 +12,4 @@ class FailureReturnString(Enum):
     USER_NOT_FOUND = "No corresponding user for UMnetID!"
     TRANSACTION_CREATION_FAILURE = "Unable to create a transaction"
     INCORRECT_CREDENTIALS = "Incorrect password for corresponding UMnetId"
+    PUBLIC_KEY_NF = "Public key for the provided walletId not found"

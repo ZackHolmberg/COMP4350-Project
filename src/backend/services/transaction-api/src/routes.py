@@ -18,11 +18,11 @@ from shared import HttpCode, FailureReturnString
 
 blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
 mining_url = BisonCoinUrls.mining_url
+user_api_url = BisonCoinUrls.user_api_url
 
-################################
-# Transaction Sign Verification
-################################
-
+###########################################
+# TRANSACTION SIGN VERIFICATION
+###########################################
 
 def validate_signature(id, signature, address):
 
@@ -39,10 +39,9 @@ def validate_signature(id, signature, address):
     except Exception as e:
         raise TransactionVerificationException(json_message=str(e))
 
-##############################
-# Service Requests
-##############################
-
+##########################################
+# SERVICE REQUESTS
+#########################################
 
 def create_wallet_transaction(address, amount, receiver):
     req_body = {"from": address, "amount": amount, "to": receiver}
@@ -85,12 +84,20 @@ def verify_receiver(address):
         if not valid:
             raise ReceiverException()
     except KeyError as e:
-        raise IncorrectPayloadException()
+        raise BisonCoinException(json_message=response.json(), return_code=response.status_code)
 
+def retrieve_public_key (walletId):
+    response = send_get_request( user_api_url.format("umnetID/"+ walletId), None)
+    try:
+        data = response.json()
+        public_key = data["data"]["public_key"]
+        return public_key
+    except KeyError as e:
+        raise TransactionVerificationException(json_message=FailureReturnString.PUBLIC_KEY_NF.value)
 
-####################
-# Routes
-###################
+########################################
+# ROUTES
+########################################
 
 @cross_origin()
 @app.route("/")
@@ -113,17 +120,16 @@ def createTransaction():
     except KeyError as e:
         raise IncorrectPayloadException()
 
-    isVerified = validate_signature(transaction_id, signature, from_address)
+    ###### Here we retrive the correct public keys
+    from_address_pk = retrieve_public_key (from_address) 
+
+    isVerified = validate_signature(transaction_id, signature, from_address_pk)
     if not isVerified:
         raise TransactionVerificationException()
 
-    # TODO do verification if the user is logged in
     verify_receiver(to_address)
-
     create_wallet_transaction(from_address, amount, to_address)
-
     send_to_mine(data)
-
     remaining_amount = get_remaining_wallet_amount(from_address, amount)
 
     return jsonify(success=True, remaining_amount=remaining_amount), HttpCode.CREATED.value

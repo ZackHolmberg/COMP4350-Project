@@ -22,6 +22,7 @@ def index():
 @cross_origin()
 @app.route("/create", methods=['POST'])
 def createWallet():
+    #TODO users should only be able to create a wallet when they exist in the database
     data = request.get_json()    
     
     if (data is None) or ("walletId" not in data):
