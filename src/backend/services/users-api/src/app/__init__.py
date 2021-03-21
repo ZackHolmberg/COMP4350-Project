@@ -17,6 +17,7 @@ app = Flask(__name__)
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['SECRET_KEY'] = 'userservicesecretkeyshouldbeunique'
 
 app.config.from_object(config.Config(''))
 

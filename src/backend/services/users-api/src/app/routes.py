@@ -1,6 +1,16 @@
 from src.app import app, mongo, HttpCode
 from flask import request, jsonify
-from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
+from shared.exceptions import *
+from shared.utils import decode_auth_token, encode_auth_token
+
+currently_valid_tokens = set()
+
+def validate_token(auth_token, umnetID):
+    try:
+        if auth_token not in currently_valid_tokens or decode_auth_token(auth_token) != umnetID:
+            raise TokenVerificationException("Token Not Valid")
+    except Exception as e:
+        raise TokenVerificationException(str(e))
 
 
 @app.route("/")
@@ -28,14 +38,20 @@ def login():
 
     if not correct_credentials:
         raise IncorrectCredentialsException()
+    try:
+        auth_token = encode_auth_token(umnetID)
+        currently_valid_tokens.add(auth_token)
+
+    except Exception as e:
+        raise BisonCoinException(e)
 
     data = {
         'first_name': user['first_name'],
         'last_name': user['last_name'],
-        'public_key': user['public_key']
+        'public_key': user['public_key'],
     }
 
-    return jsonify(user=data)
+    return jsonify(user=data, auth_token = auth_token)
 
 
 @app.route("/umnetID/<umnetID>", methods=['GET'])
@@ -111,6 +127,17 @@ def create_user():
         success=True,
     ), HttpCode.CREATED.value
 
+@app.route('/authUser', methods=['POST'])
+def authenticate_user():
+    data = request.get_json()
+    try:
+        umnetID = data["umnetID"]
+        auth_token = data["auth_token"]
+    except KeyError as e:
+        raise IncorrectPayloadException()
+
+    validate_token(auth_token, umnetID)
+    return jsonify( success=True), HttpCode.OK.value
 
 @app.route('/update', methods=['POST'])
 def update_user():
@@ -118,12 +145,14 @@ def update_user():
     try:
         first_name = data["first_name"]
         last_name = data["last_name"]
-        curr_password = data["curr_password"]
         new_password = data["new_password"]
         umnetID = data["umnetID"].upper()
         public_key = data["public_key"]
+        auth_token = data["auth_token"]
     except KeyError as e:
         raise IncorrectPayloadException()
+
+    validate_token(auth_token, umnetID)
 
     user = {
         "first_name": first_name,
@@ -158,5 +187,6 @@ def handle_database_error(e):
 
 @app.errorhandler(UserNotFoundException)
 @app.errorhandler(IncorrectPayloadException)
+@app.errorhandler(TokenVerificationException)
 def handle_userapi_error(e):
     return jsonify(error=e.json_message), e.return_code

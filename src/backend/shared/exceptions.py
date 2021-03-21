@@ -43,3 +43,8 @@ class IncorrectCredentialsException(BisonCoinException):
     def __init__(self):
         super().__init__(FailureReturnString.INCORRECT_CREDENTIALS.value,
                          HttpCode.BAD_REQUEST.value)
+
+class TokenVerificationException(BisonCoinException):
+    def __init__(self, err):
+        super().__init__(err,
+                         HttpCode.BAD_REQUEST.value)
