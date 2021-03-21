@@ -120,7 +120,6 @@ def createTransaction():
     except KeyError as e:
         raise IncorrectPayloadException()
 
-    ###### Here we retrive the correct public keys
     from_address_pk = retrieve_public_key (from_address) 
 
     isVerified = validate_signature(transaction_id, signature, from_address_pk)
