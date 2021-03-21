@@ -29,7 +29,7 @@ export default class App extends Vue {
   }
 
   computeHash(nonce: number, transaction: Transaction): string {
-      const toHash = ( nonce.toString() + transaction.amount.toString() + transaction.id + transaction.signature ).replace(/(\r\n|\n|\r)/gm, "");
+      const toHash = ( nonce.toString() + transaction.amount.toString() + transaction.timestamp.toString() + transaction.id + transaction.signature ).replace(/(\r\n|\n|\r)/gm, "");
       return sha256(toHash);
   }
 
@@ -60,6 +60,7 @@ export default class App extends Vue {
           "to": args[0].to,
           "from": args[0].from,
           "amount": parseFloat(args[0].amount),
+          "timestamp": parseInt(args[0].timestamp),
           "id": args[0].id,
           "signature": args[0].signature,
         };
@@ -73,6 +74,7 @@ export default class App extends Vue {
             "minerId": this.walletId
           }
 
+          console.log("Sending: ",toSend, " corresponding to transaction:", transaction)
           socket.emit("proof",toSend)
           this.$store.commit('MUTATION_SET_FIND_PROOF', false);
 
@@ -86,9 +88,10 @@ export default class App extends Vue {
       });
 
       socket.on("stopProof", () => {
-        this.$store.commit('MUTATION_SET_FIND_PROOF', false);
-        this.$store.dispatch("ACTION_DISPLAY_TOAST", { message: 'Mining session unsuccesful', type: 'warning' })
-
+        if(this.findProof){
+          this.$store.commit('MUTATION_SET_FIND_PROOF', false);
+          this.$store.dispatch("ACTION_DISPLAY_TOAST", { message: 'Mining session unsuccesful', type: 'warning' })
+        }
       });
       }
     } else{

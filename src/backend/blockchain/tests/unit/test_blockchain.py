@@ -15,11 +15,12 @@ Transaction Tests
 
 
 def test_transaction_constructor():
-    test_transaction = Transaction("fromAddress", "toAddress", 5)
+    test_transaction = Transaction("fromAddress", "toAddress", 5, 123)
     assert (
         test_transaction.to_address == "toAddress" and
         test_transaction.from_address == "fromAddress" and
-        test_transaction.amount == 5)
+        test_transaction.amount == 5 and
+        test_transaction.timestamp == 123)
 
 
 """
@@ -30,8 +31,7 @@ Block Tests
 def test_block_constructor():
     test_index = 0
     test_transaction = Transaction(
-        "toAddress", "fromAddress", 5)
-    test_timestamp = time.time()
+        "toAddress", "fromAddress", 5, int(time.time()))
     test_nonce = 0
     test_hash = "0000abc"
     test_prev_hash = "prevHash"
@@ -39,11 +39,10 @@ def test_block_constructor():
     test_reward = 5
 
     test_block = Block(test_index, test_transaction,
-                       test_timestamp, test_nonce, test_hash, test_prev_hash, test_miner_id, test_reward)
+                       test_nonce, test_hash, test_prev_hash, test_miner_id, test_reward)
     assert (
         test_block.index == test_index and
         test_block.transaction != None and
-        test_block.timestamp == str(test_timestamp) and
         test_block.nonce == 0 and
         len(test_block.hash) != 0 and
         test_block.prev_hash == test_prev_hash and
@@ -67,6 +66,7 @@ test_blockchain = Blockchain()
 
 def test_get_last_block():
     assert test_blockchain.get_last_block().index == 0
+
 
 test_wallet_id = "walletId"
 

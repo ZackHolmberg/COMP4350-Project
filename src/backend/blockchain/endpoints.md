@@ -95,7 +95,8 @@ Required JSON:
 {
   "from": string,
   "amount": int,
-  "to": string
+  "to": string,
+  "timestamp": int
 }
 ```
 
@@ -115,6 +116,6 @@ or
 400
 
 {
-  "err": string
+  "error": string
 }
 ```

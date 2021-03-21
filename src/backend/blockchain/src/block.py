@@ -1,11 +1,11 @@
 import json
 
+
 class Block:
-    def __init__(self, index, transaction, timestamp, nonce, hash, prev_hash, miner_id, reward_amount):
+    def __init__(self, index, transaction, nonce, hash, prev_hash, miner_id, reward_amount):
 
         self.index = int(index)
         self.transaction = transaction
-        self.timestamp = str(timestamp)
         self.prev_hash = str(prev_hash)
         self.nonce = int(nonce)
         self.hash = str(hash)

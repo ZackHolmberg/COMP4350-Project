@@ -26,16 +26,6 @@ connected_clients = 0
 difficulty = 4
 
 
-def mine(transaction):
-    # send transactions to blockchain directly without mining
-    transaction["nonce"] = 0
-    transaction["proof"] = "bypass"
-    transaction["minerId"] = "network"
-    response = send_post_request(
-        blockchain_url.format("addBlock"), transaction)
-    transactions.ready_to_mine()
-
-
 def send_to_connected_clients(transaction):
     global ongoing_proof, ongoing_transaction, connected_clients
 
@@ -70,8 +60,10 @@ def add_data_to_queue():
 
 def valid_proof(hash_, nonce) -> bool:
     valid = (hash_.startswith('0' * difficulty))
+    print("TRANSACTION: ", ongoing_transaction)
     toHash = (str(nonce) + str(
-        ongoing_transaction["amount"]) + ongoing_transaction["id"] + ongoing_transaction["signature"])
+        ongoing_transaction["amount"]) + str(
+        ongoing_transaction["timestamp"]) + ongoing_transaction["id"] + ongoing_transaction["signature"])
     toHash = toHash.replace("\n", "")
     toHash = toHash.replace("\r", "")
     computedHash = sha256(toHash.encode('utf-8')).hexdigest()

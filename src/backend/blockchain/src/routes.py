@@ -1,4 +1,3 @@
-
 from src import app
 from .transaction import Transaction
 from .block import Block
@@ -7,12 +6,11 @@ from .exceptions import WalletException
 from flask import request, jsonify
 import sys
 import os
-import time
 
 sys.path.append(os.path.abspath(os.path.join('..', '')))
 
-from shared.exceptions import IncorrectPayloadException
 from shared import HttpCode
+from shared.exceptions import IncorrectPayloadException
 
 @app.route("/")
 def index():
@@ -34,7 +32,8 @@ def proof():
         new_transaction = Transaction(
             data["from"],
             data["to"],
-            data["amount"]
+            data["amount"],
+            data["timestamp"]
         )
         miner_id = data["minerId"]
         proof = data["proof"]
@@ -46,7 +45,6 @@ def proof():
     new_block = Block(
         len(blockchain.chain),
         new_transaction,
-        time.time(),
         nonce,
         proof,
         blockchain.get_last_block().hash,
