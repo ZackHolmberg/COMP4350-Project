@@ -112,7 +112,7 @@ def create_transaction():
 def get_wallet_amount():
     try:
         data = request.get_json(force=True)
-        wallet_id = data["walletId"]
+        wallet_id = data["walletId"].upper()
         amount = blockchain.get_wallet_amount(wallet_id)
         return jsonify(amount=amount), HttpCode.OK.value
 

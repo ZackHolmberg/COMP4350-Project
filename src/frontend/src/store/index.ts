@@ -355,7 +355,6 @@ export default new Vuex.Store({
             // saveAs(blob, "privateKeys.txt")
             const data = { umnetId: umnetId, password: password };
             dispatch("ACTION_LOGIN", data);
-            dispatch("ACTION_FETCH_WALLET_AMOUNT");
           },
           (err) => {
             commit("MUTATION_SET_LOADING", false);

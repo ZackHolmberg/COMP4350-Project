@@ -102,7 +102,7 @@ def create_user():
     }
 
     try:
-        response = send_post_request( BisonCoinUrls.blockchain_wallet_url.format("addWallet"), {"walletId": umnetID})
+        response = send_post_request( BisonCoinUrls.blockchain_wallet_url.format("addWallet"), {"walletId": umnetID.strip()})
         if not "success" in response.json():
             raise Exception(response.json())
 
