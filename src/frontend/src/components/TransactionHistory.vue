@@ -10,6 +10,7 @@
     />
       <!------- OPENS COLLAPSIBLE ------->
       <div v-if="active" class="content">
+        <p v-if="transactions.length == 0" class="no-transaction-history"> No Transaction History. </p>
         <div v-for="item in transactions" :key="item.transaction.id">
           <p v-if="item.type == 'receive'" class="received content-text"> 
             Date: {{ item.transaction.date }}, From: {{ item.transaction.from }}, Amount: {{ item.transaction.amount }} BSC 
@@ -68,6 +69,7 @@ export default class TransactionHistory extends Vue {
   padding: $content-padding;
   background-color: $content-background-color;
   font-size: $content-font-size;
+  color: $default-text-color;
   border-radius: $content-border-radius;
   border: $border-color;
   box-shadow: $box-shadow;
@@ -85,8 +87,12 @@ export default class TransactionHistory extends Vue {
   background-color: $reward-color;
 }
 
+.no-transaction-history {
+  font-weight: bold;
+  color: $no-transactions-text-color;
+}
+
 .content-text {
-  color: $content-text-color;
   padding: $content-text-padding;
   margin: auto;
 }
