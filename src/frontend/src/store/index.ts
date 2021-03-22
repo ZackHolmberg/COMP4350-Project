@@ -271,7 +271,7 @@ export default new Vuex.Store({
           "umnetId": umnetId,
           "password": password,
         })
-        // Inform user whether or not login was succesful. If it wasnt, let them know why
+        // Inform user whether or not login was successful. If it wasn't, let them know why
 
         .then(
           (response) => {
