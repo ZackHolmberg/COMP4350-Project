@@ -33,45 +33,6 @@ def test_home_page(test_client):
     assert b"Hello from your wallet" in response.data
 
 
-def test_create_wallet_success(test_client, requests_mock):
-    url = '/create'
-
-    requests_mock.post(
-        "http://blockchain:5000/wallet/addWallet", json={"success": True}, status_code=201)
-
-    response = test_client.post(
-        url, json={"walletId": 'to_be_genetated_elsewhere'})
-
-    assert response.status_code == HttpCode.CREATED.value
-    assert json.loads(response.data)["success"] == True
-
-
-def test_create_wallet_error(test_client, requests_mock):
-    url = '/create'
-
-    requests_mock.post("http://blockchain:5000/wallet/addWallet",
-                       json={"error": "wallet ID already exists"}, status_code=400)
-
-    response = test_client.post(
-        url, json={"walletId": 'to_be_genetated_elsewhere'})
-
-    assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert json.loads(response.data)["error"] == "wallet ID already exists"
-
-
-def test_create_wallet_incorrect_payload(test_client, requests_mock):
-    url = '/create'
-
-    requests_mock.post("http://blockchain:5000/wallet/addWallet",
-                       json={"error": "wallet ID already exists"}, status_code=400)
-
-    response = test_client.post(url, json={})
-
-    assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert json.loads(response.data)[
-        "error"] == "Please send correct json payload"
-
-
 def test_get_wallet_amount_success(test_client, requests_mock):
     url = '/amount'
 
@@ -79,7 +40,7 @@ def test_get_wallet_amount_success(test_client, requests_mock):
         "http://blockchain:5000/wallet/balance", json={"amount": 0})
 
     response = test_client.post(
-        url, json={"walletId": 'to_be_genetated_elsewhere'})
+        url, json={"umnetId": 'to_be_genetated_elsewhere'})
 
     assert response.status_code == HttpCode.OK.value
     assert json.loads(response.data)["amount"] == 0
@@ -92,7 +53,7 @@ def test_get_wallet_amount_error(test_client, requests_mock):
                        json={"error": "no corresponding wallet for id"}, status_code=400)
 
     response = test_client.post(
-        url, json={"walletId": 'to_be_genetated_elsewhere'})
+        url, json={"umnetId": 'to_be_genetated_elsewhere'})
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)[
@@ -129,7 +90,7 @@ def test_transaction_history_incorrect_payload(test_client, requests_mock):
     assert b'Please send correct json payload' in response.data
 
 def test_transaction_history_success_full_response(test_client, requests_mock):
-    url = '/history?walletId=SHARMAA2'
+    url = '/history?umnetId=SHARMAA2'
 
     requests_mock.get("http://blockchain:5000/chain",
         json={"chain": [
@@ -146,7 +107,7 @@ def test_transaction_history_success_full_response(test_client, requests_mock):
     assert b'"history":[{"Timestamp":1616380626.2039511,"amount":2,"to":"HOLMBERGZ1"},{"Timestamp":1616380614.211374,"amount":2,"from":"FINESM1"},{"Timestamp":1616380435.8265228,"amount":10,"from":"Mining"}]' in response.data
 
 def test_transaction_history_success_empty_response(test_client, requests_mock):
-    url = '/history?walletId=DoesntExist'
+    url = '/history?umnetId=DoesntExist'
 
     requests_mock.get("http://blockchain:5000/chain",
         json={"chain": [
