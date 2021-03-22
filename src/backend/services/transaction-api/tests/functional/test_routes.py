@@ -104,6 +104,7 @@ def test_create_transaction_wrong_wallet_amount(test_client, json_header, reques
         'id' : "Test",
         'from' : 'user1',
         'to' : 'user2',
+        'timestamp': 0,
         'amount' : 99,
         'signature' : signature
     }
@@ -130,6 +131,7 @@ def test_create_transaction_mining_fail(test_client, json_header, requests_mock,
     data = {
         'id' : "Test",
         'from' : 'user1',
+        'timestamp': 0,
         'to' : 'user2',
         'amount' : 99,
         'signature' : signature
@@ -173,6 +175,7 @@ def test_create_transaction_correct_payload(test_client, json_header, requests_m
     data = {
         'id' : "Test",
         'from' : 'user1',
+        'timestamp': 0,
         'to' : 'user2',
         'amount' : 99,
         'signature' : signature
@@ -202,6 +205,7 @@ def test_create_transaction_incorrect_verification(test_client, json_header, req
     data = {
         'id' : "TestSomethingElse",
         'from' : 'user1',
+        'timestamp': 0,
         'to' : 'user2',
         'amount' : 99,
         'signature' : signature
@@ -235,6 +239,7 @@ def test_create_transaction_receiver_verification_failure(test_client, json_head
         'id' : "TestSomethingElse",
         'from' : 'user1',
         'to' : 'user2',
+        'timestamp': 0,
         'amount' : 99,
         'signature' : signature
     }
@@ -257,6 +262,7 @@ def test_create_transaction_public_key_failure(test_client, json_header, request
         'from' : 'user1',
         'to' : 'user2',
         'amount' : 99,
+        'timestamp': 0,
         'signature' : signature
     }
 

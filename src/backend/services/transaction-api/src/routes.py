@@ -129,7 +129,7 @@ def createTransaction():
         raise TransactionVerificationException()
 
     verify_receiver(to_address)
-    create_wallet_transaction(from_address, amount, to_address)
+    create_wallet_transaction(from_address, amount, to_address, timestamp)
 
     send_to_mine(data)
     remaining_amount = get_remaining_wallet_amount(from_address, amount)
