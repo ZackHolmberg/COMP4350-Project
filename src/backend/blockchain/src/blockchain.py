@@ -49,7 +49,7 @@ class Blockchain:
     def initialize_chain(self):
 
         # create empty transaction
-        empty_transaction = Transaction("", "", 0, 0)
+        empty_transaction = Transaction("", "", 0, 0, "", "")
 
         # create the genesis block
         genesis_block = Block(0, empty_transaction, 0,

@@ -1,7 +1,6 @@
 from src.transaction import Transaction
 from src.block import Block
 from src.blockchain import Blockchain
-from hashlib import sha256
 import time
 import sys
 import os
@@ -15,12 +14,15 @@ Transaction Tests
 
 
 def test_transaction_constructor():
-    test_transaction = Transaction("fromAddress", "toAddress", 5, 123)
+    test_transaction = Transaction(
+        "fromAddress", "toAddress", 5, 123, "id", "signature")
     assert (
         test_transaction.to_address == "toAddress" and
         test_transaction.from_address == "fromAddress" and
         test_transaction.amount == 5 and
-        test_transaction.timestamp == 123)
+        test_transaction.timestamp == 123 and
+        test_transaction.id == "id" and
+        test_transaction.signature == "signature")
 
 
 """
@@ -31,7 +33,7 @@ Block Tests
 def test_block_constructor():
     test_index = 0
     test_transaction = Transaction(
-        "toAddress", "fromAddress", 5, int(time.time()))
+        "toAddress", "fromAddress", 5, int(time.time()), "id", "signature")
     test_nonce = 0
     test_hash = "0000abc"
     test_prev_hash = "prevHash"
