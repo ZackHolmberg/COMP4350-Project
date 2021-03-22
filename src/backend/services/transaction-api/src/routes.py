@@ -72,7 +72,7 @@ def get_remaining_wallet_amount(address, amount):
     response = send_get_request(
         blockchain_wallet_url.format("balance"), req_body)
 
-    return float(response.json()["amount"]) - float(amount)
+    return float(response.json()["amount"])
 
 
 def verify_receiver(address):
