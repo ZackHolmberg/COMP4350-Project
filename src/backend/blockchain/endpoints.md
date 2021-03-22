@@ -14,10 +14,26 @@ Example return:
 
 ```json
 200
-
 {
-  "length": 1,
-  "chain":
+   "length":1,
+   "chain":[
+      {
+         "hash":"0000",
+         "index":0,
+         "miner_id":"miner_id",
+         "nonce":0,
+         "prev_hash":"0",
+         "reward_amount":0,
+         "transaction":{
+            "amount":0,
+            "from_address":"",
+            "id":"",
+            "signature":"",
+            "timestamp":0,
+            "to_address":""
+         }
+      }
+   ]
 }
 ```
 
@@ -81,7 +97,7 @@ or
 400
 
 {
-  "err": "no corresponding wallet for id"
+  "error": "no corresponding wallet for id"
 }
 ```
 
@@ -97,6 +113,46 @@ Required JSON:
   "amount": int,
   "to": string,
   "timestamp": int
+}
+```
+
+Example return:
+
+```json
+200
+
+{
+  "valid": true
+}
+```
+
+or
+
+```json
+400
+
+{
+  "error": string
+}
+```
+
+## Add a new block to the chain
+
+> `POST` <http://localhost/blockchain/addBlock>
+
+Required JSON:
+
+```json
+{
+  "from": string,
+  "amount": int,
+  "to": string,
+  "timestamp": int,
+  "id": string,
+  "signature": string,
+  "minerId": string,
+  "proof": string,
+  "nonce": int
 }
 ```
 
