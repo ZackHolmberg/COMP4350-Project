@@ -87,7 +87,7 @@ def verify_receiver(address):
         raise BisonCoinException(json_message=response.json(), return_code=response.status_code)
 
 def retrieve_public_key (walletId):
-    response = send_get_request( user_api_url.format("umnetID/"+ walletId), None)
+    response = send_get_request( user_api_url.format("umnetID/"+ walletId.upper()), None)
     try:
         data = response.json()
         public_key = data["data"]["public_key"]

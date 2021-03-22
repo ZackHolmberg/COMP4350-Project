@@ -67,7 +67,7 @@ def proof():
 def check_wallet_exists():
     try:
         data = request.get_json()
-        wallet_id = data["walletId"]
+        wallet_id = data["walletId"].upper()
         exists = wallet_id in blockchain.wallets
         return jsonify(valid=exists), HttpCode.OK.value
 
@@ -79,7 +79,7 @@ def check_wallet_exists():
 def add_wallet():
     try:
         data = request.get_json()
-        wallet_id = data["walletId"]
+        wallet_id = data["walletId"].upper()
         success = blockchain.add_wallet(wallet_id)
         return jsonify(success=success), HttpCode.CREATED.value
 
@@ -91,9 +91,9 @@ def add_wallet():
 def create_transaction():
     try:
         data = request.get_json()
-        wallet_id = data["from"]
+        wallet_id = data["from"].upper()
         amount = data["amount"]
-        receiver = data["to"]
+        receiver = data["to"].upper()
 
     except KeyError as e:
         raise IncorrectPayloadException()
