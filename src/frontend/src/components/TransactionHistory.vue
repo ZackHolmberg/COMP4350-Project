@@ -93,6 +93,7 @@ export default class TransactionHistory extends Vue {
 .no-transaction-history {
   font-weight: bold;
   color: $no-transactions-text-color;
+  text-align: center;
 }
 
 .content-text {

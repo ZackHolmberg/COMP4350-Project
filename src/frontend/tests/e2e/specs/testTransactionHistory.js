@@ -29,7 +29,11 @@ describe("Transaction History Component", () => {
         button.click();
         content = cy.get('[id="content"]');
         content.should("be.visible");
-        content.contains("fromPerson");
+        content.contains(
+          "DATE: Sun Mar 21 2021, FROM: fromPerson, AMOUNT: 10 BSC" +
+          " DATE: Thu May 14 2015, TO: toPerson, AMOUNT: 200 BSC" + 
+          " DATE: Fri Feb 13 2009, FROM: fromPerson, AMOUNT: 5 BSC"
+        );
       });
     });
   });

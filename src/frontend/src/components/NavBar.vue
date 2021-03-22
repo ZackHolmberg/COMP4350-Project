@@ -15,12 +15,6 @@
       />
     </router-link>
     <img
-      id="nav-settings"
-      class="nav-settings"
-      alt="Settings icon"
-      src="../assets/settingsIcon.png"
-    />
-    <img
       id="nav-logout"
       class="nav-logout"
       alt="Logout icon"
@@ -58,20 +52,6 @@ export default class NavBar extends Vue {
 }
 
 .nav-account:hover {
-  cursor: pointer;
-  transform: $hover-transform-button;
-}
-
-.nav-settings {
-  position: absolute;
-  top: $settings-icon-top; 
-  right: $settings-icon-right; 
-  width: $settings-icon-size; 
-  height: $settings-icon-size;
-  transition: $hover-transition;
-}
-
-.nav-settings:hover {
   cursor: pointer;
   transform: $hover-transform-button;
 }
