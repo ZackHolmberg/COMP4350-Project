@@ -60,7 +60,6 @@ def add_data_to_queue():
 
 def valid_proof(hash_, nonce) -> bool:
     valid = (hash_.startswith('0' * difficulty))
-    print("TRANSACTION: ", ongoing_transaction)
     toHash = (str(nonce) + str(
         ongoing_transaction["amount"]) + str(
         ongoing_transaction["timestamp"]) + ongoing_transaction["id"] + ongoing_transaction["signature"])

@@ -74,7 +74,6 @@ export default class App extends Vue {
             "minerId": this.walletId
           }
 
-          console.log("Sending: ",toSend, " corresponding to transaction:", transaction)
           socket.emit("proof",toSend)
           this.$store.commit('MUTATION_SET_FIND_PROOF', false);
 
