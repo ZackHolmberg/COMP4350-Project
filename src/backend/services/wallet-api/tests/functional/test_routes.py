@@ -110,3 +110,54 @@ def test_get_wallet_amount_incorrect_payload(test_client, requests_mock):
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)[
         "error"] == "Please send correct json payload"
+
+def test_transaction_history_incorrect_payload(test_client, requests_mock):
+    url = '/history'
+
+    requests_mock.get("http://blockchain:5000/chain",
+        json={"chain": [
+            "{\"hash\": \"0000\", \"index\": 0, \"miner_id\": \"miner_id\", \"nonce\": 0, \"prev_hash\": \"0\", \"reward_amount\": 0, \"timestamp\": \"1616379961.166997\", \"transaction\": {\"amount\": 0, \"from_address\": \"\", \"to_address\": \"\"}}",
+            "{\"hash\": \"0000e1e01b27d6fad766167a766769b86b70ab4db68893e4e7b754ec7166a714\", \"index\": 1, \"miner_id\": \"SHARMAA2\", \"nonce\": 310, \"prev_hash\": \"0000\", \"reward_amount\": 10, \"timestamp\": \"1616380435.8265228\", \"transaction\": {\"amount\": 2, \"from_address\": \"SACHDEV1\", \"to_address\": \"FINESM1\"}}",
+            "{\"hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"index\": 2, \"miner_id\": \"HOLMBERGZ1\", \"nonce\": 18761, \"prev_hash\": \"0000e1e01b27d6fad766167a766769b86b70ab4db68893e4e7b754ec7166a714\", \"reward_amount\": 10, \"timestamp\": \"1616380614.211374\", \"transaction\": {\"amount\": 2, \"from_address\": \"FINESM1\", \"to_address\": \"SHARMAA2\"}}",
+            "{\"hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"index\": 3, \"miner_id\": \"SACHDEV1\", \"nonce\": 18761, \"prev_hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"reward_amount\": 10, \"timestamp\": \"1616380626.2039511\", \"transaction\": {\"amount\": 2, \"from_address\": \"SHARMAA2\", \"to_address\": \"HOLMBERGZ1\"}}"
+        ],
+        "length": 4}, status_code=200)
+    
+    response = test_client.get(url)
+
+    assert response.status_code == HttpCode.BAD_REQUEST.value
+    assert b'Please send correct json payload' in response.data
+
+def test_transaction_history_success_full_response(test_client, requests_mock):
+    url = '/history?walletId=SHARMAA2'
+
+    requests_mock.get("http://blockchain:5000/chain",
+        json={"chain": [
+            "{\"hash\": \"0000\", \"index\": 0, \"miner_id\": \"miner_id\", \"nonce\": 0, \"prev_hash\": \"0\", \"reward_amount\": 0, \"timestamp\": \"1616379961.166997\", \"transaction\": {\"amount\": 0, \"from_address\": \"\", \"to_address\": \"\"}}",
+            "{\"hash\": \"0000e1e01b27d6fad766167a766769b86b70ab4db68893e4e7b754ec7166a714\", \"index\": 1, \"miner_id\": \"SHARMAA2\", \"nonce\": 310, \"prev_hash\": \"0000\", \"reward_amount\": 10, \"timestamp\": \"1616380435.8265228\", \"transaction\": {\"amount\": 2, \"from_address\": \"SACHDEV1\", \"to_address\": \"FINESM1\"}}",
+            "{\"hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"index\": 2, \"miner_id\": \"HOLMBERGZ1\", \"nonce\": 18761, \"prev_hash\": \"0000e1e01b27d6fad766167a766769b86b70ab4db68893e4e7b754ec7166a714\", \"reward_amount\": 10, \"timestamp\": \"1616380614.211374\", \"transaction\": {\"amount\": 2, \"from_address\": \"FINESM1\", \"to_address\": \"SHARMAA2\"}}",
+            "{\"hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"index\": 3, \"miner_id\": \"SACHDEV1\", \"nonce\": 18761, \"prev_hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"reward_amount\": 10, \"timestamp\": \"1616380626.2039511\", \"transaction\": {\"amount\": 2, \"from_address\": \"SHARMAA2\", \"to_address\": \"HOLMBERGZ1\"}}"
+        ],
+        "length": 4}, status_code=200)
+    
+    response = test_client.get(url)
+
+    assert response.status_code == HttpCode.OK.value
+    assert b'"history":[{"Timestamp":1616380626.2039511,"amount":2,"to":"HOLMBERGZ1"},{"Timestamp":1616380614.211374,"amount":2,"from":"FINESM1"},{"Timestamp":1616380435.8265228,"amount":10,"from":"Mining"}]' in response.data
+
+def test_transaction_history_success_empty_response(test_client, requests_mock):
+    url = '/history?walletId=DoesntExist'
+
+    requests_mock.get("http://blockchain:5000/chain",
+        json={"chain": [
+            "{\"hash\": \"0000\", \"index\": 0, \"miner_id\": \"miner_id\", \"nonce\": 0, \"prev_hash\": \"0\", \"reward_amount\": 0, \"timestamp\": \"1616379961.166997\", \"transaction\": {\"amount\": 0, \"from_address\": \"\", \"to_address\": \"\"}}",
+            "{\"hash\": \"0000e1e01b27d6fad766167a766769b86b70ab4db68893e4e7b754ec7166a714\", \"index\": 1, \"miner_id\": \"SHARMAA2\", \"nonce\": 310, \"prev_hash\": \"0000\", \"reward_amount\": 10, \"timestamp\": \"1616380435.8265228\", \"transaction\": {\"amount\": 2, \"from_address\": \"SACHDEV1\", \"to_address\": \"FINESM1\"}}",
+            "{\"hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"index\": 2, \"miner_id\": \"HOLMBERGZ1\", \"nonce\": 18761, \"prev_hash\": \"0000e1e01b27d6fad766167a766769b86b70ab4db68893e4e7b754ec7166a714\", \"reward_amount\": 10, \"timestamp\": \"1616380614.211374\", \"transaction\": {\"amount\": 2, \"from_address\": \"FINESM1\", \"to_address\": \"SHARMAA2\"}}",
+            "{\"hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"index\": 3, \"miner_id\": \"SACHDEV1\", \"nonce\": 18761, \"prev_hash\": \"000037a1d5bd16f2f85a2fc13eea74a761db2b154d1e64df0dff810cb6a3f427\", \"reward_amount\": 10, \"timestamp\": \"1616380626.2039511\", \"transaction\": {\"amount\": 2, \"from_address\": \"SHARMAA2\", \"to_address\": \"HOLMBERGZ1\"}}"
+        ],
+        "length": 4}, status_code=200)
+    
+    response = test_client.get(url)
+
+    assert response.status_code == HttpCode.OK.value
+    assert response.get_json()["history"] == []
