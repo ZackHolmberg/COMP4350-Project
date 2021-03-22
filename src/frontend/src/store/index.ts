@@ -337,8 +337,8 @@ export default new Vuex.Store({
       // If we have valid fields, send off to user service for account creation
       const keyPair = genKeyPair();
       const privateKey = keyPair[0];
-      const public_key = keyPair[1];
-      const privateKeyHash = sha256(`${umnetId}${password}${public_key}`)
+      const publicKey = keyPair[1];
+      const privateKeyHash = sha256(`${umnetId}${password}${publicKey}`)
 
       // TODO: Remove when we read in and set privateKey on login
       commit("MUTATION_SET_PRIVATE_KEY", privateKey)
@@ -348,7 +348,7 @@ export default new Vuex.Store({
           "first_name": firstName,
           "last_name": lastName,
           "umnetId": umnetId,
-          "public_key": public_key,
+          "public_key": publicKey,
           "password": password,
         })
         .then(
