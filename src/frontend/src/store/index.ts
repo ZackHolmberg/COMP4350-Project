@@ -271,7 +271,7 @@ export default new Vuex.Store({
           "umnetId": umnetId,
           "password": password,
         })
-        // Inform user whether or not login was succesfful. If it wasnt, let them know why
+        // Inform user whether or not login was succesful. If it wasnt, let them know why
 
         .then(
           (response) => {
@@ -303,7 +303,7 @@ export default new Vuex.Store({
         );
     },
 
-    ACTION_CREATE_ACCOUNT({ commit, getters, dispatch }, values) {
+    ACTION_CREATE_ACCOUNT({ commit, dispatch }, values) {
       commit("MUTATION_SET_LOADING", true);
 
       const umnetId = values.umnetId;
@@ -374,8 +374,22 @@ export default new Vuex.Store({
       });
     },
 
-    ACTION_GET_TRANSACTION_HISTORY({ commit }) {
-      const transactions = [
+    ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
+      axios
+        .get("http://localhost//wallet/history/"+ getters.walletId)
+        .then(
+          (response) => {
+            commit("MUTATION_SET_TRANSACTION_HISTORY", response.data);
+          },
+          (err) => {
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : ERROR_STRING
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
+          }
+        ); 
+
+      /* const transactions = [
         {
           "transaction": {
             "id": 1,
@@ -405,7 +419,7 @@ export default new Vuex.Store({
         }
       ];
 
-      commit("MUTATION_SET_TRANSACTION_HISTORY", transactions);
+      commit("MUTATION_SET_TRANSACTION_HISTORY", transactions); */
     },
   },
 });

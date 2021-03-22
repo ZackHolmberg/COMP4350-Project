@@ -8,7 +8,7 @@
       type="other"
       @click.native="collapse"
     />
-    <div v-if="active" class="content">
+    <div v-if="active" id="content" class="content">
       <p v-if="transactions.length == 0" class="no-transaction-history"> No Transaction History. </p>
       <div v-for="item in transactions" :key="item.transaction.id">
         <p v-if="item.type == 'receive'" class="received content-text"> 
@@ -42,7 +42,7 @@ export default class TransactionHistory extends Vue {
   }
 
   mounted() {
-    this.$store.dispatch("ACTION_GET_TRANSACTION_HISTORY");
+    this.$store.dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
   }
 
   get transactions() {
