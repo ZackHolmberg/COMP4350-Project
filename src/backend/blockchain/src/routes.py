@@ -9,8 +9,8 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join('..', '')))
 
-from shared import HttpCode
 from shared.exceptions import IncorrectPayloadException
+from shared import HttpCode
 
 @app.route("/")
 def index():
@@ -33,7 +33,9 @@ def proof():
             data["from"],
             data["to"],
             data["amount"],
-            data["timestamp"]
+            data["timestamp"],
+            data["id"],
+            data["signature"]
         )
         miner_id = data["minerId"].upper()
         proof = data["proof"]

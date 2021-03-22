@@ -37,7 +37,7 @@ def test_get_chain(test_client):
     assert data['nonce'] == 0
     assert data['prev_hash'] == "0"
     assert data['transaction'] == {"amount": 0,
-                                   "from_address": "", "to_address": "", "timestamp": 0}
+                                   "from_address": "", "to_address": "", "timestamp": 0, "id": "", "signature": ""}
     assert data['miner_id'] == "miner_id"
     assert data['reward_amount'] == 0
 
@@ -62,7 +62,7 @@ def test_receiver_notpresent(test_client):
     data = {'from': "fake_wallet_id",
             'amount': 0,
             'to': "another",
-            'timestamp': 0}
+            'timestamp': 0, "id": "abc", "signature": "123"}
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
@@ -81,12 +81,12 @@ def test_verify_amount(test_client):
     data1 = {'from': "fake_wallet_id",
              'amount': 0,
              'to': "another",
-             'timestamp': 0}
+             'timestamp': 0, "id": "abc", "signature": "123"}
 
     data2 = {'from': "fake_wallet_id",
              'amount': 15,
              'to': "another",
-             'timestamp': 0}
+             'timestamp': 0, "id": "abc", "signature": "123"}
 
     response = test_client.post(url, data=json.dumps(data1), headers=headers)
 
@@ -114,7 +114,7 @@ def test_valid_transaction(test_client):
     data = {'from': "user1",
             'amount': 5,
             'to': "user2",
-            'timestamp': 0}
+            'timestamp': 0, "id": "abc", "signature": "123"}
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
