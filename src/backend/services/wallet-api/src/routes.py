@@ -1,5 +1,6 @@
 from src import app, cross_origin
 from flask import request, jsonify
+import json
 import requests
 import sys
 import os
@@ -11,8 +12,10 @@ else:
 
 from shared.utils import BisonCoinUrls
 from shared.exceptions import IncorrectPayloadException
+from shared import HttpCode
 
 blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
+blockchain_url = BisonCoinUrls.blockchain_url
 
 @cross_origin()
 @app.route("/")
@@ -41,6 +44,35 @@ def getWalletAmount():
     response = requests.get( blockchain_wallet_url.format("balance"), json=data)
     return jsonify(response.json()), response.status_code
 
+@cross_origin()
+@app.route("/<walletId>/history", methods=['GET'])
+def getWalletHistory(walletId):
+    if walletId is None:
+        raise IncorrectPayloadException()
+
+    response = requests.get( "http://localhost/blockchain/chain").json()
+    chain = response['chain']
+
+    result = []
+
+    for block in chain[1:]:
+        block = json.loads(block)
+        ts = float(block["timestamp"])
+        
+        # if user was the miner 
+        if walletId == block["miner_id"] :
+            result.append({"Timestamp": ts, "from" : "Mining", "amount": block["reward_amount"]})
+
+        # if user was the sender
+        if walletId == block["transaction"]['from_address']:
+            result.append({"Timestamp": ts, "to" : block["transaction"]['to_address'], "amount": block["transaction"]["amount"]})
+        
+        # if user was the reciever
+        if walletId == block["transaction"]['to_address']:
+            result.append({"Timestamp": ts, "from" : block["transaction"]['from_address'], "amount": block["transaction"]["amount"]})
+
+    result.reverse()
+    return jsonify({"history" : result}), HttpCode.OK.value 
 
 @app.errorhandler(IncorrectPayloadException)
 def handle_wallet_error(e):
