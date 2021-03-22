@@ -35,7 +35,7 @@ def proof():
             data["amount"],
             data["timestamp"]
         )
-        miner_id = data["minerId"]
+        miner_id = data["minerId"].upper()
         proof = data["proof"]
         nonce = data["nonce"]
 
