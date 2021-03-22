@@ -10,6 +10,7 @@
   "id": string,
   "from": string,
   "to": string,
+  "timestamp": int,
   "amount": float,
   "signature": float
 }
@@ -19,6 +20,7 @@
 - The amount will need to be present in the users wallet to make a transaction
 - id is a random transaction id that will be signed with the private key
 - Signature is the signed transaction id from the private key of the public key address
+- Timestamp represents the epoch time in seconds when the transaction was created by the user
 
 Example return:
 

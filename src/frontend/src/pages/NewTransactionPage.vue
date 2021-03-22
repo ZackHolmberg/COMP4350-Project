@@ -28,7 +28,7 @@
       <Button
         id="transaction-send"
         class="transaction-send-button"
-        dest="/home"
+        dest=""
         label="Send"
         size="small"
         type="default"

@@ -6,10 +6,12 @@ from src.routes import send_to_connected_clients, difficulty
 from src import routes
 from hashlib import sha256
 
-VALID_NONCE = 21624
-VALID_AMOUNT = 1
-VALID_ID = "d3a5dab0199356d8260b9f94c1b783601b3d337e692d6abca8ad2e8cc8e7c4a7"
-VALID_SIGNATURE = "6104ebba3a1df561d522f5f5c165698ae1f0152a3ca1613d5e2d0e5bd606733cc6e60df4bcf3e3d6c791f2b1e1ce217cb498c69d0dbfe563139a81f063b6fdb24421c63765ce34d193ea0a92e0e98132e4d5e992a30c25b622e1d287e524960f49dea74826227a59c17021ae446d4fe87ce491d34d7d6d014bb4c7f2928b6641"
+VALID_NONCE = 734
+VALID_AMOUNT = 3
+VALID_ID = "ea269ca4907f920c60eb07bc8be34451ff6f63fef69e969be83b4d29921ff70a"
+VALID_SIGNATURE = "1ff49f1e529c7a21a63bb176220457ecfc000051a56079bfbdc2b4d0a56d2a1648593c56b18b0b491207e697540fc1ee7d648f37dd3c235a4f3ceabb9ecd103533d60f6c9bc07de6236325ab992b85a25d65bc83be846b8bae2d5123818cb9cc8cd0e822b3d96fe14bfb2f75e5aa5cfa0302d3b420f5affb0c0c186663747ac0"
+VALID_TIMESTAMP = 1616381251
+VALID_PROOF = "0000733069633f9c7ff25d8ff0e260709f87117245d1eaa959eb193507741a5b"
 
 
 @pytest.fixture(scope='module')
@@ -120,7 +122,7 @@ def test_proof_correct_payload(test_client, json_header, requests_mock):
     socketio_test_client = socketio.test_client(
         app, flask_test_client=test_client)
     transaction = {
-        "from": "test2", "to": "test1", "amount": VALID_AMOUNT, "id": VALID_ID, "signature": VALID_SIGNATURE}
+        "from": "test2", "to": "test1", "amount": VALID_AMOUNT, "timestamp": VALID_TIMESTAMP, "id": VALID_ID, "signature": VALID_SIGNATURE}
     send_to_connected_clients(transaction)
 
     received = socketio_test_client.get_received()
@@ -129,9 +131,10 @@ def test_proof_correct_payload(test_client, json_header, requests_mock):
     requests_mock.post("http://blockchain:5000/addBlock",
                        json={"success": True}, status_code=201)
 
-    hash_ = sha256((str(VALID_NONCE) + str(VALID_AMOUNT) + VALID_ID +
+    hash_ = sha256((str(VALID_NONCE) + str(VALID_AMOUNT) + str(VALID_TIMESTAMP) + VALID_ID +
                     VALID_SIGNATURE).encode('utf-8')).hexdigest()
 
+    assert (hash_ == VALID_PROOF)
     socketio_test_client.emit('proof', {
         "id": VALID_ID,
         "proof": hash_,
@@ -179,6 +182,7 @@ def test_proof_incorrect_hash(test_client, json_header, requests_mock):
         'id': 'test3',
         'to': 'test1',
         'from': 'test2',
+        'timestamp': 123,
         'amount': 10,
         'signature': 'test4'
     }
