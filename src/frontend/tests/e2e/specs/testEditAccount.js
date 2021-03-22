@@ -30,6 +30,8 @@ describe("Edit Account", () => {
 
     it("Edits and saves new user info", () => {
       cy.get("#account-edit").click();
+      cy.get("#account-edit").should("not.exist");
+      cy.get("#account-save").should("exist");
       cy.url().should("eq", "http://localhost:8080/account");
       cy.get("#account-first-name").type("newFirstName");
       cy.intercept("POST", "/users/update", { fixture: "success.json" }).as(
@@ -37,7 +39,8 @@ describe("Edit Account", () => {
       );
       cy.get("#account-save").click();
       cy.wait(["@updateUser"]);
-
+      cy.get("#account-edit").should("exist");
+      cy.get("#account-save").should("not.exist");
       cy.get("#account-cancel").click();
       cy.get("#nav-account").click();
 

@@ -43,8 +43,9 @@ def validate_signature(id, signature, address):
 # SERVICE REQUESTS
 #########################################
 
-def create_wallet_transaction(address, amount, receiver):
-    req_body = {"from": address, "amount": amount, "to": receiver}
+def create_wallet_transaction(address, amount, receiver, timestamp):
+    req_body = {"from": address, "amount": amount,
+                "to": receiver, "timestamp": timestamp, }
 
     response = send_post_request(
         blockchain_wallet_url.format("createTransaction"), req_body)
@@ -114,6 +115,7 @@ def createTransaction():
         from_address = data["from"]
         to_address = data["to"]
         amount = data["amount"]
+        timestamp = data["timestamp"]
         transaction_id = data["id"]
         signature = data["signature"]
 
@@ -128,6 +130,7 @@ def createTransaction():
 
     verify_receiver(to_address)
     create_wallet_transaction(from_address, amount, to_address)
+
     send_to_mine(data)
     remaining_amount = get_remaining_wallet_amount(from_address, amount)
 

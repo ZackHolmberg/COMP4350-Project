@@ -26,7 +26,7 @@ const genKeyPair = (): string[] => {
 // TODO: This should include timestamp too 
 const getTransactionId = (transaction: Transaction): string => {
   return sha256(
-    transaction.to + transaction.from + transaction.amount
+    transaction.to + transaction.from + transaction.amount + transaction.timestamp
   ).toString();
 };
 
@@ -206,12 +206,16 @@ export default new Vuex.Store({
     ACTION_SEND_TRANSACTION({ getters, commit, dispatch }, values) {
       const recipient = values.recipient;
       const amount = values.amount
+      const now = new Date()
+      const utcMilllisecondsSinceEpoch = now.getTime() + (now.getTimezoneOffset() * 60 * 1000)
+      const utcSecondsSinceEpoch = Math.round(utcMilllisecondsSinceEpoch / 1000)
       const transaction: Transaction = {
         "to": recipient,
         "from": getters.walletId,
         "amount": parseFloat(amount),
         "id": "",
         "signature": "",
+        "timestamp": utcSecondsSinceEpoch
       };
 
       transaction.id = getTransactionId(transaction);
@@ -225,10 +229,12 @@ export default new Vuex.Store({
           "from": transaction.from,
           "to": transaction.to,
           "amount": transaction.amount,
+          "timestamp": transaction.timestamp,
           "id": transaction.id,
           "signature": transaction.signature,
         })
         .then((response) => {
+          router.push("/home");
           const message = "Transaction sent successfully!"
           dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
           commit("MUTATION_SET_LOADING", false);

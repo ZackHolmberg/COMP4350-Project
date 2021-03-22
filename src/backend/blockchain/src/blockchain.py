@@ -3,6 +3,7 @@ from .block import Block
 from .transaction import Transaction
 from .exceptions import WalletException
 
+
 class Blockchain:
 
     difficulty = 4
@@ -48,11 +49,11 @@ class Blockchain:
     def initialize_chain(self):
 
         # create empty transaction
-        empty_transaction = Transaction("", "", 0)
+        empty_transaction = Transaction("", "", 0, 0)
 
         # create the genesis block
-        genesis_block = Block(0, empty_transaction,
-                              time.time(), 0, "0"*self.difficulty, "0", "miner_id", 0)
+        genesis_block = Block(0, empty_transaction, 0,
+                              "0"*self.difficulty, "0", "miner_id", 0)
 
         # append it to the chain
         self.chain.append(genesis_block)
