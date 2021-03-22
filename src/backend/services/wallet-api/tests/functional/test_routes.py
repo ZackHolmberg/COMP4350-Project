@@ -32,7 +32,6 @@ def test_home_page(test_client):
     assert response.status_code == HttpCode.OK.value
     assert b"Hello from your wallet" in response.data
 
-
 def test_get_wallet_amount_success(test_client, requests_mock):
     url = '/amount'
 

@@ -8,7 +8,7 @@
 
 ```json 
 {
-  "walletId": string
+  "umnetId": string
 }
 ```
 Returns the amount of bisoncoin that the user currently owns.
@@ -20,7 +20,9 @@ Returns the amount of bisoncoin that the user currently owns.
   "amount": int
 }
 ```
+
 or
+
 ```json
 {
   "error" : string
@@ -47,7 +49,9 @@ Returns the transaction history of the wallet ID passed in the query.
 }
 200
 ```
+
 or
+
 ```json
 {
   "error": "Please send correct json payload"

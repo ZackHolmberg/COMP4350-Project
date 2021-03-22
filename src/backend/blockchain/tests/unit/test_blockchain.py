@@ -68,7 +68,7 @@ def test_get_last_block():
     assert test_blockchain.get_last_block().index == 0
 
 
-test_wallet_id = "walletId"
+test_wallet_id = "umnetId"
 
 
 def test_add_wallet():

@@ -29,7 +29,7 @@ Required JSON:
 
 ```json
 {
-  "walletId": string
+  "umnetId": string
 }
 ```
 
@@ -61,7 +61,7 @@ Required JSON:
 
 ```json
 {
-  "walletId": string
+  "umnetId": string
 }
 ```
 

@@ -44,7 +44,7 @@ def test_get_chain(test_client):
 
 def test_add_wallet(test_client):
     url = '/wallet/addWallet'
-    data = {'walletId': "fake_wallet_id"}
+    data = {'umnetId': "fake_wallet_id"}
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
@@ -73,7 +73,7 @@ def test_receiver_notpresent(test_client):
 def test_verify_amount(test_client):
 
     url = '/wallet/addWallet'
-    data = {'walletId': "another"}
+    data = {'umnetId': "another"}
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
@@ -101,12 +101,12 @@ def test_verify_amount(test_client):
 
 def test_valid_transaction(test_client):
     url = '/wallet/addWallet'
-    data = {'walletId': "user1"}
+    data = {'umnetId': "user1"}
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
     url = '/wallet/addWallet'
-    data = {'walletId': "user2"}
+    data = {'umnetId': "user2"}
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
@@ -121,8 +121,8 @@ def test_valid_transaction(test_client):
     assert response.status_code == 200
     assert response.json['valid'] == True
 
-    data1 = {'walletId': "user1"}
-    data2 = {'walletId': "user2"}
+    data1 = {'umnetId': "user1"}
+    data2 = {'umnetId': "user2"}
     url = '/wallet/balance'
 
     response = test_client.get(url, data=json.dumps(data1), headers=headers)
@@ -138,8 +138,8 @@ def test_valid_transaction(test_client):
 
 def test_get_wallet_amount(test_client):
     url = '/wallet/balance'
-    data1 = {'walletId': "fake_wallet_id"}
-    data2 = {'walletId': "non_existent_wallet_id"}
+    data1 = {'umnetId': "fake_wallet_id"}
+    data2 = {'umnetId': "non_existent_wallet_id"}
 
     response = test_client.get(url, data=json.dumps(data1), headers=headers)
 

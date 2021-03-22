@@ -13,7 +13,7 @@
     {
       "first_name": string,
       "last_name": string,
-      "umnetID": string,
+      "umnetId": string,
       "public_key": string
     },
     ...
@@ -37,7 +37,7 @@
 {
   "first_name": string,
   "last_name": string,
-  "umnetID": string,
+  "umnetId": string,
   "public_key": string,
   "password": string
 }
@@ -57,7 +57,7 @@
 
 ## Get User
 
-> users/umnetID/{{umnetID}}(GET): returns the info of a particular user.
+> users/umnetId/{{umnetId}}(GET): returns the info of a particular user.
 
 ### Response
 
@@ -67,7 +67,7 @@
   "data": {
     "first_name": string,
     "last_name": string,
-    "umnetID": string,
+    "umnetId": string,
     "public_key": string
   }
 }
@@ -87,7 +87,7 @@
 
 ```json
 {
-  "umnetID": string,
+  "umnetId": string,
   "password": string
 }
 ```
@@ -118,7 +118,7 @@
 {
   "first_name": string,
   "last_name": string,
-  "umnetID": string,
+  "umnetId": string,
   "public_key": string,
   "curr_password": string,
   "new_password": string

@@ -9,7 +9,7 @@ def create_users_db(app, schema):
         db.create_collection("users")
 
     # Make the username and public_key into unique indexes
-    db.users.create_index("umnetID", unique=True)
+    db.users.create_index("umnetId", unique=True)
     db.users.create_index("public_key", unique=True)
 
     # Add the validator

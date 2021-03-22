@@ -16,8 +16,8 @@ let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default class App extends Vue {
 
-  get walletId(){
-    return this.$store.getters.walletId
+  get umnetId(){
+    return this.$store.getters.umnetId
   }
 
   get findProof(){
@@ -71,7 +71,7 @@ export default class App extends Vue {
             "proof":temp.proof,
             "nonce":temp.nonce,
             "id": transaction.id,
-            "minerId": this.walletId
+            "minerId": this.umnetId
           }
 
           socket.emit("proof",toSend)
