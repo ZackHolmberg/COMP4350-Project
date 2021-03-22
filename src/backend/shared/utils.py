@@ -5,7 +5,7 @@ class BisonCoinUrls:
     blockchain_url = "http://blockchain:5000/{:s}"
     blockchain_wallet_url = "http://blockchain:5000/wallet/{:s}"
     mining_url = "http://mining:5000/{:s}"
-
+    user_api_url = "http://users:5000/{:s}"
 
 def send_post_request(url, body):
     response = requests.post(url, json=body)
