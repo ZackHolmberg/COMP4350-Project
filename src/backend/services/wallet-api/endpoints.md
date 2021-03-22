@@ -35,7 +35,6 @@ or
 
 Returns the transaction history of the wallet ID passed in the query.
 
-*note: the mining rewards are formatted as transactions recieved from 'Mining'*
 
 **Example return:**
 
@@ -43,8 +42,17 @@ Returns the transaction history of the wallet ID passed in the query.
 {
   "history": List of dicts arranged by timestamps by recency as follows 
   [
-    {"timestamp": float, "from": string, "amount": float},
-    {"timestamp": float, "to": string, "amount": float}
+    {
+      "transaction": {
+        "amount": float,
+        "from_address": string,
+        "to_address": string,
+        "id": string,
+        "signature": string,
+        "timestamp": float
+      }, 
+      "type": send or receive or reward
+    }
   ]
 }
 200
