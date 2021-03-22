@@ -11,5 +11,5 @@ class FailureReturnString(Enum):
     SIGNATURE_VERFICATION_FAILURE = "signature verification failed"
     USER_NOT_FOUND = "No corresponding user for UMnetID!"
     TRANSACTION_CREATION_FAILURE = "Unable to create a transaction"
-    INCORRECT_CREDENTIALS = "Incorrect password for corresponding UMnetId"
+    INCORRECT_CREDENTIALS = "Incorrect umnetId or password"
     PUBLIC_KEY_NF = "Public key for the provided umnetId not found"

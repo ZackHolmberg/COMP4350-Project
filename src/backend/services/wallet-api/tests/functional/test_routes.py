@@ -38,8 +38,11 @@ def test_get_wallet_amount_success(test_client, requests_mock):
     requests_mock.get(
         "http://blockchain:5000/wallet/balance", json={"amount": 0})
 
+    requests_mock.post(
+        "http://users:5000/authUser", json={"success": True})
+
     response = test_client.post(
-        url, json={"umnetId": 'to_be_genetated_elsewhere'})
+        url, json={"umnetId": 'to_be_genetated_elsewhere', "password" : ""})
 
     assert response.status_code == HttpCode.OK.value
     assert json.loads(response.data)["amount"] == 0
@@ -51,18 +54,23 @@ def test_get_wallet_amount_error(test_client, requests_mock):
     requests_mock.get("http://blockchain:5000/wallet/balance",
                        json={"error": "no corresponding wallet for id"}, status_code=400)
 
+    requests_mock.post(
+        "http://users:5000/authUser", json={"success": True})
+
     response = test_client.post(
-        url, json={"umnetId": 'to_be_genetated_elsewhere'})
+        url, json={"umnetId": 'to_be_genetated_elsewhere', "password" : ""})
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert json.loads(response.data)[
-        "error"] == "no corresponding wallet for id"
+    assert json.loads(response.data)["error"] == "no corresponding wallet for id"
 
 
 def test_get_wallet_amount_incorrect_payload(test_client, requests_mock):
     url = '/amount'
 
     requests_mock.post(
+        "http://users:5000/authUser", json={"success": True})
+
+    requests_mock.get(
         "http://blockchain:5000/wallet/balance", json={"amount": 0})
 
     response = test_client.post(url, json={})
@@ -70,3 +78,16 @@ def test_get_wallet_amount_incorrect_payload(test_client, requests_mock):
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)[
         "error"] == "Please send correct json payload"
+
+def test_get_wallet_amount_auth_failure(test_client, requests_mock):
+    url = '/amount'
+
+    requests_mock.post(
+        "http://users:5000/authUser", json={"error": "Some failure in auth"})
+
+    requests_mock.get(
+        "http://blockchain:5000/wallet/balance", json={"amount": 0})
+
+    response = test_client.post(url, json={"umnetId" : "um", "password": "wrong_password"})
+
+    assert b'Some failure in auth' in response.data

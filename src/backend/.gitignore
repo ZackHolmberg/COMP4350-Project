@@ -6,3 +6,4 @@ tests/*.pyc
 __init__.pyc
 **/.cache
 **/*.pyc
+/services/data/

@@ -180,6 +180,7 @@ export default new Vuex.Store({
       axios
         .post("http://localhost/wallet/amount", {
           "umnetId": getters.umnetId,
+          "password": getters.password,
         })
         .then(
           (response) => {
