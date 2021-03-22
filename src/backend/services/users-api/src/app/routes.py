@@ -125,16 +125,8 @@ def update_user():
         curr_password = data["curr_password"]
         new_password = data["new_password"]
         umnetId = data["umnetId"].upper()
-        public_key = data["public_key"]
     except KeyError as e:
         raise IncorrectPayloadException()
-
-    user = {
-        "first_name": first_name,
-        "last_name": last_name,
-        "password": new_password,
-        "public_key": public_key
-    }
 
     usr = mongo.db.users.find_one({"umnetId": umnetId})
 
@@ -143,6 +135,13 @@ def update_user():
 
     if usr["password"] != curr_password:
         raise DatabaseVerificationException("password verification failed")
+
+    user = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "password": new_password,
+        "public_key": usr["public_key"]
+    }
 
     try:
         res = mongo.db.users.update_one({"umnetId": umnetId}, {"$set": user})

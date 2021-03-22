@@ -65,7 +65,6 @@ export default new Vuex.Store({
   state: {
     loading: false,
     walletAmount: 0,
-    publicKey: "",
     privateKey: "",
     umnetId: "",
     password: "",
@@ -84,9 +83,6 @@ export default new Vuex.Store({
     },
     privateKey: (state) => {
       return state.privateKey;
-    },
-    publicKey: (state) => {
-      return state.publicKey;
     },
     umnetId: (state) => {
       return state.umnetId;
@@ -135,9 +131,6 @@ export default new Vuex.Store({
     MUTATION_SET_UMNETID(state, umnetId) {
       state.umnetId = umnetId
     },
-    MUTATION_SET_PUBLIC_KEY(state, publicKey) {
-      state.publicKey = publicKey
-    },
     MUTATION_SET_PRIVATE_KEY(state, privateKey) {
       state.privateKey = privateKey
     },
@@ -161,7 +154,6 @@ export default new Vuex.Store({
           "first_name": firstName,
           "last_name": lastName,
           "umnetId": getters.umnetId,
-          "public_key": getters.publicKey,
           "curr_password": getters.password,
           "new_password": password
         })
@@ -280,7 +272,6 @@ export default new Vuex.Store({
             commit("MUTATION_SET_LAST_NAME", response.data.user.last_name)
             commit("MUTATION_SET_UMNETID", umnetId)
             commit("MUTATION_SET_PASSWORD", password)
-            commit("MUTATION_SET_PUBLIC_KEY", response.data.user.public_key)
 
             // TODO: Figure out reading privateKey from file
 
