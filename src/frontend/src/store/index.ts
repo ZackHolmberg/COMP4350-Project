@@ -377,31 +377,31 @@ export default new Vuex.Store({
     ACTION_GET_TRANSACTION_HISTORY({ commit }) {
       const transactions = [
         {
-          transaction: {
-            id: 1,
-            date: "Thursday March 11th",
-            from: "fromPerson",
-            amount: 10
+          "transaction": {
+            "id": 1,
+            "timestamp": "Thursday March 11th",
+            "from": "fromPerson",
+            "amount": 10
           },
-          type: "receive"
+          "type": "receive"
         },
         {
-          transaction: {
-            id: 2,
-            date: "Thursday March 10th",
-            to: "toPerson",
-            amount: 200
+          "transaction": {
+            "id": 2,
+            "timestamp": "Thursday March 10th",
+            "to": "toPerson",
+            "amount": 200
           },
-          type: "send"
+          "type": "send"
         },
         {
-          transaction: {
-            id: 3,
-            date: "Thursday March 9th",
-            from: "fromPerson",
-            amount: 5
+          "transaction": {
+            "id": 3,
+            "timestamp": "Thursday March 9th",
+            "from": "fromPerson",
+            "amount": 5
           },
-          type: "reward"
+          "type": "reward"
         }
       ];
 

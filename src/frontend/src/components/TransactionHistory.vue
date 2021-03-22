@@ -8,22 +8,20 @@
       type="other"
       @click.native="collapse"
     />
-      <!------- OPENS COLLAPSIBLE ------->
-      <div v-if="active" class="content">
-        <p v-if="transactions.length == 0" class="no-transaction-history"> No Transaction History. </p>
-        <div v-for="item in transactions" :key="item.transaction.id">
-          <p v-if="item.type == 'receive'" class="received content-text"> 
-            Date: {{ item.transaction.date }}, From: {{ item.transaction.from }}, Amount: {{ item.transaction.amount }} BSC 
-          </p>
-          <p v-else-if="item.type == 'send'" class="sent content-text"> 
-            Date: {{ item.transaction.date }}, To: {{ item.transaction.to }}, Amount: {{ item.transaction.amount }} BSC
-          </p>
-          <p v-else-if="item.type == 'reward'" class="reward content-text"> 
-            Date: {{ item.transaction.date }}, From: {{ item.transaction.from }}, Amount: {{ item.transaction.amount }} BSC
-          </p>
-        </div>
+    <div v-if="active" class="content">
+      <p v-if="transactions.length == 0" class="no-transaction-history"> No Transaction History. </p>
+      <div v-for="item in transactions" :key="item.transaction.id">
+        <p v-if="item.type == 'receive'" class="received content-text"> 
+          DATE: {{ item.transaction.timestamp }}, FROM: {{ item.transaction.from }}, AMOUNT: {{ item.transaction.amount }} BSC 
+        </p>
+        <p v-else-if="item.type == 'send'" class="sent content-text"> 
+          DATE: {{ item.transaction.timestamp }}, TO: {{ item.transaction.to }}, AMOUNT: {{ item.transaction.amount }} BSC
+        </p>
+        <p v-else-if="item.type == 'reward'" class="reward content-text"> 
+          DATE: {{ item.transaction.timestamp }}, FROM: {{ item.transaction.from }}, AMOUNT: {{ item.transaction.amount }} BSC
+        </p>
       </div>
-      <!------- END -- OPENS COLLAPSIBLE ------->
+    </div>
   </div>
 </template>
 
