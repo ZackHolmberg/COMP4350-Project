@@ -376,7 +376,7 @@ export default new Vuex.Store({
 
     ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
       axios
-        .get("http://localhost//wallet/history/"+ getters.walletId)
+        .get("http://localhost//wallet/history?walletId="+ getters.walletId)
         .then(
           (response) => {
             commit("MUTATION_SET_TRANSACTION_HISTORY", response.data);
@@ -388,12 +388,12 @@ export default new Vuex.Store({
             dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
           }
         ); 
-
+ 
       /* const transactions = [
         {
           "transaction": {
             "id": 1,
-            "timestamp": "Thursday March 11th",
+            "timestamp": 1616383465,
             "from": "fromPerson",
             "amount": 10
           },
@@ -402,7 +402,7 @@ export default new Vuex.Store({
         {
           "transaction": {
             "id": 2,
-            "timestamp": "Thursday March 10th",
+            "timestamp": 1431660137,
             "to": "toPerson",
             "amount": 200
           },
@@ -411,7 +411,7 @@ export default new Vuex.Store({
         {
           "transaction": {
             "id": 3,
-            "timestamp": "Thursday March 9th",
+            "timestamp": 1234567890,
             "from": "fromPerson",
             "amount": 5
           },

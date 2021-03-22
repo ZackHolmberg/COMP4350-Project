@@ -136,15 +136,15 @@ $account-text-left: 80px;
 $account-text-padding-top: 20px;
 
 // TRANSACTION HISTORY
-$received-color: rgb(6, 125, 168);
-$reward-color: rgb(167, 45, 56);
-$sent-color: rgb(16, 173, 43);
+$received-color: rgba(235, 255, 204, 0.75);
+$reward-color: rgba(255, 248, 149, 0.75); 
+$sent-color:  rgba(255, 206, 192, 0.75);
 $no-transactions-text-color: gray;
 
-$content-text-padding: 5px;
+$content-text-padding: 15px;
+$content-text-margin: -2px;
 
 $content-padding: 20px;
-$content-background-color: lightgray;
+$content-background-color: rgb(231, 231, 231);
 $content-border-radius: 20px;
-$content-font-size: 18px;
-
+$content-font-size: 20px;

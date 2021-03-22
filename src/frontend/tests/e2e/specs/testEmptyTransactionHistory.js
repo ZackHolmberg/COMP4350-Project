@@ -1,4 +1,4 @@
-describe("Transaction History Component", () => {
+describe("Empty Transaction History Component", () => {
     context("1080p resolution", () => {
       beforeEach(() => {
         // run these tests as if in a desktop
@@ -13,23 +13,19 @@ describe("Transaction History Component", () => {
         cy.intercept("POST", "/wallet/amount", {
           fixture: "walletAmountEmpty.json",
         }).as("getWalletAmount");
-        cy.intercept("GET", "/wallet/history?walletId=testPublicKey", {
-          fixture: "transactionHistory.json",
-        }).as("getTransactionHistory");
         cy.get("#login-button").click();
         cy.wait(["@userLogin"]);
-        cy.wait(["@getTransactionHistory"]);
         cy.wait(["@getWalletAmount"]);
       });
-  
-      it("Validates that the transaction history component is visible when clicked and looks as expected", () => {
+
+      it("Validates that the transaction history component is visible when clicked and transaction history is empty.", () => {
         cy.url().should("eq", "http://localhost:8080/home");
         button = cy.get('[id="transaction-history-button"]');
         button.should("be.visible");
         button.click();
         content = cy.get('[id="content"]');
         content.should("be.visible");
-        content.contains("fromPerson");
+        content.contains("No Transaction History.");
       });
     });
   });

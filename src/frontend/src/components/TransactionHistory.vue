@@ -12,13 +12,13 @@
       <p v-if="transactions.length == 0" class="no-transaction-history"> No Transaction History. </p>
       <div v-for="item in transactions" :key="item.transaction.id">
         <p v-if="item.type == 'receive'" class="received content-text"> 
-          DATE: {{ item.transaction.timestamp }}, FROM: {{ item.transaction.from }}, AMOUNT: {{ item.transaction.amount }} BSC 
+          DATE: {{ convertDate(item.transaction.timestamp) }}, FROM: {{ item.transaction.from }}, AMOUNT: {{ item.transaction.amount }} BSC 
         </p>
         <p v-else-if="item.type == 'send'" class="sent content-text"> 
-          DATE: {{ item.transaction.timestamp }}, TO: {{ item.transaction.to }}, AMOUNT: {{ item.transaction.amount }} BSC
+          DATE: {{ convertDate(item.transaction.timestamp) }}, TO: {{ item.transaction.to }}, AMOUNT: {{ item.transaction.amount }} BSC
         </p>
         <p v-else-if="item.type == 'reward'" class="reward content-text"> 
-          DATE: {{ item.transaction.timestamp }}, FROM: {{ item.transaction.from }}, AMOUNT: {{ item.transaction.amount }} BSC
+          DATE: {{ convertDate(item.transaction.timestamp) }}, FROM: {{ item.transaction.from }}, AMOUNT: {{ item.transaction.amount }} BSC
         </p>
       </div>
     </div>
@@ -57,17 +57,23 @@ export default class TransactionHistory extends Vue {
       this.$data.active = true;
     }  
   }
+
+  convertDate(time: number) {
+    const d = new Date(0);
+    d.setUTCSeconds(time);
+    return d.toDateString();
+  }
 }
 </script>
 
 <style lang="scss">
 @import "../style.scss";
 .content {
-  text-align: center;
+  text-align: left;
   padding: $content-padding;
   background-color: $content-background-color;
   font-size: $content-font-size;
-  color: $default-text-color;
+  color: black;
   border-radius: $content-border-radius;
   border: $border-color;
   box-shadow: $box-shadow;
@@ -92,6 +98,7 @@ export default class TransactionHistory extends Vue {
 
 .content-text {
   padding: $content-text-padding;
-  margin: auto;
+  margin: $content-text-margin;
+  border: $home-page-border;
 }
 </style>
