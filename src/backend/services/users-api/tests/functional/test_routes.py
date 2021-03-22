@@ -68,7 +68,10 @@ def test_home_page(test_client, test_db_patch):
     assert resp_msg.encode('utf-8') in response.data
 
 
-def test_create_user(test_client, json_header):
+def test_create_user(test_client, json_header, requests_mock):
+    requests_mock.post("http://blockchain:5000/wallet/addWallet",
+                json={"success": True}, status_code=200)
+
     url = '/create'
 
     payload = {
@@ -314,3 +317,23 @@ def test_failure_update_user_incomplete_payload(test_client, test_db_patch, json
         url, data=json.dumps(payload), headers=json_header)
 
     assert b'Please send correct json payload' in response.data
+
+def test_create_user_wallet_creation_failure(test_client, json_header, requests_mock):
+    requests_mock.post("http://blockchain:5000/wallet/addWallet",
+                json={"error": False}, status_code=500)
+
+    url = '/create'
+
+    payload = {
+        "first_name": "Madison",
+        "last_name": "Fines",
+        "umnetID": "FINESM1",
+        "password": "madison123",
+        "public_key": "madison_pk"
+    }
+
+    response = test_client.post(
+        url, data=json.dumps(payload), headers=json_header)
+    assert "error" in response.json
+    user = mongo.db.users.find_one({"umnetID": "FINESM1"})
+    assert user is None

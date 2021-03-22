@@ -1,7 +1,7 @@
 from src.app import app, mongo, HttpCode
 from flask import request, jsonify
 from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
-
+from shared.utils import BisonCoinUrls, send_post_request
 
 @app.route("/")
 def index():
@@ -102,6 +102,10 @@ def create_user():
     }
 
     try:
+        response = send_post_request( BisonCoinUrls.blockchain_wallet_url.format("addWallet"), {"walletId": umnetID})
+        if not "success" in response.json():
+            raise Exception(response.json())
+
         mongo.db.users.insert_one(user)
 
     except Exception as e:

@@ -182,26 +182,7 @@ export default new Vuex.Store({
           }
         );
     },
-    ACTION_INITIALIZE_WALLET({ commit, getters, dispatch }) {
-      commit("MUTATION_SET_LOADING", true);
-      axios
-        .post("http://localhost/wallet/create", {
-          "walletId": getters.walletId,
-        })
-        .then(
-          () => {
-            commit("MUTATION_SET_LOADING", false);
-            dispatch("ACTION_FETCH_WALLET_AMOUNT");
-          },
-          (err) => {
-            const message = err.response && err.response.data.error
-              ? err.response.data.error
-              : ERROR_STRING
-            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
-            commit("MUTATION_SET_LOADING", false);
-          }
-        );
-    },
+
     ACTION_FETCH_WALLET_AMOUNT({ commit, getters, dispatch }) {
       commit("MUTATION_SET_LOADING", true);
       axios
@@ -293,7 +274,7 @@ export default new Vuex.Store({
             commit("MUTATION_SET_LAST_NAME", response.data.user.last_name)
             commit("MUTATION_SET_UMNETID", umnetId)
             commit("MUTATION_SET_PASSWORD", password)
-            commit("MUTATION_SET_WALLETID", response.data.user.public_key)
+            commit("MUTATION_SET_WALLETID", umnetId)
 
             // TODO: Figure out reading privateKey from file
 
@@ -372,13 +353,9 @@ export default new Vuex.Store({
             // TODO: Uncomment when we read in and set privateKey on login
             // const blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
             // saveAs(blob, "privateKeys.txt")
-
-            dispatch("ACTION_INITIALIZE_WALLET").then(() => {
-
-              const data = { umnetId: umnetId, password: password };
-
-              dispatch("ACTION_LOGIN", data);
-            });
+            const data = { umnetId: umnetId, password: password };
+            dispatch("ACTION_LOGIN", data);
+            dispatch("ACTION_FETCH_WALLET_AMOUNT");
           },
           (err) => {
             commit("MUTATION_SET_LOADING", false);

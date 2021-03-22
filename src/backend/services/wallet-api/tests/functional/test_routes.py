@@ -32,52 +32,6 @@ def test_home_page(test_client):
     assert response.status_code == HttpCode.OK.value
     assert b"Hello from your wallet" in response.data
 
-
-def test_create_wallet_success(test_client, requests_mock):
-    url = '/create'
-
-    requests_mock.post(
-        "http://blockchain:5000/wallet/addWallet", json={"success": True}, status_code=201)
-
-    requests_mock.get("http://users:5000/umnetID/to_be_genetated_elsewhere",
-                       json={"success": True, "data": {}}, status_code=200)
-    
-    response = test_client.post(
-        url, json={"walletId": 'to_be_genetated_elsewhere'})
-
-    assert response.status_code == HttpCode.CREATED.value
-    assert json.loads(response.data)["success"] == True
-
-
-def test_create_wallet_error(test_client, requests_mock):
-    url = '/create'
-
-    requests_mock.post("http://blockchain:5000/wallet/addWallet",
-                       json={"error": "wallet ID already exists"}, status_code=400)
-    
-    requests_mock.get("http://users:5000/umnetID/to_be_genetated_elsewhere",
-                       json={"success": True, "data": {}}, status_code=200)
-    
-    response = test_client.post(
-        url, json={"walletId": 'to_be_genetated_elsewhere'})
-
-    assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert json.loads(response.data)["error"] == "wallet ID already exists"
-
-
-def test_create_wallet_incorrect_payload(test_client, requests_mock):
-    url = '/create'
-
-    requests_mock.post("http://blockchain:5000/wallet/addWallet",
-                       json={"error": "wallet ID already exists"}, status_code=400)
-
-    response = test_client.post(url, json={})
-
-    assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert json.loads(response.data)[
-        "error"] == "Please send correct json payload"
-
-
 def test_get_wallet_amount_success(test_client, requests_mock):
     url = '/amount'
 
