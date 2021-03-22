@@ -55,7 +55,7 @@ export default class HomePage extends Vue {}
 .wallet-component {
   position: absolute;
   width: 100%;
-  bottom: 45%;
+  bottom: $home-page-wallet-bottom;
 }
 
 .transaction-component {
@@ -73,6 +73,6 @@ export default class HomePage extends Vue {}
 .transaction-history-component {
   position: absolute;
   width: 100%;
-  top: 70%;
+  top: $home-page-history-top;
 }
 </style>

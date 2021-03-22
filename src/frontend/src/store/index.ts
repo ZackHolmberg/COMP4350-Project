@@ -379,7 +379,7 @@ export default new Vuex.Store({
         {
           transaction: {
             id: 1,
-            date: "Thursday, March 11th",
+            date: "Thursday March 11th",
             from: "fromPerson",
             amount: 10
           },
@@ -388,7 +388,7 @@ export default new Vuex.Store({
         {
           transaction: {
             id: 2,
-            date: "Thursday, March 10th",
+            date: "Thursday March 10th",
             to: "toPerson",
             amount: 200
           },
@@ -397,7 +397,7 @@ export default new Vuex.Store({
         {
           transaction: {
             id: 3,
-            date: "Thursday, March 9th",
+            date: "Thursday March 9th",
             from: "fromPerson",
             amount: 5
           },

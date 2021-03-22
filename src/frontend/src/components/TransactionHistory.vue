@@ -12,13 +12,13 @@
       <div v-if="active" class="content">
         <div v-for="item in transactions" :key="item.transaction.id">
           <p v-if="item.type == 'receive'" class="received content-text"> 
-            Date: {{ item.transaction.date }} From: {{ item.transaction.from }} Amount: {{ item.transaction.amount }} BSC 
+            Date: {{ item.transaction.date }}, From: {{ item.transaction.from }}, Amount: {{ item.transaction.amount }} BSC 
           </p>
           <p v-else-if="item.type == 'send'" class="sent content-text"> 
-            Date: {{ item.transaction.date }} To: {{ item.transaction.to }} Amount: {{ item.transaction.amount }} BSC
+            Date: {{ item.transaction.date }}, To: {{ item.transaction.to }}, Amount: {{ item.transaction.amount }} BSC
           </p>
           <p v-else-if="item.type == 'reward'" class="reward content-text"> 
-            Date: {{ item.transaction.date }} From: {{ item.transaction.from }} Amount: {{ item.transaction.amount }} BSC
+            Date: {{ item.transaction.date }}, From: {{ item.transaction.from }}, Amount: {{ item.transaction.amount }} BSC
           </p>
         </div>
       </div>
@@ -42,6 +42,14 @@ export default class TransactionHistory extends Vue {
     }
   }
 
+  mounted() {
+    this.$store.dispatch("ACTION_GET_TRANSACTION_HISTORY");
+  }
+
+  get transactions() {
+    return this.$store.getters.transactions;
+  }
+
   collapse() {
     if(this.$data.active) {
       this.$data.active = false;
@@ -50,14 +58,6 @@ export default class TransactionHistory extends Vue {
       this.$data.active = true;
     }  
   }
-
-  mounted() {
-    this.$store.dispatch("ACTION_GET_TRANSACTION_HISTORY");
-  }
-
-  get transactions() {
-    return this.$store.getters.transactions;
-  }
 }
 </script>
 
@@ -65,30 +65,29 @@ export default class TransactionHistory extends Vue {
 @import "../style.scss";
 .content {
   text-align: center;
-  overflow: hidden;
-  padding: 18px;
-  display: 'none';
-  background-color: lightgrey;
-  font-size: 18px;
-  border-radius: 5px;
+  padding: $content-padding;
+  background-color: $content-background-color;
+  font-size: $content-font-size;
+  border-radius: $content-border-radius;
   border: $border-color;
+  box-shadow: $box-shadow;
 }
 
 .received {
-  background-color: lightgreen;
+  background-color: $received-color;
 }
 
 .sent {
-  background-color: lightsalmon;
+  background-color: $sent-color;
 }
 
 .reward {
-  background-color: lightblue;
+  background-color: $reward-color;
 }
 
 .content-text {
-  color: black;
-  padding: 5px;
+  color: $content-text-color;
+  padding: $content-text-padding;
   margin: auto;
 }
 </style>

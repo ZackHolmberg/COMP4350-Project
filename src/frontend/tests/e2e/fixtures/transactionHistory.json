@@ -1,0 +1,29 @@
+[
+  {
+    "transaction": {
+      "id": 1,
+      "timestamp": "Thursday March 11th",
+      "from": "fromPerson",
+      "amount": 10
+    },
+    "type": "receive"
+  },
+  {
+    "transaction": {
+      "id": 2,
+      "timestamp": "Thursday March 10th",
+      "to": "toPerson",
+      "amount": 200
+    },
+    "type": "send"
+  },
+  {
+    "transaction": {
+      "id": 3,
+      "timestamp": "Thursday March 9th",
+      "from": "fromPerson",
+      "amount": 5
+    },
+    "type": "reward"
+  }
+]

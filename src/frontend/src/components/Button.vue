@@ -27,12 +27,20 @@ export default class Button extends Vue {
       return "big-button default";
     } else if (this.size == "small" && this.type == "default") {
       return "button default";
+    }  else if (this.size == "long" && this.type == "default") {
+      return "long-button default";
+    } else if (this.size == "big" && this.type == "other") {
+      return "big-button other";
+    } else if (this.size == "small" && this.type == "other") {
+      return "button other";
     } else if (this.size == "long" && this.type == "other") {
       return "long-button other";
     } else if (this.size == "big" && this.type == "cancel") {
       return "big-button cancel";
     } else if (this.size == "small" && this.type == "cancel") {
       return "button cancel";
+    } else if (this.size == "long" && this.type == "cancel") {
+      return "long-button cancel";
     }
   }
 
@@ -53,7 +61,7 @@ export default class Button extends Vue {
 }
 
 .other {
-  background-color: rgba(173, 2, 59, 0.521);
+  background-color: $other-button-background-color;
 }
 
 .big-button {
@@ -69,7 +77,7 @@ export default class Button extends Vue {
 }
 
 .long-button {
-  width: 85%;
+  width: $long-button-width;
   height: $big-button-height;
   border-radius: $big-button-border-radius;
   box-shadow: $box-shadow;
@@ -106,7 +114,7 @@ export default class Button extends Vue {
 
 .long-button:hover {
   cursor: pointer;
-  transform: scale(1.1);
+  transform: $hover-transform-long-button;
   box-shadow: $box-shadow-hover;
 }
 

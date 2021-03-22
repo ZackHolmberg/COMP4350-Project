@@ -14,6 +14,7 @@ $default-header-font-size: 50px;
 // BUTTON
 $button-background-color: rgba(0, 117, 160, 0.582);
 $cancel-button-background-color: rgba(160, 5, 0, 0.555);
+$other-button-background-color: rgba(173, 2, 59, 0.521);
 
 $button-text: #e8e6e3;
 $button-font-size: 16px;
@@ -21,6 +22,7 @@ $big-button-font-size: 32px;
 $border-color: 2px solid rgb(140, 130, 115);
 
 $hover-transform-button: scale(1.2);
+$hover-transform-long-button: scale(1.1);
 
 $button-border-radius: 25px;
 $big-button-border-radius: 40px;
@@ -30,6 +32,8 @@ $big-button-height: 100px;
 
 $button-width: 100px;
 $button-height: 50px;
+
+$long-button-width: 85%;
 
 $loading-spinner-margin: 25%;
 
@@ -89,6 +93,10 @@ $home-page-border: 1px solid black;
 $home-page-button-position: 12%;
 $home-page-button-bottom: 40%;
 
+$home-page-wallet-bottom: 45%;
+
+$home-page-history-top: 70%;
+
 // TRANSACTION PAGE
 $transaction-button-padding: 10px;
 $transaction-button-position: 20%;
@@ -127,4 +135,16 @@ $account-text-font-size: 20px;
 $account-text-left: 80px;
 $account-text-padding-top: 20px;
 
+// TRANSACTION HISTORY
+$received-color: rgb(6, 125, 168);
+$reward-color: rgb(167, 45, 56);
+$sent-color: rgb(16, 173, 43);
+
+$content-text-padding: 5px;
+$content-text-color: white;
+
+$content-padding: 20px;
+$content-background-color: lightgray;
+$content-border-radius: 20px;
+$content-font-size: 18px;
 
