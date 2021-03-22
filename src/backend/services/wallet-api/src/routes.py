@@ -45,8 +45,8 @@ def getWalletHistory():
     if umnetId is None:
         raise IncorrectPayloadException()
 
-    response = requests.get("http://localhost/blockchain/chain").json()
-    # response = requests.get( blockchain_url.format("chain")).json()
+    # response = requests.get("http://localhost/blockchain/chain").json()
+    response = requests.get( blockchain_url.format("chain")).json()
     chain = response['chain']
 
     result = []
@@ -57,17 +57,15 @@ def getWalletHistory():
         
         # if user was the miner 
         if umnetId.upper() == block["miner_id"].upper() :
-            # result.append({"Timestamp": ts, "from" : "Mining", "amount": block["reward_amount"]})
-            result.append({"transaction": {"timestamp": ts, "amount": block["reward_amount"], "from_address": "BLOCKCHAIN", "to_adderss": block["miner_id"]}, "type": "reward"})
+            result.append({"transaction": {"timestamp": ts, "amount": block["reward_amount"], "from_address": "BLOCKCHAIN", "to_adderss": block["miner_id"], "id" : block["transaction"]["id"], "signature": block["transaction"]["signature"]}, "type": "reward"})
 
         # if user was the sender
         if umnetId.upper() == block["transaction"]['from_address'].upper():
-            # result.append({"Timestamp": ts, "to" : block["transaction"]['to_address'], "amount": block["transaction"]["amount"]})
             result.append({"transaction" : block["transaction"], "type": "send"})
         
         # if user was the reciever
         if umnetId.upper() == block["transaction"]['to_address'].upper():
-            result.append({"Timestamp": ts, "from" : block["transaction"]['from_address'], "amount": block["transaction"]["amount"]})
+            result.append({"transaction" : block["transaction"], "type": "receive"})
 
     result.reverse()
     return jsonify({"history" : result}), HttpCode.OK.value 
