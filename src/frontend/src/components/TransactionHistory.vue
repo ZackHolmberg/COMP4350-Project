@@ -2,7 +2,6 @@
   <div>
     <Button 
       id="transaction-history-button" 
-      dest="" 
       label="Transaction History" 
       size="long"
       type="other"

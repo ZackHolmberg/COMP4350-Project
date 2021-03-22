@@ -39,7 +39,6 @@
     <Button
       class="create-account-button"
       id="create-account-button"
-      dest=""
       label="Create Account"
       size="small"
       type="default"

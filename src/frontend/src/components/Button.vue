@@ -18,7 +18,7 @@ import Circle2 from "vue-loading-spinner/src/components/Circle2.vue";
 })
 export default class Button extends Vue {
   @Prop() private label!: string;
-  @Prop() private dest!: string;
+  @Prop({ default: "" }) private dest!: string;
   @Prop() private size!: string;
   @Prop() private type!: string;
 

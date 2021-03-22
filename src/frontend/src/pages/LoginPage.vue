@@ -18,7 +18,6 @@
       class="login-button"
       id="login-button"
       label="Login"
-      dest=""
       size="small"
       type="default"
       @click.native="login"
