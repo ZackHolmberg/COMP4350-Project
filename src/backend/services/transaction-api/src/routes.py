@@ -68,7 +68,7 @@ def send_to_mine(body):
 
 
 def get_remaining_wallet_amount(address, amount):
-    req_body = {"walletId": address}
+    req_body = {"umnetId": address}
     response = send_get_request(
         blockchain_wallet_url.format("balance"), req_body)
 
@@ -76,7 +76,7 @@ def get_remaining_wallet_amount(address, amount):
 
 
 def verify_receiver(address):
-    req_body = {"walletId": address}
+    req_body = {"umnetId": address}
     response = send_post_request(
         blockchain_wallet_url.format("checkWallet"), req_body)
 
@@ -87,8 +87,8 @@ def verify_receiver(address):
     except KeyError as e:
         raise BisonCoinException(json_message=response.json(), return_code=response.status_code)
 
-def retrieve_public_key (walletId):
-    response = send_get_request( user_api_url.format("umnetID/"+ walletId.upper()), None)
+def retrieve_public_key (umnetId):
+    response = send_get_request( user_api_url.format("umnetId/"+ umnetId.upper()), None)
     try:
         data = response.json()
         public_key = data["data"]["public_key"]

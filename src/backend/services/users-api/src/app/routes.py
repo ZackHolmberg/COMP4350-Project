@@ -15,13 +15,13 @@ def index():
 def login():
     data = request.get_json()
     try:
-        umnetID = data['umnetID'].upper()
+        umnetId = data['umnetId'].upper()
         password = data['password']
     except KeyError as e:
         raise IncorrectPayloadException()
 
     try:
-        user = mongo.db.users.find_one({"umnetID": umnetID})
+        user = mongo.db.users.find_one({"umnetId": umnetId})
         correct_credentials = user["password"] == password
     except Exception as e:
         raise UserNotFoundException()
@@ -38,15 +38,15 @@ def login():
     return jsonify(user=data)
 
 
-@app.route("/umnetID/<umnetID>", methods=['GET'])
-def get_user(umnetID):
-    user = mongo.db.users.find_one({'umnetID': umnetID.upper()})
+@app.route("/umnetId/<umnetId>", methods=['GET'])
+def get_user(umnetId):
+    user = mongo.db.users.find_one({'umnetId': umnetId.upper()})
 
     try:
         data = {
             'first_name': user['first_name'],
             'last_name': user['last_name'],
-            'umnetID': user['umnetID'],
+            'umnetId': user['umnetId'],
             'public_key': user['public_key']
         }
     except Exception as e:
@@ -69,7 +69,7 @@ def get_all_users():
         user = {
             'first_name': usr['first_name'],
             'last_name': usr['last_name'],
-            'umnetID': usr['umnetID'],
+            'umnetId': usr['umnetId'],
             'public_key': usr['public_key']
         }
         data.append(user)
@@ -87,7 +87,7 @@ def create_user():
         first_name = data["first_name"]
         last_name = data["last_name"]
         password = data["password"]
-        umnetID = data["umnetID"].upper()
+        umnetId = data["umnetId"].upper()
         public_key = data["public_key"]
 
     except KeyError as e:
@@ -96,13 +96,13 @@ def create_user():
     user = {
         "first_name": first_name,
         "last_name": last_name,
-        "umnetID": umnetID,
+        "umnetId": umnetId,
         "password": password,
         "public_key": public_key
     }
 
     try:
-        response = send_post_request( BisonCoinUrls.blockchain_wallet_url.format("addWallet"), {"walletId": umnetID.strip()})
+        response = send_post_request( BisonCoinUrls.blockchain_wallet_url.format("addWallet"), {"umnetId": umnetId.strip()})
         if not "success" in response.json():
             raise Exception(response.json())
 
@@ -124,7 +124,7 @@ def update_user():
         last_name = data["last_name"]
         curr_password = data["curr_password"]
         new_password = data["new_password"]
-        umnetID = data["umnetID"].upper()
+        umnetId = data["umnetId"].upper()
         public_key = data["public_key"]
     except KeyError as e:
         raise IncorrectPayloadException()
@@ -136,7 +136,7 @@ def update_user():
         "public_key": public_key
     }
 
-    usr = mongo.db.users.find_one({"umnetID": umnetID})
+    usr = mongo.db.users.find_one({"umnetId": umnetId})
 
     if usr is None:
         raise DatabaseVerificationException("user doesn't exist")
@@ -145,7 +145,7 @@ def update_user():
         raise DatabaseVerificationException("password verification failed")
 
     try:
-        res = mongo.db.users.update_one({"umnetID": umnetID}, {"$set": user})
+        res = mongo.db.users.update_one({"umnetId": umnetId}, {"$set": user})
 
     except Exception as e:
         raise DatabaseVerificationException(str(e))

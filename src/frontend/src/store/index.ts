@@ -160,7 +160,7 @@ export default new Vuex.Store({
         .post("http://localhost/users/update", {
           "first_name": firstName,
           "last_name": lastName,
-          "umnetID": getters.umnetId,
+          "umnetId": getters.umnetId,
           "public_key": getters.publicKey,
           "curr_password": getters.password,
           "new_password": password
@@ -187,7 +187,7 @@ export default new Vuex.Store({
       commit("MUTATION_SET_LOADING", true);
       axios
         .post("http://localhost/wallet/amount", {
-          "walletId": getters.umnetId,
+          "umnetId": getters.umnetId,
         })
         .then(
           (response) => {
@@ -268,7 +268,7 @@ export default new Vuex.Store({
 
       axios
         .post("http://localhost/users/login", {
-          "umnetID": umnetId,
+          "umnetId": umnetId,
           "password": password,
         })
         // Inform user whether or not login was succesfful. If it wasnt, let them know why
@@ -347,7 +347,7 @@ export default new Vuex.Store({
         .post("http://localhost/users/create", {
           "first_name": firstName,
           "last_name": lastName,
-          "umnetID": umnetId,
+          "umnetId": umnetId,
           "public_key": public_key,
           "password": password,
         })

@@ -39,7 +39,7 @@ def test_get_wallet_amount_success(test_client, requests_mock):
         "http://blockchain:5000/wallet/balance", json={"amount": 0})
 
     response = test_client.post(
-        url, json={"walletId": 'to_be_genetated_elsewhere'})
+        url, json={"umnetId": 'to_be_genetated_elsewhere'})
 
     assert response.status_code == HttpCode.OK.value
     assert json.loads(response.data)["amount"] == 0
@@ -52,7 +52,7 @@ def test_get_wallet_amount_error(test_client, requests_mock):
                        json={"error": "no corresponding wallet for id"}, status_code=400)
 
     response = test_client.post(
-        url, json={"walletId": 'to_be_genetated_elsewhere'})
+        url, json={"umnetId": 'to_be_genetated_elsewhere'})
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert json.loads(response.data)[

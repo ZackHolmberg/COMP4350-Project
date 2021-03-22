@@ -116,7 +116,7 @@ def test_create_transaction_wrong_wallet_amount(test_client, json_header, reques
     requests_mock.post("http://blockchain:5000/wallet/checkWallet",
                        json={"valid": True}, status_code=200)
 
-    requests_mock.get("http://users:5000/umnetID/USER1",
+    requests_mock.get("http://users:5000/umnetId/USER1",
                        json={"success": True, "data": {"public_key": public_key}}, status_code=200)
     
     response = test_client.post(url, data=json.dumps(data), headers=json_header)
@@ -148,7 +148,7 @@ def test_create_transaction_mining_fail(test_client, json_header, requests_mock,
     requests_mock.post("http://mining:5000/queue",
                        json={"err": "something went wrong"}, status_code=500)
 
-    requests_mock.get("http://users:5000/umnetID/USER1",
+    requests_mock.get("http://users:5000/umnetId/USER1",
                        json={"success": True, "data": {"public_key": public_key}}, status_code=200)
     
     response = test_client.post(url, data=json.dumps(data), headers=json_header)
@@ -169,7 +169,7 @@ def test_create_transaction_correct_payload(test_client, json_header, requests_m
     requests_mock.post("http://mining:5000/queue",
                        json={"success": True}, status_code=201)
     
-    requests_mock.get("http://users:5000/umnetID/USER1",
+    requests_mock.get("http://users:5000/umnetId/USER1",
                        json={"success": True, "data": {"public_key": public_key}}, status_code=200)
     
     data = {
@@ -199,7 +199,7 @@ def test_create_transaction_incorrect_verification(test_client, json_header, req
     requests_mock.post("http://mining:5000/queue",
                        json={"success": True}, status_code=201)
     
-    requests_mock.get("http://users:5000/umnetID/USER1",
+    requests_mock.get("http://users:5000/umnetId/USER1",
                        json={"success": True, "data": {"public_key": public_key}}, status_code=200)
     
     data = {
@@ -232,7 +232,7 @@ def test_create_transaction_receiver_verification_failure(test_client, json_head
     requests_mock.post("http://mining:5000/queue",
                        json={"success": True}, status_code=201)
     
-    requests_mock.get("http://users:5000/umnetID/USER1",
+    requests_mock.get("http://users:5000/umnetId/USER1",
                        json={"success": True, "data": {"public_key": public_key}}, status_code=201)
     
     data = {
@@ -254,7 +254,7 @@ def test_create_transaction_receiver_verification_failure(test_client, json_head
 
 def test_create_transaction_public_key_failure(test_client, json_header, requests_mock, signature, public_key):
     
-    requests_mock.get("http://users:5000/umnetID/USER1",
+    requests_mock.get("http://users:5000/umnetId/USER1",
                        json={"success": True, "data": {}}, status_code=400)
     
     data = {
@@ -270,4 +270,4 @@ def test_create_transaction_public_key_failure(test_client, json_header, request
     response = test_client.post(url, data=json.dumps(data), headers=json_header)
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert b"Public key for the provided walletId not found" in response.data
+    assert b"Public key for the provided umnetId not found" in response.data

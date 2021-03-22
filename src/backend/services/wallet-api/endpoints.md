@@ -8,7 +8,7 @@
 
 ```json
 {
-  "walletId": string
+  "umnetId": string
 }
 ```
 
@@ -17,14 +17,16 @@ Registers a wallet for a new user in the blockchain and returns the server messa
 **Example return:**
 
 ```json
-201 
+201
 {
   "success": boolean
 }
 ```
+
 or
+
 ```json
-400 
+400
 {
   "error"  : string
 }
@@ -37,24 +39,27 @@ or
 **Required JSON:**
 
 ```json
-200 
+200
 {
-  "walletId": string
+  "umnetId": string
 }
 ```
+
 Returns the amount of bisoncoin that the user currently owns.
 
 **Example return:**
 
 ```json
-400 
+400
 {
   "amount": int
 }
 ```
+
 or
+
 ```json
 {
-  "error" : string
+  "error": string
 }
 ```

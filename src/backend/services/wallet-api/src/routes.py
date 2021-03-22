@@ -25,7 +25,7 @@ def index():
 def getWalletAmount():
     data = request.get_json(force=True)
 
-    if (data is None) or ("walletId" not in data):
+    if (data is None) or ("umnetId" not in data):
         raise IncorrectPayloadException()
 
     response = send_get_request( blockchain_wallet_url.format("balance"), data)
