@@ -97,7 +97,6 @@ export default class ViewAccountPage extends Vue {
   }
 
   setEditing(editing: boolean) {
-    console.log("setting editing to:", editing);
     this.$store.commit("MUTATION_SET_EDITING", editing);
   }
 
