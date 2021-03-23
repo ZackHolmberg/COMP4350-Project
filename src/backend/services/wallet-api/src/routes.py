@@ -58,7 +58,7 @@ def getWalletHistory(umnetId):
 
     for block in chain[1:]:
         block = json.loads(block)
-        ts = float(block["transaction"]["timestamp"])
+        ts = block["transaction"]["timestamp"]
         
         # if user was the miner 
         if umnetId == block["miner_id"].upper() :

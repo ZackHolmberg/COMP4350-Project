@@ -7,7 +7,6 @@
 **Required JSON:**
 
 ```json
-200
 {
   "umnetId": string,
   "password": string
@@ -22,6 +21,7 @@ Returns the amount of bisoncoin that the user currently owns.
 {
   "amount": int
 }
+200
 ```
 
 or
@@ -30,6 +30,7 @@ or
 {
   "error" : string
 }
+400
 ```
 
 ## Get the user's transaction history
@@ -51,7 +52,7 @@ Returns the transaction history of the umnetId passed in the query.
         "to_address": string,
         "id": string,
         "signature": string,
-        "timestamp": float
+        "timestamp": int
       }, 
       "type": send or receive or reward
     }
