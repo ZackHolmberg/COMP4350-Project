@@ -20,16 +20,12 @@ describe("Create Account", () => {
       cy.intercept("POST", "/users/login", { fixture: "loginSuccess.json" }).as(
         "userLogin"
       );
-      cy.intercept("POST", "/wallet/create", { fixture: "success.json" }).as(
-        "createWallet"
-      );
       cy.intercept("POST", "/wallet/amount", {
         fixture: "walletAmountEmpty.json",
       }).as("getWalletAmount");
 
       cy.get("#create-account-button").click();
       cy.wait(["@createAccount"]);
-      cy.wait(["@createWallet"]);
       cy.wait(["@userLogin"]);
       cy.wait(["@getWalletAmount"]);
       cy.url().should("eq", "http://localhost:8080/home");

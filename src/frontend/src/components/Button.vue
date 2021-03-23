@@ -18,7 +18,7 @@ import Circle2 from "vue-loading-spinner/src/components/Circle2.vue";
 })
 export default class Button extends Vue {
   @Prop() private label!: string;
-  @Prop() private dest!: string;
+  @Prop({ default: "" }) private dest!: string;
   @Prop() private size!: string;
   @Prop() private type!: string;
 
@@ -27,10 +27,20 @@ export default class Button extends Vue {
       return "big-button default";
     } else if (this.size == "small" && this.type == "default") {
       return "button default";
+    }  else if (this.size == "long" && this.type == "default") {
+      return "long-button default";
+    } else if (this.size == "big" && this.type == "other") {
+      return "big-button other";
+    } else if (this.size == "small" && this.type == "other") {
+      return "button other";
+    } else if (this.size == "long" && this.type == "other") {
+      return "long-button other";
     } else if (this.size == "big" && this.type == "cancel") {
       return "big-button cancel";
     } else if (this.size == "small" && this.type == "cancel") {
       return "button cancel";
+    } else if (this.size == "long" && this.type == "cancel") {
+      return "long-button cancel";
     }
   }
 
@@ -50,8 +60,24 @@ export default class Button extends Vue {
   background-color: $button-background-color;
 }
 
+.other {
+  background-color: $other-button-background-color;
+}
+
 .big-button {
   width: $big-button-width;
+  height: $big-button-height;
+  border-radius: $big-button-border-radius;
+  box-shadow: $box-shadow;
+  font-size: $big-button-font-size;
+  font-family: $default-font;
+  transition: $hover-transition;
+  border: $border-color;
+  color: $button-text;
+}
+
+.long-button {
+  width: $long-button-width;
   height: $big-button-height;
   border-radius: $big-button-border-radius;
   box-shadow: $box-shadow;
@@ -83,6 +109,12 @@ export default class Button extends Vue {
 .big-button:hover {
   cursor: pointer;
   transform: $hover-transform-button;
+  box-shadow: $box-shadow-hover;
+}
+
+.long-button:hover {
+  cursor: pointer;
+  transform: $hover-transform-long-button;
   box-shadow: $box-shadow-hover;
 }
 

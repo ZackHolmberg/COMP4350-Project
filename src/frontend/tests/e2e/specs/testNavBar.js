@@ -21,7 +21,6 @@ describe("Checks nav bar", () => {
       cy.url().should("eq", "http://localhost:8080/home");
       cy.get("#nav-logo").should("be.visible");
       cy.get("#nav-account").should("be.visible");
-      cy.get("#nav-settings").should("be.visible");
       cy.get("#nav-logout").should("be.visible");
     });
 

@@ -7,7 +7,6 @@ import "vue-toast-notification/dist/theme-sugar.css";
 import * as rs from "jsrsasign";
 import { router } from "../main";
 import type { Transaction } from "../types";
-import { saveAs } from 'file-saver';
 import createPersistedState from "vuex-persistedstate";
 import * as Cookies from 'js-cookie'
 
@@ -23,7 +22,6 @@ const genKeyPair = (): string[] => {
   ];
 };
 
-// TODO: This should include timestamp too 
 const getTransactionId = (transaction: Transaction): string => {
   return sha256(
     transaction.to + transaction.from + transaction.amount + transaction.timestamp
@@ -32,7 +30,6 @@ const getTransactionId = (transaction: Transaction): string => {
 
 const sign = (transaction: Transaction, privateKey: string): string => {
   const dataToSign = transaction.id;
-
   const sig = new rs.KJUR.crypto.Signature({ alg: "SHA256withRSA" });
 
   sig.init(privateKey);
@@ -72,7 +69,8 @@ export default new Vuex.Store({
     lastName: "",
     mining: false,
     editing: false,
-    findProof: false
+    findProof: false,
+    transactions: [],
   },
   getters: {
     loading: (state) => {
@@ -105,6 +103,9 @@ export default new Vuex.Store({
     findProof: (state) => {
       return state.findProof;
     },
+    transactions: (state) => {
+      return state.transactions;
+    }
   },
   mutations: {
     MUTATION_SET_LOADING(state, loading) {
@@ -129,16 +130,19 @@ export default new Vuex.Store({
       state.password = password;
     },
     MUTATION_SET_UMNETID(state, umnetId) {
-      state.umnetId = umnetId
+      state.umnetId = umnetId;
     },
     MUTATION_SET_PRIVATE_KEY(state, privateKey) {
-      state.privateKey = privateKey
+      state.privateKey = privateKey;
     },
     MUTATION_SET_MINING(state, mining) {
-      state.mining = mining
+      state.mining = mining;
     },
     MUTATION_SET_FIND_PROOF(state, findProof) {
-      state.findProof = findProof
+      state.findProof = findProof;
+    },
+    MUTATION_SET_TRANSACTION_HISTORY(state, transactions) {
+      state.transactions = transactions;
     }
   },
   actions: {
@@ -216,7 +220,6 @@ export default new Vuex.Store({
       transaction.signature = sign(transaction, getters.privateKey);
 
       commit("MUTATION_SET_LOADING", true);
-
       axios
         .post("http://localhost/transactions/create", {
           "from": transaction.from,
@@ -227,6 +230,7 @@ export default new Vuex.Store({
           "signature": transaction.signature,
         })
         .then((response) => {
+
           router.push("/home");
           const message = "Transaction sent successfully!"
           dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
@@ -244,7 +248,7 @@ export default new Vuex.Store({
           });
     },
 
-    ACTION_LOGIN({ commit, dispatch, getters }, values) {
+    ACTION_LOGIN({ commit, dispatch }, values) {
       const umnetId = values.umnetId;
       const password = values.password;
 
@@ -264,7 +268,7 @@ export default new Vuex.Store({
           "umnetId": umnetId,
           "password": password,
         })
-        // Inform user whether or not login was succesfful. If it wasnt, let them know why
+        // Inform user whether or not login was successful. If it wasn't, let them know why
 
         .then(
           (response) => {
@@ -276,7 +280,7 @@ export default new Vuex.Store({
 
             const privateKey = localStorage.getItem(umnetId);
             commit("MUTATION_SET_PRIVATE_KEY", privateKey)
-            
+
             const message = "Login successful!"
             dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
             dispatch("ACTION_FETCH_WALLET_AMOUNT").then(() => {
@@ -296,7 +300,7 @@ export default new Vuex.Store({
         );
     },
 
-    ACTION_CREATE_ACCOUNT({ commit, getters, dispatch }, values) {
+    ACTION_CREATE_ACCOUNT({ commit, dispatch }, values) {
       commit("MUTATION_SET_LOADING", true);
 
       const umnetId = values.umnetId;
@@ -326,7 +330,7 @@ export default new Vuex.Store({
       const privateKeyHash = sha256(`${umnetId}${password}${publicKey}`)
 
       localStorage.setItem(umnetId, privateKey);
-            
+
       axios
         .post("http://localhost/users/create", {
           "first_name": firstName,
@@ -338,7 +342,7 @@ export default new Vuex.Store({
         .then(
           () => {
             commit("MUTATION_SET_LOADING", false);
-            
+
             const data = { umnetId: umnetId, password: password };
             dispatch("ACTION_LOGIN", data);
           },
@@ -365,6 +369,22 @@ export default new Vuex.Store({
         position: "top",
         dismissible: true,
       });
+    },
+
+    ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
+      axios
+        .get("http://localhost/wallet/history/"+ getters.umnetId)
+        .then(
+          (response) => {
+            commit("MUTATION_SET_TRANSACTION_HISTORY", response.data.history);
+          },
+          (err) => {
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : ERROR_STRING
+            dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
+          }
+        ); 
     },
   },
 });

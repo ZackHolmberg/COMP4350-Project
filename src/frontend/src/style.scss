@@ -14,6 +14,7 @@ $default-header-font-size: 50px;
 // BUTTON
 $button-background-color: rgba(0, 117, 160, 0.582);
 $cancel-button-background-color: rgba(160, 5, 0, 0.555);
+$other-button-background-color: rgba(173, 2, 59, 0.521);
 
 $button-text: #e8e6e3;
 $button-font-size: 16px;
@@ -21,6 +22,7 @@ $big-button-font-size: 32px;
 $border-color: 2px solid rgb(140, 130, 115);
 
 $hover-transform-button: scale(1.2);
+$hover-transform-long-button: scale(1.1);
 
 $button-border-radius: 25px;
 $big-button-border-radius: 40px;
@@ -30,6 +32,8 @@ $big-button-height: 100px;
 
 $button-width: 100px;
 $button-height: 50px;
+
+$long-button-width: 85%;
 
 $loading-spinner-margin: 25%;
 
@@ -56,17 +60,14 @@ $box-border-radius: 10px;
 // NAV BAR
 $nav-logo-size: 110px;
 $account-icon-size: 70px;
-$settings-icon-size: 80px;
 $logout-icon-size: 70px;
 
 $nav-logo-top: 5px;
 $account-icon-top: 25px;
-$settings-icon-top: 20px;
 $logout-icon-top: 25px;
 
 $nav-logo-left: 30px;
-$account-icon-right: 235px;
-$settings-icon-right: 130px;
+$account-icon-right: 130px;
 $logout-icon-right: 30px;
 
 $nav-bar-height: 120px;
@@ -87,7 +88,11 @@ $home-page-background-color: rgba(0, 0, 0, 0.75);
 $home-page-border: 1px solid black;
 
 $home-page-button-position: 12%;
-$home-page-button-bottom: 20%;
+$home-page-button-bottom: 40%;
+
+$home-page-wallet-bottom: 45%;
+
+$home-page-history-top: 70%;
 
 // TRANSACTION PAGE
 $transaction-button-padding: 10px;
@@ -127,4 +132,16 @@ $account-text-font-size: 20px;
 $account-text-left: 80px;
 $account-text-padding-top: 20px;
 
+// TRANSACTION HISTORY
+$received-color: rgba(235, 255, 204, 0.75);
+$reward-color: rgba(255, 248, 149, 0.75); 
+$sent-color:  rgba(255, 206, 192, 0.75);
+$no-transactions-text-color: gray;
 
+$content-text-padding: 15px;
+$content-text-margin: -2px;
+
+$content-padding: 20px;
+$content-background-color: rgb(231, 231, 231);
+$content-border-radius: 20px;
+$content-font-size: 20px;
