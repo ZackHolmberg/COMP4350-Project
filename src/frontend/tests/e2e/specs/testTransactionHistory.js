@@ -13,7 +13,7 @@ describe("Transaction History Component", () => {
         cy.intercept("POST", "/wallet/amount", {
           fixture: "walletAmountEmpty.json",
         }).as("getWalletAmount");
-        cy.intercept("GET", "/wallet/history?walletId=testPublicKey", {
+        cy.intercept("GET", "/wallet/history/umnetId", {
           fixture: "transactionHistory.json",
         }).as("getTransactionHistory");
         cy.get("#login-button").click();

@@ -1,29 +1,31 @@
-[
-  {
-    "transaction": {
-      "id": 1,
-      "timestamp": 1616383465,
-      "from": "fromPerson",
-      "amount": 10
-    },
+{ 
+  "history": [
+    {
+      "transaction": {
+        "id": 1,
+        "timestamp": 1616383465,
+        "from": "fromPerson",
+        "amount": 10
+      },
     "type": "receive"
-  },
-  {
-    "transaction": {
-      "id": 2,
-      "timestamp": 1431660137,
-      "to": "toPerson",
-      "amount": 200
     },
-    "type": "send"
-  },
-  {
-    "transaction": {
-      "id": 3,
-      "timestamp": 1234567890,
-      "from": "fromPerson",
-      "amount": 5
+    {
+      "transaction": {
+        "id": 2,
+        "timestamp": 1431660137,
+        "to": "toPerson",
+        "amount": 200
+      },
+      "type": "send"
     },
-    "type": "reward"
-  }
-]
+    {
+      "transaction": {
+        "id": 3,
+        "timestamp": 1234567890,
+        "from": "fromPerson",
+        "amount": 5
+      },
+      "type": "reward"
+    }
+  ]
+}

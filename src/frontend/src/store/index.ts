@@ -376,10 +376,10 @@ export default new Vuex.Store({
 
     ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
       axios
-        .get("http://localhost//wallet/history?walletId="+ getters.walletId)
+        .get("http://localhost//wallet/history/"+ getters.umnetId)
         .then(
           (response) => {
-            commit("MUTATION_SET_TRANSACTION_HISTORY", response.data);
+            commit("MUTATION_SET_TRANSACTION_HISTORY", response.data.history);
           },
           (err) => {
             const message = err.response && err.response.data.error
@@ -388,38 +388,6 @@ export default new Vuex.Store({
             dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
           }
         ); 
- 
-      /* const transactions = [
-        {
-          "transaction": {
-            "id": 1,
-            "timestamp": 1616383465,
-            "from": "fromPerson",
-            "amount": 10
-          },
-          "type": "receive"
-        },
-        {
-          "transaction": {
-            "id": 2,
-            "timestamp": 1431660137,
-            "to": "toPerson",
-            "amount": 200
-          },
-          "type": "send"
-        },
-        {
-          "transaction": {
-            "id": 3,
-            "timestamp": 1234567890,
-            "from": "fromPerson",
-            "amount": 5
-          },
-          "type": "reward"
-        }
-      ];
-
-      commit("MUTATION_SET_TRANSACTION_HISTORY", transactions); */
     },
   },
 });
