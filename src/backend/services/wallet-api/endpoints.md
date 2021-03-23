@@ -6,11 +6,14 @@
 
 **Required JSON:**
 
-```json 
+```json
+200
 {
-  "umnetId": string
+  "umnetId": string,
+  "password": string
 }
 ```
+
 Returns the amount of bisoncoin that the user currently owns.
 
 **Example return:**
@@ -34,7 +37,6 @@ or
 > `GET` <http://localhost/wallet/history/umnetId>
 
 Returns the transaction history of the umnetId passed in the query.
-
 
 **Example return:**
 

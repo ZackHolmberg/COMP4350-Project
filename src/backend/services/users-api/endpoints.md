@@ -136,3 +136,26 @@
 ```json
 { "error": string }
 ```
+
+## authUser
+
+### Payload
+
+```json
+{
+  "umnetId": string,
+  "password": string
+}
+```
+
+### Response
+
+```json
+{ "success": true }
+```
+
+-or-
+
+```json
+{ "error": string }
+```
