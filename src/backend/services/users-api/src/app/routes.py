@@ -2,6 +2,13 @@ from src.app import app, mongo, HttpCode
 from flask import request, jsonify
 from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
 from shared.utils import BisonCoinUrls, send_post_request
+from werkzeug.security import generate_password_hash, check_password_hash
+
+def get_user_from_db(umnetId, password):
+    user = mongo.db.users.find_one({"umnetId": umnetId})
+    if not user or not check_password_hash(user["password"], password):
+        raise IncorrectCredentialsException()
+    return user
 
 @app.route("/")
 def index():
@@ -20,15 +27,7 @@ def login():
     except KeyError as e:
         raise IncorrectPayloadException()
 
-    try:
-        user = mongo.db.users.find_one({"umnetId": umnetId})
-        correct_credentials = user["password"] == password
-    except Exception as e:
-        raise UserNotFoundException()
-
-    if not correct_credentials:
-        raise IncorrectCredentialsException()
-
+    user = get_user_from_db(umnetId, password)
     data = {
         'first_name': user['first_name'],
         'last_name': user['last_name'],
@@ -79,6 +78,18 @@ def get_all_users():
         data=data
     )
 
+@app.route('/authUser', methods=['POST'])
+def authenticate_user():
+    data = request.get_json()
+    try:
+        umnetId = data["umnetId"]
+        password = data["password"]
+    except KeyError as e:
+        raise IncorrectPayloadException()
+    
+    user = get_user_from_db(umnetId, password)  # raises an error when user not found
+    assert "umnetId" in user
+    return jsonify( success=True), HttpCode.OK.value
 
 @app.route('/create', methods=['POST'])
 def create_user():
@@ -97,7 +108,7 @@ def create_user():
         "first_name": first_name,
         "last_name": last_name,
         "umnetId": umnetId,
-        "password": password,
+        "password": generate_password_hash(password, method='sha256'),
         "public_key": public_key
     }
 
@@ -128,23 +139,18 @@ def update_user():
     except KeyError as e:
         raise IncorrectPayloadException()
 
-    usr = mongo.db.users.find_one({"umnetId": umnetId})
+    user = get_user_from_db(umnetId, curr_password)
 
-    if usr is None:
-        raise DatabaseVerificationException("user doesn't exist")
-
-    if usr["password"] != curr_password:
-        raise DatabaseVerificationException("password verification failed")
-
-    user = {
+    new_password_hash = generate_password_hash(new_password, method='sha256') 
+    updated_user = {
         "first_name": first_name,
         "last_name": last_name,
-        "password": new_password,
-        "public_key": usr["public_key"]
+        "password": new_password_hash,
+        "public_key": user["public_key"]
     }
 
     try:
-        res = mongo.db.users.update_one({"umnetId": umnetId}, {"$set": user})
+        res = mongo.db.users.update_one({"umnetId": umnetId}, {"$set": updated_user})
 
     except Exception as e:
         raise DatabaseVerificationException(str(e))
@@ -160,6 +166,7 @@ def handle_database_error(e):
 
 
 @app.errorhandler(UserNotFoundException)
+@app.errorhandler(IncorrectCredentialsException)
 @app.errorhandler(IncorrectPayloadException)
 def handle_userapi_error(e):
     return jsonify(error=e.json_message), e.return_code
