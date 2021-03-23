@@ -337,8 +337,6 @@ export default new Vuex.Store({
         .then(
           () => {
             commit("MUTATION_SET_LOADING", false);
-            // const blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
-            // saveAs(blob, "privateKeys.txt")
             
             const data = { umnetId: umnetId, password: password };
             dispatch("ACTION_LOGIN", data);
