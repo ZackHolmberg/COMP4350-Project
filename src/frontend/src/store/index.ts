@@ -282,7 +282,7 @@ export default new Vuex.Store({
             } else {
               commit("MUTATION_SET_PRIVATE_KEY", privateKey)
             }
-            
+
             const message = "Login successful!"
             dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
             dispatch("ACTION_FETCH_WALLET_AMOUNT").then(() => {
@@ -348,16 +348,6 @@ export default new Vuex.Store({
             // TODO: Uncomment when we read in and set privateKey on login
             // const blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
             // saveAs(blob, "privateKeys.txt")
-
-            // const pk = JSON.stringify(privateKey)
-            // const blob = new Blob([pk], {type: 'text/plain'})
-            // const e = document.createEvent('MouseEvents'),
-            // a = document.createElement('a');
-            // a.download = "pk.json";
-            // a.href = window.URL.createObjectURL(blob);
-            // a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
-            // e.initEvent('click', true);
-            // a.dispatchEvent(e);
             
             const data = { umnetId: umnetId, password: password };
             dispatch("ACTION_LOGIN", data);
