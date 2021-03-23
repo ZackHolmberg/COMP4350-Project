@@ -283,7 +283,7 @@ export default new Vuex.Store({
             else {
               commit("MUTATION_SET_PRIVATE_KEY", privateKey)
             }
-            console.log(getters.privateKey)
+            
             const message = "Login successful!"
             dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
             dispatch("ACTION_FETCH_WALLET_AMOUNT").then(() => {
