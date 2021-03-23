@@ -12,7 +12,6 @@ else:
 
 from shared.utils import BisonCoinUrls
 from shared import HttpCode
-
 from shared.exceptions import IncorrectPayloadException, UserNotFoundException 
 from shared.utils import send_get_request, send_post_request
 
@@ -37,34 +36,30 @@ def getWalletAmount():
     return jsonify(response.json()), response.status_code
 
 @cross_origin()
-@app.route("/history", methods=['GET'])
-def getWalletHistory():
+@app.route("/history/<umnetId>", methods=['GET'])
+def getWalletHistory(umnetId):
 
-    umnetId = request.args.get('umnetId')
-
-    if umnetId is None:
-        raise IncorrectPayloadException()
-
-    # response = requests.get("http://localhost/blockchain/chain").json()
     response = requests.get( blockchain_url.format("chain")).json()
     chain = response['chain']
 
     result = []
+
+    umnetId = umnetId.upper()
 
     for block in chain[1:]:
         block = json.loads(block)
         ts = float(block["transaction"]["timestamp"])
         
         # if user was the miner 
-        if umnetId.upper() == block["miner_id"].upper() :
+        if umnetId == block["miner_id"].upper() :
             result.append({"transaction": {"timestamp": ts, "amount": block["reward_amount"], "from_address": "BLOCKCHAIN", "to_adderss": block["miner_id"], "id" : block["transaction"]["id"], "signature": block["transaction"]["signature"]}, "type": "reward"})
 
         # if user was the sender
-        if umnetId.upper() == block["transaction"]['from_address'].upper():
+        if umnetId == block["transaction"]['from_address'].upper():
             result.append({"transaction" : block["transaction"], "type": "send"})
         
         # if user was the reciever
-        if umnetId.upper() == block["transaction"]['to_address'].upper():
+        if umnetId == block["transaction"]['to_address'].upper():
             result.append({"transaction" : block["transaction"], "type": "receive"})
 
     result.reverse()

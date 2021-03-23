@@ -31,9 +31,9 @@ or
 
 ## Get the user's transaction history
 
-> `GET` <http://localhost/wallet/history?walletId={SearchID}>
+> `GET` <http://localhost/wallet/history/umnetId>
 
-Returns the transaction history of the wallet ID passed in the query.
+Returns the transaction history of the umnetId passed in the query.
 
 
 **Example return:**
@@ -56,13 +56,4 @@ Returns the transaction history of the wallet ID passed in the query.
   ]
 }
 200
-```
-
-or
-
-```json
-{
-  "error": "Please send correct json payload"
-}
-400
 ```
