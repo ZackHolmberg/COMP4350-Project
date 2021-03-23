@@ -275,14 +275,14 @@ export default new Vuex.Store({
 
             // TODO: Figure out reading privateKey from file
 
-            // let reader = new FileReader();
-
-            // const privateKey = ""
-
+            const privateKey = localStorage.getItem(umnetId);
             // TODO: Remove once we have a better way to do this
-            if (getters.privateKey == "") {
+            if (getters.privateKey == "" || getters.privateKey == undefined {
               commit("MUTATION_SET_PRIVATE_KEY", "-----BEGIN RSA PRIVATE KEY-----\r\nMIICWwIBAAKBgQDTVUqBAh2WiuxoACXfK+qppy6J2lttoNywfwesv0Sg9KHIbSEf\r\nduRSq0J53ajQo/s2KeHvW8oyNlZcCi+FSB5S052urxW1E/ozoVGqdelGS86h07zm\r\nSRVxUQCKexZbS3LrXXfs4yv3Gdko2+cDaM+OQnNbQWTAu/6f8PrgXS579wIDAQAB\r\nAoGAPqUiz7kz0iNeTrn0gAJBroa7WevbfFTZ9ovBV6jfDCNYLdSDpBMXPZY8v2lA\r\nmJBzcCvcKJr6BgZrdR8j1Qt6ySLAChnFV9Y5DimN/x6cmW6xt8MhUcGhAAMzAP1m\r\nZx5+b0scdOzfeRVwPKJHRNqGtHMtyPgsoZxIE7PkU/Ilb/ECQQDq2e9r260uhmcZ\r\niFuOyET5EXzWkPDAWYHNdaYg4+OMIr5EmqN5ia+o9RsiOSlrS41RjgQZ1ElFTW3n\r\nj/CodakZAkEA5l0wNbNf8O5v7IALn54+b853iPiblb5aEJTdamZ8X74NoplsBpK3\r\nix+CfBNNuzZLynrxbKwujbDrP1pcdDMfjwJAAU/CRInvh6j8fmoCiOOZbwKn/dLF\r\nZW2aifk0Ok7LgIbZJSzv6MfaEUl9I03Ka2z6lxAB+drzpc1u5bIqF+bAUQJAHqeN\r\n78dz3+rKyAzt/wqewmAWNgrnIVEYSRaWND95E4CF7fo+js1dUU0bHwmukVgTU9ly\r\nYQS0mTROybprjSb0bwJAE1TOGPKyrtf3YEOFGJctAjn0Zlz7tpout72zrHw27FjH\r\nBq9ocxcFGWKGa8Go1Ohfy2nvBJPGypgJOK+jTv56zQ==\r\n-----END RSA PRIVATE KEY-----\r\n")
+            } else {
+              commit("MUTATION_SET_PRIVATE_KEY", privateKey)
             }
+            
             const message = "Login successful!"
             dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
             dispatch("ACTION_FETCH_WALLET_AMOUNT").then(() => {
@@ -331,9 +331,8 @@ export default new Vuex.Store({
       const publicKey = keyPair[1];
       const privateKeyHash = sha256(`${umnetId}${password}${publicKey}`)
 
-      // TODO: Remove when we read in and set privateKey on login
-      commit("MUTATION_SET_PRIVATE_KEY", privateKey)
-
+      localStorage.setItem(umnetId, privateKey);
+            
       axios
         .post("http://localhost/users/create", {
           "first_name": firstName,
@@ -349,6 +348,17 @@ export default new Vuex.Store({
             // TODO: Uncomment when we read in and set privateKey on login
             // const blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
             // saveAs(blob, "privateKeys.txt")
+
+            // const pk = JSON.stringify(privateKey)
+            // const blob = new Blob([pk], {type: 'text/plain'})
+            // const e = document.createEvent('MouseEvents'),
+            // a = document.createElement('a');
+            // a.download = "pk.json";
+            // a.href = window.URL.createObjectURL(blob);
+            // a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+            // e.initEvent('click', true);
+            // a.dispatchEvent(e);
+            
             const data = { umnetId: umnetId, password: password };
             dispatch("ACTION_LOGIN", data);
           },
