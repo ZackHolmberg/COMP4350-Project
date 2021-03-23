@@ -273,8 +273,6 @@ export default new Vuex.Store({
             commit("MUTATION_SET_UMNETID", umnetId)
             commit("MUTATION_SET_PASSWORD", password)
 
-            // TODO: Figure out reading privateKey from file
-
             const privateKey = localStorage.getItem(umnetId);
             // TODO: Remove once we have a better way to do this
             if (privateKey == "" || privateKey == undefined) {
@@ -345,8 +343,6 @@ export default new Vuex.Store({
         .then(
           () => {
             commit("MUTATION_SET_LOADING", false);
-
-            // TODO: Uncomment when we read in and set privateKey on login
             // const blob = new Blob([`${privateKeyHash}:${privateKey}`], { type: "text/plain;charset=utf-8" });
             // saveAs(blob, "privateKeys.txt")
             
