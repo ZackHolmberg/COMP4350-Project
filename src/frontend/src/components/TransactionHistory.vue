@@ -49,12 +49,7 @@ export default class TransactionHistory extends Vue {
   }
 
   collapse() {
-    if(this.$data.active) {
-      this.$data.active = false;
-    }
-    else {
-      this.$data.active = true;
-    }  
+    this.$data.active = !this.$data.active;
   }
 
   convertDate(time: number) {
