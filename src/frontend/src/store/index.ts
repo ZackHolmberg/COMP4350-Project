@@ -376,7 +376,7 @@ export default new Vuex.Store({
 
     ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
       axios
-        .get("http://localhost//wallet/history/"+ getters.umnetId)
+        .get("http://localhost/wallet/history/"+ getters.umnetId)
         .then(
           (response) => {
             commit("MUTATION_SET_TRANSACTION_HISTORY", response.data.history);
