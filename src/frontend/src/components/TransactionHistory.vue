@@ -9,7 +9,7 @@
     />
     <div v-if="active" id="content" class="content">
       <p v-if="transactions.length == 0" class="no-transaction-history">
-        No Transaction History.
+        No Transaction History
       </p>
       <div v-for="item in transactions" :key="item.transaction.id">
         <p v-if="item.type == 'receive'" class="received content-text">
