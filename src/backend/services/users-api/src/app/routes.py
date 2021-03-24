@@ -86,17 +86,13 @@ def get_all_users():
 def authenticate_user():
     data = request.get_json()
     try:
-        umnetId = data["umnetId"]
+        umnetId = data["umnetId"].upper()
         password = data["password"]
     except KeyError as e:
-        print("ZACK MSG - User authentication failed as key error in user service", file=sys.stderr)
         raise IncorrectPayloadException()
 
     # raises an error when user not found
-    print("ZACK MSG - before get_user_from_db",
-          "credentials:", data, file=sys.stderr)
     user = get_user_from_db(umnetId, password)
-    print("ZACK MSG - after get_user_from_db")
     assert "umnetId" in user
     return jsonify(success=True), HttpCode.OK.value
 
