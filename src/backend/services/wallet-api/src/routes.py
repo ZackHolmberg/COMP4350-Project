@@ -19,16 +19,22 @@ blockchain_wallet_url = BisonCoinUrls.blockchain_wallet_url
 user_api_url = BisonCoinUrls.user_api_url
 blockchain_url = BisonCoinUrls.blockchain_url
 
+
 def authenticate_user(umnetId, password):
-    req_body = {"umnetID": umnetId, "password": password}
-    response = send_post_request( user_api_url.format("authUser"), req_body)
+    req_body = {"umnetId": umnetId, "password": password}
+    print("ZACK MSG - authenticate_user request body:", req_body)
+    response = send_post_request(user_api_url.format("authUser"), req_body)
     if "success" not in response.json():
-        raise BisonCoinException(json_message=response.json(), return_code=response.status_code)
+        print("ZACK MSG - User authentication failed in wallet service")
+        raise BisonCoinException(
+            json_message=response.json(), return_code=response.status_code)
+
 
 @cross_origin()
 @app.route("/")
 def index():
     return "Hello from your wallet"
+
 
 @cross_origin()
 @app.route("/amount", methods=['POST'])
@@ -39,17 +45,18 @@ def getWalletAmount():
         password = data["password"]
     except KeyError:
         raise IncorrectPayloadException()
-    
+
     authenticate_user(umnetId, password)
 
-    response = send_get_request( blockchain_wallet_url.format("balance"), data)
+    response = send_get_request(blockchain_wallet_url.format("balance"), data)
     return jsonify(response.json()), response.status_code
+
 
 @cross_origin()
 @app.route("/history/<umnetId>", methods=['GET'])
 def getWalletHistory(umnetId):
 
-    response = requests.get( blockchain_url.format("chain")).json()
+    response = requests.get(blockchain_url.format("chain")).json()
     chain = response['chain']
 
     result = []
@@ -59,27 +66,31 @@ def getWalletHistory(umnetId):
     for block in chain[1:]:
         block = json.loads(block)
         ts = block["transaction"]["timestamp"]
-        
-        # if user was the miner 
-        if umnetId == block["miner_id"].upper() :
-            result.append({"transaction": {"timestamp": ts, "amount": block["reward_amount"], "from_address": "BLOCKCHAIN", "to_adderss": block["miner_id"], "id" : block["transaction"]["id"], "signature": block["transaction"]["signature"]}, "type": "reward"})
+
+        # if user was the miner
+        if umnetId == block["miner_id"].upper():
+            result.append({"transaction": {"timestamp": ts, "amount": block["reward_amount"], "from_address": "BLOCKCHAIN", "to_adderss": block[
+                          "miner_id"], "id": block["transaction"]["id"], "signature": block["transaction"]["signature"]}, "type": "reward"})
 
         # if user was the sender
         if umnetId == block["transaction"]['from_address'].upper():
-            result.append({"transaction" : block["transaction"], "type": "send"})
-        
+            result.append(
+                {"transaction": block["transaction"], "type": "send"})
+
         # if user was the reciever
         if umnetId == block["transaction"]['to_address'].upper():
-            result.append({"transaction" : block["transaction"], "type": "receive"})
+            result.append(
+                {"transaction": block["transaction"], "type": "receive"})
 
     result.reverse()
-    return jsonify({"history" : result}), HttpCode.OK.value 
+    return jsonify({"history": result}), HttpCode.OK.value
 
 
 @app.errorhandler(IncorrectPayloadException)
 @app.errorhandler(UserNotFoundException)
 def handle_wallet_error(e):
     return jsonify(error=e.json_message), e.return_code
+
 
 @app.errorhandler(BisonCoinException)
 def handle_error(e):

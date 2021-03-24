@@ -3,12 +3,15 @@ from flask import request, jsonify
 from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
 from shared.utils import BisonCoinUrls, send_post_request
 from werkzeug.security import generate_password_hash, check_password_hash
+import sys
+
 
 def get_user_from_db(umnetId, password):
     user = mongo.db.users.find_one({"umnetId": umnetId})
     if not user or not check_password_hash(user["password"], password):
         raise IncorrectCredentialsException()
     return user
+
 
 @app.route("/")
 def index():
@@ -78,6 +81,7 @@ def get_all_users():
         data=data
     )
 
+
 @app.route('/authUser', methods=['POST'])
 def authenticate_user():
     data = request.get_json()
@@ -85,11 +89,17 @@ def authenticate_user():
         umnetId = data["umnetId"]
         password = data["password"]
     except KeyError as e:
+        print("ZACK MSG - User authentication failed as key error in user service", file=sys.stderr)
         raise IncorrectPayloadException()
-    
-    user = get_user_from_db(umnetId, password)  # raises an error when user not found
+
+    # raises an error when user not found
+    print("ZACK MSG - before get_user_from_db",
+          "credentials:", data, file=sys.stderr)
+    user = get_user_from_db(umnetId, password)
+    print("ZACK MSG - after get_user_from_db")
     assert "umnetId" in user
-    return jsonify( success=True), HttpCode.OK.value
+    return jsonify(success=True), HttpCode.OK.value
+
 
 @app.route('/create', methods=['POST'])
 def create_user():
@@ -113,11 +123,11 @@ def create_user():
     }
 
     try:
-        response = send_post_request( BisonCoinUrls.blockchain_wallet_url.format("addWallet"), {"umnetId": umnetId.strip()})
+        mongo.db.users.insert_one(user)
+        response = send_post_request(BisonCoinUrls.blockchain_wallet_url.format(
+            "addWallet"), {"umnetId": umnetId.strip()})
         if not "success" in response.json():
             raise Exception(response.json())
-
-        mongo.db.users.insert_one(user)
 
     except Exception as e:
         raise DatabaseVerificationException(str(e))
@@ -141,7 +151,7 @@ def update_user():
 
     user = get_user_from_db(umnetId, curr_password)
 
-    new_password_hash = generate_password_hash(new_password, method='sha256') 
+    new_password_hash = generate_password_hash(new_password, method='sha256')
     updated_user = {
         "first_name": first_name,
         "last_name": last_name,
@@ -150,7 +160,8 @@ def update_user():
     }
 
     try:
-        res = mongo.db.users.update_one({"umnetId": umnetId}, {"$set": updated_user})
+        res = mongo.db.users.update_one(
+            {"umnetId": umnetId}, {"$set": updated_user})
 
     except Exception as e:
         raise DatabaseVerificationException(str(e))
