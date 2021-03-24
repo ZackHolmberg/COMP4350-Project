@@ -327,7 +327,6 @@ export default new Vuex.Store({
       const keyPair = genKeyPair();
       const privateKey = keyPair[0];
       const publicKey = keyPair[1];
-      const privateKeyHash = sha256(`${umnetId}${password}${publicKey}`)
 
       localStorage.setItem(umnetId, privateKey);
 

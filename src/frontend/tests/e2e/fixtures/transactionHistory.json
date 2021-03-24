@@ -1,19 +1,19 @@
-{ 
+{
   "history": [
     {
       "transaction": {
         "id": 1,
         "timestamp": 1616383465,
-        "from": "fromPerson",
+        "from_address": "fromPerson",
         "amount": 10
       },
-    "type": "receive"
+      "type": "receive"
     },
     {
       "transaction": {
         "id": 2,
         "timestamp": 1431660137,
-        "to": "toPerson",
+        "to_address": "toPerson",
         "amount": 200
       },
       "type": "send"
@@ -22,7 +22,7 @@
       "transaction": {
         "id": 3,
         "timestamp": 1234567890,
-        "from": "fromPerson",
+        "from_address": "fromPerson",
         "amount": 5
       },
       "type": "reward"

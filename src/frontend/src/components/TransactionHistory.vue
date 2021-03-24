@@ -1,23 +1,31 @@
 <template>
   <div>
-    <Button 
-      id="transaction-history-button" 
-      label="Transaction History" 
+    <Button
+      id="transaction-history-button"
+      label="Transaction History"
       size="long"
       type="other"
       @click.native="collapse"
     />
     <div v-if="active" id="content" class="content">
-      <p v-if="transactions.length == 0" class="no-transaction-history"> No Transaction History. </p>
+      <p v-if="transactions.length == 0" class="no-transaction-history">
+        No Transaction History.
+      </p>
       <div v-for="item in transactions" :key="item.transaction.id">
-        <p v-if="item.type == 'receive'" class="received content-text"> 
-          DATE: {{ convertDate(item.transaction.timestamp) }}, FROM: {{ item.transaction.from }}, AMOUNT: {{ item.transaction.amount }} BSC 
+        <p v-if="item.type == 'receive'" class="received content-text">
+          DATE: {{ convertDate(item.transaction.timestamp) }}, FROM:
+          {{ item.transaction.from_address }}, AMOUNT:
+          {{ item.transaction.amount }} BSC
         </p>
-        <p v-else-if="item.type == 'send'" class="sent content-text"> 
-          DATE: {{ convertDate(item.transaction.timestamp) }}, TO: {{ item.transaction.to }}, AMOUNT: {{ item.transaction.amount }} BSC
+        <p v-else-if="item.type == 'send'" class="sent content-text">
+          DATE: {{ convertDate(item.transaction.timestamp) }}, TO:
+          {{ item.transaction.to_address }}, AMOUNT:
+          {{ item.transaction.amount }} BSC
         </p>
-        <p v-else-if="item.type == 'reward'" class="reward content-text"> 
-          DATE: {{ convertDate(item.transaction.timestamp) }}, FROM: {{ item.transaction.from }}, AMOUNT: {{ item.transaction.amount }} BSC
+        <p v-else-if="item.type == 'reward'" class="reward content-text">
+          DATE: {{ convertDate(item.transaction.timestamp) }}, FROM:
+          {{ item.transaction.from_address }}, AMOUNT:
+          {{ item.transaction.amount }} BSC
         </p>
       </div>
     </div>
@@ -25,19 +33,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 import Button from "./Button.vue";
 
 @Component({
   components: {
-    Button
+    Button,
   },
 })
 export default class TransactionHistory extends Vue {
   data() {
     return {
       active: false,
-    }
+    };
   }
 
   mounted() {
