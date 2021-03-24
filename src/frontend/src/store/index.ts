@@ -386,5 +386,22 @@ export default new Vuex.Store({
           }
         );
     },
+
+    ACTION_LOGOUT({ commit, dispatch }) {
+      commit("MUTATION_SET_FIRST_NAME", "")
+      commit("MUTATION_SET_LAST_NAME", "")
+      commit("MUTATION_SET_UMNETID", "")
+      commit("MUTATION_SET_PASSWORD", "")
+      commit("MUTATION_SET_PRIVATE_KEY", "")
+      commit("MUTATION_SET_WALLET_AMOUNT", 0)
+      commit("MUTATION_SET_MINING", false)
+      commit("MUTATION_SET_FIND_PROOF", false)
+      commit("MUTATION_SET_TRANSACTION_HISTORY", [])
+
+      const message = "Logout successful"
+      dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
+      router.push("/");
+
+    },
   },
 });

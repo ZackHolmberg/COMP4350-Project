@@ -2,24 +2,28 @@
   <div class="nav-bar">
     <img
       id="nav-logo"
-      class="nav-logo"   
+      class="nav-logo"
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
     <router-link to="/account">
       <img
-        id='nav-account'
+        id="nav-account"
         class="nav-account"
         alt="Account icon"
         src="../assets/accountIcon.png"
       />
     </router-link>
-    <img
-      id="nav-logout"
-      class="nav-logout"
-      alt="Logout icon"
-      src="../assets/logoutIcon.png"
-    />
+    <div @click="logout">
+      <router-link to="/account">
+        <img
+          id="nav-logout"
+          class="nav-logout"
+          alt="Logout icon"
+          src="../assets/logoutIcon.png"
+        />
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -28,6 +32,9 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class NavBar extends Vue {
+  logout() {
+    this.$store.dispatch("ACTION_LOGOUT");
+  }
 }
 </script>
 
@@ -37,17 +44,17 @@ export default class NavBar extends Vue {
 .nav-logo {
   position: absolute;
   top: $nav-logo-top;
-  left: $nav-logo-left; 
+  left: $nav-logo-left;
   width: $nav-logo-size;
   height: $nav-logo-size;
 }
 
 .nav-account {
   position: absolute;
-  top: $account-icon-top; 
-  right: $account-icon-right; 
-  width: $account-icon-size; 
-  height: $account-icon-size; 
+  top: $account-icon-top;
+  right: $account-icon-right;
+  width: $account-icon-size;
+  height: $account-icon-size;
   transition: $hover-transition;
 }
 
@@ -60,7 +67,7 @@ export default class NavBar extends Vue {
   position: absolute;
   top: $logout-icon-top;
   right: $logout-icon-right;
-  width: $logout-icon-size; 
+  width: $logout-icon-size;
   height: $logout-icon-size;
   transition: $hover-transition;
 }
