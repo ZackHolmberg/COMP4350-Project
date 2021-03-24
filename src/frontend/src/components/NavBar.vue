@@ -15,14 +15,12 @@
       />
     </router-link>
     <div @click="logout">
-      <router-link to="/account">
-        <img
-          id="nav-logout"
-          class="nav-logout"
-          alt="Logout icon"
-          src="../assets/logoutIcon.png"
-        />
-      </router-link>
+      <img
+        id="nav-logout"
+        class="nav-logout"
+        alt="Logout icon"
+        src="../assets/logoutIcon.png"
+      />
     </div>
   </div>
 </template>
