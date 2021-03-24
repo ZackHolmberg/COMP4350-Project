@@ -3,7 +3,6 @@ from flask import request, jsonify
 from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
 from shared.utils import BisonCoinUrls, send_post_request
 from werkzeug.security import generate_password_hash, check_password_hash
-import sys
 
 
 def get_user_from_db(umnetId, password):
