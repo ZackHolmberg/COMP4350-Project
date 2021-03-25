@@ -269,7 +269,6 @@ export default new Vuex.Store({
           "password": password,
         })
         // Inform user whether or not login was successful. If it wasn't, let them know why
-
         .then(
           (response) => {
             commit("MUTATION_SET_LOADING", false);
