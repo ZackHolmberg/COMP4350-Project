@@ -1,13 +1,13 @@
 <template>
-<div>
-  <NavBar />
-  <div class="wrapper">
-    <Wallet class="wallet-component"/>
-    <CreateTransaction class="transaction-component"/>
-    <Mining class="mining-component"/>
-    <TransactionHistory class="transaction-history-component"/>
+  <div>
+    <NavBar />
+    <div class="wrapper">
+      <Wallet class="wallet-component" />
+      <CreateTransaction class="transaction-component" />
+      <Mining class="mining-component" />
+      <TransactionHistory class="transaction-history-component" />
+    </div>
   </div>
-</div>
 </template>
 
 <script lang="ts">
@@ -27,7 +27,19 @@ import TransactionHistory from "../components/TransactionHistory.vue";
     TransactionHistory,
   },
 })
-export default class HomePage extends Vue {}
+export default class HomePage extends Vue {
+  get umnetId() {
+    return this.$store.getters.umnetId;
+  }
+
+  mounted() {
+    window.setInterval(() => {
+      if (this.umnetId != "") {
+        this.$store.dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
+      }
+    }, 10000);
+  }
+}
 </script>
 
 <style lang="scss">

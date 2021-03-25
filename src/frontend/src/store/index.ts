@@ -376,6 +376,7 @@ export default new Vuex.Store({
         .then(
           (response) => {
             commit("MUTATION_SET_TRANSACTION_HISTORY", response.data.history);
+
           },
           (err) => {
             const message = err.response && err.response.data.error
@@ -401,20 +402,6 @@ export default new Vuex.Store({
       dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
       router.push("/");
 
-    },
-
-    ACTION_FETCH_NEW_TRANSACTIONS({ dispatch, getters }) {
-
-      const currTransactions = getters.transactions
-      dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
-      const updatedTransactions = getters.transactions
-
-      if (updatedTransactions.length > currTransactions.length) {
-        //If there are new transactions
-        dispatch("ACTION_FETCH_WALLET_AMOUNT")
-        const message = "New transaction received!"
-        dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
-      }
     },
   },
 });

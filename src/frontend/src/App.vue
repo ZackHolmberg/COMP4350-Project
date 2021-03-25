@@ -16,12 +16,6 @@ let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default class App extends Vue {
 
-  mounted() {
-    window.setInterval(() => {
-      this.$store.dispatch("ACTION_FETCH_NEW_TRANSACTIONS");
-    }, 10000);
-  }
-
   get umnetId(){
     return this.$store.getters.umnetId
   }
@@ -59,7 +53,6 @@ export default class App extends Vue {
       if(!socket.connected){
         socket.connect()
         socket.on("findProof", (...args: any) => {
-        this.$store.dispatch("ACTION_DISPLAY_TOAST", { message: 'Mining session unsuccesful', type: 'success' })
         this.$store.commit('MUTATION_SET_FIND_PROOF', true);
 
         const transaction: Transaction = {
