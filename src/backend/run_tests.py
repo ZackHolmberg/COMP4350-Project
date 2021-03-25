@@ -1,4 +1,4 @@
-from subprocess import PIPE , Popen
+from subprocess import Popen
 
 directories = ["./blockchain", 
                 "./services/wallet-api", 
