@@ -92,7 +92,6 @@ def test_transaction_history_successfull_response(test_client, requests_mock):
     "length": 4}, status_code=200)
     
     response = test_client.get(url)
-    print(response.data)
 
     assert response.status_code == HttpCode.OK.value
     assert b'"history":[{"transaction":{"amount":3,"from_address":"SACHDEV1","id":"bf3ca14719becea7a176e0b295d4b6bb9ce1e11461968ff435afe7753d4a4e5c","signature":"4a9d17230a018d11be53eb65a663199d35fb568f49da69a69c0de13c53e94a17c8aa74d4205f32d5cf361b9eaa9fc781aed9aea59228897c8b624de36630d78ff84837e0f61d7d4850f510d372e6776ea4c32009263cb4b9793c1bb3915f092db27555db4b2cdbce21adcb1d7124cca77e3b2ce3bc0a209e242da152fe5fdf98","timestamp":1616457911,"to_address":"SHARMAA2"},"type":"receive"},{"transaction":{"amount":10,"from_address":"BLOCKCHAIN","id":"bf3ca14719becea7a176e0b295d4b6bb9ce1e11461968ff435afe7753d4a4e5c","signature":"4a9d17230a018d11be53eb65a663199d35fb568f49da69a69c0de13c53e94a17c8aa74d4205f32d5cf361b9eaa9fc781aed9aea59228897c8b624de36630d78ff84837e0f61d7d4850f510d372e6776ea4c32009263cb4b9793c1bb3915f092db27555db4b2cdbce21adcb1d7124cca77e3b2ce3bc0a209e242da152fe5fdf98","timestamp":1616457911,"to_adderss":"SHARMAA2"},"type":"reward"}' in response.data

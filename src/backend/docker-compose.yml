@@ -59,6 +59,8 @@ services:
       - ./shared:/src/shared
     environment:
       - APP_NAME=UserService
+      - PYTHONUNBUFFERED=1
+
     expose:
       - 5000
     depends_on: [mongodb]

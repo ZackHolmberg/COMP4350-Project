@@ -35,7 +35,7 @@ or
 
 ## Get the user's transaction history
 
-> `GET` <http://localhost/wallet/history/umnetId>
+> `GET` <http://localhost/wallet/history/<umnetId>>
 
 Returns the transaction history of the umnetId passed in the query.
 
@@ -43,7 +43,7 @@ Returns the transaction history of the umnetId passed in the query.
 
 ```json
 {
-  "history": List of dicts arranged by timestamps by recency as follows 
+  "history": List of dicts arranged by timestamps by recency as follows
   [
     {
       "transaction": {
@@ -53,7 +53,7 @@ Returns the transaction history of the umnetId passed in the query.
         "id": string,
         "signature": string,
         "timestamp": int
-      }, 
+      },
       "type": send or receive or reward
     }
   ]

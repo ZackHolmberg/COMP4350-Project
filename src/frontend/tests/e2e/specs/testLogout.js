@@ -1,8 +1,7 @@
-describe("Empty Transaction History Component", () => {
+describe("Checks ability to logout", () => {
   context("1080p resolution", () => {
     beforeEach(() => {
       // run these tests as if in a desktop
-      // browser with a 1080p monitor
       cy.viewport(1920, 1080);
       cy.visit("http://localhost:8080/");
       cy.get("#umnetId").type("umnetId");
@@ -18,14 +17,13 @@ describe("Empty Transaction History Component", () => {
       cy.wait(["@getWalletAmount"]);
     });
 
-    it("Validates that the transaction history component is visible when clicked and transaction history is empty.", () => {
-      cy.url().should("eq", "http://localhost:8080/home");
-      button = cy.get('[id="transaction-history-button"]');
-      button.should("be.visible");
-      button.click();
-      content = cy.get('[id="content"]');
-      content.should("be.visible");
-      content.contains("No Transaction History");
+    it("Logs user out after login", () => {
+      cy.get("#nav-logout").click();
+
+      cy.url().should("eq", "http://localhost:8080/");
+      transaction = cy.get('[class="v-toast__text"]');
+      transaction.should("be.visible");
+      transaction.contains("Logout successful");
     });
   });
 });

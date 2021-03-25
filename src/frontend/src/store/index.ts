@@ -269,7 +269,6 @@ export default new Vuex.Store({
           "password": password,
         })
         // Inform user whether or not login was successful. If it wasn't, let them know why
-
         .then(
           (response) => {
             commit("MUTATION_SET_LOADING", false);
@@ -327,7 +326,6 @@ export default new Vuex.Store({
       const keyPair = genKeyPair();
       const privateKey = keyPair[0];
       const publicKey = keyPair[1];
-      const privateKeyHash = sha256(`${umnetId}${password}${publicKey}`)
 
       localStorage.setItem(umnetId, privateKey);
 
@@ -342,6 +340,7 @@ export default new Vuex.Store({
         .then(
           () => {
             commit("MUTATION_SET_LOADING", false);
+            commit("MUTATION_SET_WALLET_AMOUNT", 0);
 
             const data = { umnetId: umnetId, password: password };
             dispatch("ACTION_LOGIN", data);
@@ -373,7 +372,7 @@ export default new Vuex.Store({
 
     ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
       axios
-        .get("http://localhost/wallet/history/"+ getters.umnetId)
+        .get("http://localhost/wallet/history/" + getters.umnetId)
         .then(
           (response) => {
             commit("MUTATION_SET_TRANSACTION_HISTORY", response.data.history);
@@ -384,7 +383,24 @@ export default new Vuex.Store({
               : ERROR_STRING
             dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'error' })
           }
-        ); 
+        );
+    },
+
+    ACTION_LOGOUT({ commit, dispatch }) {
+      commit("MUTATION_SET_FIRST_NAME", "")
+      commit("MUTATION_SET_LAST_NAME", "")
+      commit("MUTATION_SET_UMNETID", "")
+      commit("MUTATION_SET_PASSWORD", "")
+      commit("MUTATION_SET_PRIVATE_KEY", "")
+      commit("MUTATION_SET_WALLET_AMOUNT", 0)
+      commit("MUTATION_SET_MINING", false)
+      commit("MUTATION_SET_FIND_PROOF", false)
+      commit("MUTATION_SET_TRANSACTION_HISTORY", [])
+
+      const message = "Logout successful"
+      dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
+      router.push("/");
+
     },
   },
 });
