@@ -82,8 +82,6 @@ export default class App extends Vue {
       socket.on("reward", () => {
           this.$store.dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
           this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
-          this.$store.dispatch("ACTION_DISPLAY_TOAST", { message: 'Mining reward received!', type: 'success' })
-
       });
 
       socket.on("stopProof", () => {

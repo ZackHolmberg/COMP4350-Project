@@ -376,7 +376,6 @@ export default new Vuex.Store({
         .then(
           (response) => {
             commit("MUTATION_SET_TRANSACTION_HISTORY", response.data.history);
-
           },
           (err) => {
             const message = err.response && err.response.data.error
