@@ -6,8 +6,29 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { mapState } from "vuex";
 
-@Component
+@Component({
+  computed: mapState(["transactions"]),
+  created() {
+    this.unwatch = this.$store.watch(
+      (state: any, getters: { transactions: any }) => getters.transactions,
+      (newValue: any, oldValue: any) => {
+        if (newValue.length > oldValue.length) {
+          this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
+          const message = "New transaction received!";
+          this.$store.dispatch("ACTION_DISPLAY_TOAST", {
+            message: message,
+            type: "success",
+          });
+        }
+      }
+    );
+  },
+  beforeDestroy() {
+    this.unwatch();
+  },
+})
 export default class Wallet extends Vue {
   get walletAmount() {
     return this.$store.getters.walletAmount;
