@@ -16,6 +16,12 @@ let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 export default class App extends Vue {
 
+  mounted() {
+    window.setInterval(() => {
+      this.$store.dispatch("ACTION_FETCH_NEW_TRANSACTIONS");
+    }, 10000);
+  }
+
   get umnetId(){
     return this.$store.getters.umnetId
   }
@@ -81,6 +87,7 @@ export default class App extends Vue {
       });
 
       socket.on("reward", () => {
+          this.$store.dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
           this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
           this.$store.dispatch("ACTION_DISPLAY_TOAST", { message: 'Mining reward received!', type: 'success' })
 

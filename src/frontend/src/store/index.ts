@@ -269,7 +269,6 @@ export default new Vuex.Store({
           "password": password,
         })
         // Inform user whether or not login was successful. If it wasn't, let them know why
-
         .then(
           (response) => {
             commit("MUTATION_SET_LOADING", false);
@@ -402,6 +401,20 @@ export default new Vuex.Store({
       dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
       router.push("/");
 
+    },
+
+    ACTION_FETCH_NEW_TRANSACTIONS({ dispatch, getters }) {
+
+      const currTransactions = getters.transactions
+      dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
+      const updatedTransactions = getters.transactions
+
+      if (updatedTransactions.length > currTransactions.length) {
+        //If there are new transactions
+        dispatch("ACTION_FETCH_WALLET_AMOUNT")
+        const message = "New transaction received!"
+        dispatch("ACTION_DISPLAY_TOAST", { message: message, type: 'success' })
+      }
     },
   },
 });
