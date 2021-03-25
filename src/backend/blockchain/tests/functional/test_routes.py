@@ -25,6 +25,22 @@ def test_client():
     ctx.pop()
 
 
+def test_index(test_client):
+    url='/'
+    response = test_client.get(url)
+
+    assert b'Hello Blockchain' in response.data
+
+def test_add_block_invalid_payload(test_client):
+    url = '/addBlock'
+
+    payload = {"from": "user1", "to": "user2", "amount": 20}
+
+    response = test_client.post(url, headers = headers, data = json.dumps(payload))
+
+    assert response.status_code == 400
+    assert b'Please send correct json payload' in response.data
+
 def test_get_chain(test_client):
     # test GET query on '/chain' route
     url = '/chain'
