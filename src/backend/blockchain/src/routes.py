@@ -6,21 +6,28 @@ from .exceptions import WalletException
 from flask import request, jsonify
 import sys
 import os
+import json
+from src import peers
 
 sys.path.append(os.path.abspath(os.path.join('..', '')))
 
 from shared.exceptions import IncorrectPayloadException
 from shared import HttpCode
 from shared.utils import send_post_request, send_get_request
-peers = []
-if not os.environ.get('BACKUP', False):
-    peers.append("http://blockchain-backup:5000")
 
 request_handlers = {
     "GET": send_get_request,
     "POST": send_post_request
 }
 
+def query_peer(peer):
+    try:
+        # Implement the logic to take the responses and add that to the chain
+        response = send_get_request(peer+"/chain", None)
+        response = send_get_request(peer+"/wallet/all", None)    
+    except Exception as e:
+        print("LOG: Peer Replication Failed on startup", str(e))
+    
 @app.route("/")
 def index():
     return "Hello Blockchain"
@@ -32,6 +39,14 @@ def get_chain():
     for block in blockchain.chain:
         chain.append(block.toJSON())
     return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
+
+@app.route('/wallet/all', methods=['GET'])
+def get_wallets():
+    wallets = []
+    for wallet, amount in blockchain.wallets.items():
+        wallets.append(json.dumps( {"wallet": wallet, "amount": amount} ))
+    
+    return jsonify(length=len(wallets), wallets=wallets), HttpCode.OK.value
 
 
 @app.route('/addBlock', methods=['POST'])
