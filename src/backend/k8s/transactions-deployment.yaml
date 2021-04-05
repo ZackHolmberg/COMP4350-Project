@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: transactions
+  name: transactions
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: transactions
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: transactions
+    spec:
+      containers:
+        - env:
+            - name: APP_NAME
+              value: TransactionService
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          image: backend_transactions
+          name: transaction-api
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          resources: {}
+      restartPolicy: Always
+status: {}

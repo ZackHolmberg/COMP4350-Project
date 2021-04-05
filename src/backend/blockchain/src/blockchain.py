@@ -1,7 +1,16 @@
-import time
 from .block import Block
 from .transaction import Transaction
 from .exceptions import WalletException
+from kubernetes import client, config
+
+config.load_incluster_config()
+
+v1 = client.CoreV1Api()
+print("Listing pods with their IPs:")
+ret = v1.list_pod_for_all_namespaces(watch=False)
+for i in ret.items:
+    print("%s\t%s\t%s" %
+          (i.status.pod_ip, i.metadata.namespace, i.metadata.name), flush=True)
 
 
 class Blockchain:
@@ -13,6 +22,7 @@ class Blockchain:
         self.chain = []
         self.initialize_chain()
         self.wallets = {}
+        print("Initializing blockchain...", flush=True)
 
     def check_id_present(self, id):
         if id not in self.wallets:

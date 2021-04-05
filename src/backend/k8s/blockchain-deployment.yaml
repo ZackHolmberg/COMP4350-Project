@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: blockchain
+  name: blockchain
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: blockchain
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: blockchain
+    spec:
+      containers:
+        - env:
+            - name: APP_NAME
+              value: Blockchain
+            - name: PYTHONUNBUFFERED
+              value: "0"
+          image: backend_blockchain
+          imagePullPolicy: Never
+          name: blockchain
+          ports:
+            - containerPort: 5000
+          resources: {}
+      restartPolicy: Always
+status: {}

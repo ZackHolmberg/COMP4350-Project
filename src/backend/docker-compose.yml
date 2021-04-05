@@ -103,7 +103,7 @@ services:
     restart: always
     environment:
       - APP_NAME=Blockchain
-      - PYTHONUNBUFFERED=1
+      - PYTHONUNBUFFERED=0
 
     volumes:
       - ./blockchain:/src/blockchain

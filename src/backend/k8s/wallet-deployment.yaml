@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: wallet
+  name: wallet
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: wallet
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: wallet
+    spec:
+      containers:
+        - env:
+            - name: APP_NAME
+              value: WalletService
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          image: backend_wallet
+          imagePullPolicy: Never
+          name: wallet-api
+          ports:
+            - containerPort: 5000
+          resources: {}
+      restartPolicy: Always
+status: {}
