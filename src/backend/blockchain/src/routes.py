@@ -24,10 +24,19 @@ def query_peer(peer):
     try:
         # Implement the logic to take the responses and add that to the chain
         response = send_get_request(peer+"/chain", None)
-        response = send_get_request(peer+"/wallet/all", None)    
+        response = send_get_request(peer+"/wallet/all", None)
+
     except Exception as e:
         print("LOG: Peer Replication Failed on startup", str(e))
-    
+
+def replicate(route, request_type, request):
+    for peer in peers:
+        full_route = peer+route
+        try:
+            response = request_handlers[request_type](full_route,request)
+        except Exception as e:
+            print("LOG: Replication Failed", route, request_type, request, str(e))
+
 @app.route("/")
 def index():
     return "Hello Blockchain"
@@ -39,6 +48,18 @@ def get_chain():
     for block in blockchain.chain:
         chain.append(block.toJSON())
     return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
+
+@app.route('/addPeer', methods=['POST'])
+def get_chain():
+    data = request.get_json()
+    try:
+        peer = data["peer"]
+        peers.append(peer)
+    except KeyError:
+        IncorrectPayloadException()
+
+    return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
+
 
 @app.route('/wallet/all', methods=['GET'])
 def get_wallets():
@@ -147,18 +168,9 @@ def get_wallet_amount():
     except KeyError as e:
         raise IncorrectPayloadException()
 
-def replicate(route, request_type, request):
-    for peer in peers:
-        full_route = peer+route
-        try:
-            response = request_handlers[request_type](full_route,request)
-        except Exception as e:
-            print("LOG: Replication Failed", route, request_type, request, str(e))
-
 @app.errorhandler(WalletException)
 def handle_wallet_exception(e):
     return jsonify(error=e.message), HttpCode.BAD_REQUEST.value
-
 
 @app.errorhandler(IncorrectPayloadException)
 def handle_wallet_exception(e):
