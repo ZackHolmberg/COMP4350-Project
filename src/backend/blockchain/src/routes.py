@@ -58,7 +58,7 @@ def get_chain():
     except KeyError:
         IncorrectPayloadException()
 
-    return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
+    return jsonify(success=True), HttpCode.OK.value
 
 
 @app.route('/wallet/all', methods=['GET'])
