@@ -11,6 +11,15 @@ sys.path.append(os.path.abspath(os.path.join('..', '')))
 
 from shared.exceptions import IncorrectPayloadException
 from shared import HttpCode
+from shared.utils import send_post_request, send_get_request
+peers = []
+if not os.environ.get('BACKUP', False):
+    peers.append("http://blockchain-backup:5000")
+
+request_handlers = {
+    "GET": send_get_request,
+    "POST": send_post_request
+}
 
 @app.route("/")
 def index():
@@ -60,6 +69,7 @@ def proof():
 
     blockchain.add_to_wallet(miner_id, Blockchain.COINBASE_AMOUNT)
 
+    replicate('/addBlock', 'POST', data)
     return jsonify(success=True), HttpCode.CREATED.value
 
 
@@ -81,6 +91,8 @@ def add_wallet():
         data = request.get_json()
         wallet_id = data["umnetId"].upper()
         success = blockchain.add_wallet(wallet_id)
+        
+        replicate('/wallet/addWallet', 'POST', data)
         return jsonify(success=success), HttpCode.CREATED.value
 
     except KeyError as e:
@@ -105,6 +117,7 @@ def create_transaction():
     blockchain.subtract_from_wallet(wallet_id, amount)
     blockchain.add_to_wallet(receiver, amount)
 
+    replicate('/wallet/createTransaction', 'POST', data)
     return jsonify(valid=valid), HttpCode.OK.value
 
 
@@ -119,6 +132,13 @@ def get_wallet_amount():
     except KeyError as e:
         raise IncorrectPayloadException()
 
+def replicate(route, request_type, request):
+    for peer in peers:
+        full_route = peer+route
+        try:
+            response = request_handlers[request_type](full_route,request)
+        except Exception as e:
+            print("LOG: Replication Failed", route, request_type, request, str(e))
 
 @app.errorhandler(WalletException)
 def handle_wallet_exception(e):
