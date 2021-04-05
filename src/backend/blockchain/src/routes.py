@@ -50,7 +50,7 @@ def get_chain():
     return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
 
 @app.route('/addPeer', methods=['POST'])
-def get_chain():
+def add_peer():
     data = request.get_json()
     try:
         peer = data["peer"]
