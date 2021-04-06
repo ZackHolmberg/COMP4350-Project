@@ -25,10 +25,10 @@ def query_peer(peers):
         backup_node = peers[0]
 
         chain_response = send_get_request(backup_node+"/chain", None)
-        blockchain.build_chain_from_peer_response(chain_response.get_json())
+        blockchain.build_chain_from_peer_response(chain_response.json())
 
         wallet_response = send_get_request(backup_node+"/wallet/all", None)
-        blockchain.build_wallet_from_peer_response(wallet_response.get_json())
+        blockchain.build_wallets_from_peer_response(wallet_response.json())
 
     except Exception as e:
         print("LOG: Peer Replication Failed on startup", str(e))
