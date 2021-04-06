@@ -50,7 +50,7 @@ def index():
 def get_chain():
     chain = []
     for block in blockchain.chain:
-        chain.append(block.toJSON())
+        chain.append(block.to_json())
     return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
 
 @app.route('/addPeer', methods=['POST'])

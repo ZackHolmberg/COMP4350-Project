@@ -12,7 +12,7 @@ class Block:
         self.miner_id = str(miner_id)
         self.reward_amount = int(reward_amount)
 
-    def toJSON(self):
+    def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True)
     
