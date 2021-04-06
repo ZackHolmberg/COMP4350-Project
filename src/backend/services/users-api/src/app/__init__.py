@@ -1,4 +1,6 @@
-import sys, os
+"""User-api app module"""
+import sys
+import os
 from flask import Flask
 from flask_cors import CORS, cross_origin
 from flask_pymongo import PyMongo

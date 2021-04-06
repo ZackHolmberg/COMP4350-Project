@@ -1,19 +1,39 @@
-from src.app import app, mongo, HttpCode
+"""User-api module: contains the routes that users access to interact with the database"""
 from flask import request, jsonify
-from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
+from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException,\
+     UserNotFoundException, DatabaseVerificationException
 from shared.utils import BisonCoinUrls, send_post_request
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from src.app import app, mongo, HttpCode
 
 def get_user_from_db(umnetId, password):
+    """
+    Retrieves the user with the supplied umnetID from the database if the password is correct
+
+            Parameters:
+                    umnetId (string): A string umnetId that is to be retrieved
+                    password (string): The password associated to the supplied umnetId
+
+            Returns:
+                    User (string): The user associated to the umnetId
+                    error (string): if the password does not match the umnetId supplied
+    """
     user = mongo.db.users.find_one({"umnetId": umnetId})
     if not user or not check_password_hash(user["password"], password):
         raise IncorrectCredentialsException()
     return user
 
-
 @app.route("/")
 def index():
+    """
+    endpoint to test if the service is running, returns a welcome string and status=True
+
+            Parameters:
+                    None
+
+            Returns:
+                    greeting message if the service is up
+    """
     return jsonify(
         success=True,
         message="Hello Users of " + mongo.db.name
@@ -22,12 +42,22 @@ def index():
 
 @app.route("/login", methods=["POST"])
 def login():
+    """
+    Login endpoint for users
+            Parameters: through request:
+                    umnetId (string): A string umnetId that is to be retrieved
+                    password (string): The password associated to the supplied umnetId
+
+            Returns:
+                    User (string): returns user's name and public key on successful login
+                    error (string)
+    """
     data = request.get_json()
     try:
         umnetId = data['umnetId'].upper()
         password = data['password']
-    except KeyError as e:
-        raise IncorrectPayloadException()
+    except KeyError as error:
+        raise IncorrectPayloadException() from error
 
     user = get_user_from_db(umnetId, password)
     data = {
@@ -41,6 +71,16 @@ def login():
 
 @app.route("/umnetId/<umnetId>", methods=['GET'])
 def get_user(umnetId):
+    """
+    Retrieves the information of the user associated with the supplied umnetId
+
+            Parameters: through request:
+                    umnetId (string): A string umnetId that is to be retrieved
+
+            Returns:
+                    data (string): User's information including public key, name, and umnetId
+                    error (string): error with the approptiate message
+    """
     user = mongo.db.users.find_one({'umnetId': umnetId.upper()})
 
     try:
@@ -50,8 +90,8 @@ def get_user(umnetId):
             'umnetId': user['umnetId'],
             'public_key': user['public_key']
         }
-    except Exception as e:
-        raise UserNotFoundException()
+    except Exception as error:
+        raise UserNotFoundException() from error
 
     return jsonify(
         success=True,
@@ -61,12 +101,22 @@ def get_user(umnetId):
 
 @app.route("/list", methods=['GET'])
 def get_all_users():
-    userList = mongo.db.users.find()
+    """
+    Retrieves a list of all the users present in the database along with their information.
+
+            Parameters: through request:
+                    None
+
+            Returns:
+                    data (list of strings): list of users and their information
+                    error (string): error with the approptiate message
+    """
+    user_list = mongo.db.users.find()
 
     user = {}
     data = []
 
-    for usr in userList:
+    for usr in user_list:
         user = {
             'first_name': usr['first_name'],
             'last_name': usr['last_name'],
@@ -83,12 +133,23 @@ def get_all_users():
 
 @app.route('/authUser', methods=['POST'])
 def authenticate_user():
+    """
+    Authentication endpoint for services 
+
+            Parameters: through request:
+                    umnetId (string): A string umnetId that is to be retrieved
+                    password (string): The password associated to the supplied umnetId
+
+            Returns:
+                    success (boolean): True if user is authenticated, else false
+                    error (string): error with the approptiate message
+    """
     data = request.get_json()
     try:
         umnetId = data["umnetId"].upper()
         password = data["password"]
-    except KeyError as e:
-        raise IncorrectPayloadException()
+    except KeyError as error:
+        raise IncorrectPayloadException() from error
 
     # raises an error when user not found
     user = get_user_from_db(umnetId, password)
@@ -98,6 +159,20 @@ def authenticate_user():
 
 @app.route('/create', methods=['POST'])
 def create_user():
+    """
+    Endpoint to create a new user
+
+            Parameters: through request:
+                    umnetId (string): User's umnetId
+                    password (string): The password associated to the supplied umnetId
+                    first_name (string): user's first name
+                    last_name (string): user's last name
+                    public key (string): user's public key
+
+            Returns:
+                    success (boolean): True if user is authenticated, else false
+                    error (string): error with the approptiate message
+    """
     data = request.get_json()
     try:
         first_name = data["first_name"]
@@ -106,8 +181,8 @@ def create_user():
         umnetId = data["umnetId"].upper()
         public_key = data["public_key"]
 
-    except KeyError as e:
-        raise IncorrectPayloadException()
+    except KeyError as error:
+        raise IncorrectPayloadException() from error
 
     user = {
         "first_name": first_name,
@@ -124,8 +199,8 @@ def create_user():
         if not "success" in response.json():
             raise Exception(response.json())
 
-    except Exception as e:
-        raise DatabaseVerificationException(str(e))
+    except Exception as error:
+        raise DatabaseVerificationException(str(error)) from error
 
     return jsonify(
         success=True,
@@ -134,6 +209,20 @@ def create_user():
 
 @app.route('/update', methods=['POST'])
 def update_user():
+    """
+    Endpoint to update a user's information
+
+            Parameters: through request:
+                    umnetId (string): User's umnetId
+                    password (string): The password associated to the supplied umnetId
+                    first_name (string): user's first name
+                    last_name (string): user's last name
+                    public key (string): user's public key
+
+            Returns:
+                    success (boolean): True if user is authenticated, else false
+                    error (string): error with the approptiate message
+    """
     data = request.get_json()
     try:
         first_name = data["first_name"]
@@ -141,8 +230,8 @@ def update_user():
         curr_password = data["curr_password"]
         new_password = data["new_password"]
         umnetId = data["umnetId"].upper()
-    except KeyError as e:
-        raise IncorrectPayloadException()
+    except KeyError as error:
+        raise IncorrectPayloadException() from error
 
     user = get_user_from_db(umnetId, curr_password)
 
@@ -155,11 +244,11 @@ def update_user():
     }
 
     try:
-        res = mongo.db.users.update_one(
+        mongo.db.users.update_one(
             {"umnetId": umnetId}, {"$set": updated_user})
 
-    except Exception as e:
-        raise DatabaseVerificationException(str(e))
+    except Exception as error:
+        raise DatabaseVerificationException(str(error)) from error 
 
     return jsonify(
         success=True
@@ -167,12 +256,30 @@ def update_user():
 
 
 @app.errorhandler(DatabaseVerificationException)
-def handle_database_error(e):
-    return jsonify(database_error=e.error_message, error=e.json_message), e.return_code
+def handle_database_error(error):
+    """
+    method to handle database verification exception
+
+            Parameters: through request:
+                    error: The error that occured in the endpoint
+
+            Returns:
+                    error message with faillure return code
+    """
+    return jsonify(database_error=error.error_message, error=error.json_message), error.return_code
 
 
 @app.errorhandler(UserNotFoundException)
 @app.errorhandler(IncorrectCredentialsException)
 @app.errorhandler(IncorrectPayloadException)
-def handle_userapi_error(e):
-    return jsonify(error=e.json_message), e.return_code
+def handle_userapi_error(error):
+    """
+    method to handle user not found, incorrect credentials and incorrect payload
+
+            Parameters: through request:
+                    error: The error that occured in the endpoint
+
+            Returns:
+                    error message as json and return code
+    """
+    return jsonify(error=error.json_message), error.return_code

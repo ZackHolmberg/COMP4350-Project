@@ -109,7 +109,7 @@ def test_login_success(test_client, json_header):
     assert response.json['user'] == expected_return
 
 
-def test_login_user_not_in_db(test_client, json_header):
+def test_login_user_incorrect_password(test_client, json_header):
     url = '/login'
 
     payload = {
@@ -138,6 +138,18 @@ def test_login_user_not_in_db(test_client, json_header):
         url, data=json.dumps(payload), headers=json_header)
     assert response.json['error'] == FailureReturnString.INCORRECT_CREDENTIALS.value
 
+def test_login_incorrect_payload(test_client, json_header):
+    mongo.db.users.delete_one({"umnetId": "FINESM1"})
+
+    url = '/login'
+
+    payload = {
+        "umnetId": "FINESM1"
+    }
+
+    response = test_client.post(
+        url, data=json.dumps(payload), headers=json_header)
+    assert response.json['error'] == FailureReturnString.INCORRECT_PAYLOAD.value
 
 def test_get_all_users(test_client, test_db_patch):
 

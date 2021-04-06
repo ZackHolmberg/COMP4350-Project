@@ -1,3 +1,4 @@
+"""init for the module containing the wallet api routes"""
 from flask import Flask
 from flask_cors import CORS, cross_origin
 
