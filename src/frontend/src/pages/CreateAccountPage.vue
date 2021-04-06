@@ -87,7 +87,6 @@ export default class CreateAccountPage extends Vue {
 
 .create-account-button {
   margin-top: $create-account-button-margin-top;
-  margin-bottom: $create-account-button-margin-bottom;
   width: $button-width;
   margin-left: auto;
   margin-right: auto;

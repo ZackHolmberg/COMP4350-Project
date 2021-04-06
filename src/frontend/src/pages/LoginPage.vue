@@ -70,8 +70,8 @@ export default class LoginPage extends Vue {
 }
 
 .login-button {
-  margin-top: $login-button-margin-top;
-  margin-bottom: $login-button-margin-bottom;
+  margin-top: $login-button-margin;
+  margin-bottom: $login-button-margin;
   width: $button-width;
   margin-left: auto;
   margin-right: auto;
