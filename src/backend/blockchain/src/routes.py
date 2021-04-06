@@ -20,7 +20,7 @@ request_handlers = {
     "POST": send_post_request
 }
 
-def query_peer(peers):
+def query_peers(peers):
     try:
         backup_node = peers[0]
 
@@ -29,17 +29,16 @@ def query_peer(peers):
 
         wallet_response = send_get_request(backup_node+"/wallet/all", None)
         blockchain.build_wallets_from_peer_response(wallet_response.json())
-
-    except Exception as e:
-        print("LOG: Peer Replication Failed on startup", str(e))
+    except Exception:
+        pass
 
 def replicate(route, request_type, request):
     for peer in peers:
         full_route = peer+route
         try:
             response = request_handlers[request_type](full_route,request)
-        except Exception as e:
-            print("LOG: Replication Failed", route, request_type, request, str(e))
+        except Exception:
+            pass
 
 @app.route("/")
 def index():

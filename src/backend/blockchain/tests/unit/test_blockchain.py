@@ -188,11 +188,13 @@ def test_build_wallet_from_peer_response_failure():
             "{\"umnetId\": \"Failure4\"}"
         ]
     }
-
-    test_blockchain.build_wallets_from_peer_response(peer_response)
-    assert len(test_blockchain.wallets) == 2
-    assert test_blockchain.verify_wallet_amount("KK1", 10)
-    assert test_blockchain.verify_wallet_amount("KK2", 10.99)
+    try:
+        test_blockchain.build_wallets_from_peer_response(peer_response)
+        assert False
+    except Exception:
+        assert len(test_blockchain.wallets) == 2
+        assert test_blockchain.verify_wallet_amount("KK1", 10)
+        assert test_blockchain.verify_wallet_amount("KK2", 10.99)
 
 def test_build_chain_from_peer_response_failure():
     peer_response = {
@@ -201,14 +203,18 @@ def test_build_chain_from_peer_response_failure():
     ],
     "length": 1
     }
-    test_blockchain.build_chain_from_peer_response(peer_response)
-    assert len(test_blockchain.chain) == 1
-    assert test_blockchain.chain[0].hash == "0000"
-    assert test_blockchain.chain[0].index == 0
-    assert test_blockchain.chain[0].miner_id == "miner_id"
-    assert test_blockchain.chain[0].transaction.from_address == ""
-    assert test_blockchain.chain[0].transaction.to_address == ""
-    
+    try:
+        test_blockchain.build_chain_from_peer_response(peer_response)
+        assert False
+        
+    except Exception:
+        assert len(test_blockchain.chain) == 1
+        assert test_blockchain.chain[0].hash == "0000"
+        assert test_blockchain.chain[0].index == 0
+        assert test_blockchain.chain[0].miner_id == "miner_id"
+        assert test_blockchain.chain[0].transaction.from_address == ""
+        assert test_blockchain.chain[0].transaction.to_address == ""
+        
 
 def test_build_chain_from_peer_response():
     peer_response = {
