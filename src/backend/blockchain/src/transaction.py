@@ -14,3 +14,13 @@ class Transaction:
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True)
+    
+    def from_json(data):
+        return Transaction(
+            data["from_address"],
+            data["to_address"],
+            data["amount"],
+            data["timestamp"],
+            data["id"],
+            data["signature"],
+        )

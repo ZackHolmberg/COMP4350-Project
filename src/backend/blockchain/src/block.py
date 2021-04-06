@@ -1,5 +1,5 @@
 import json
-
+from .transaction import Transaction
 
 class Block:
     def __init__(self, index, transaction, nonce, hash, prev_hash, miner_id, reward_amount):
@@ -15,3 +15,18 @@ class Block:
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True)
+    
+    def from_json(data):
+        transaction_data = data["transaction"]
+        transaction_obj = Transaction.from_json(transaction_obj)
+        return Block(
+            data["index"],
+            transaction_obj,
+            data["nonce"],
+            data["hash"],
+            data["prev_hash"],
+            data["miner_id"],
+            data["reward_amount"]
+        )
+
+

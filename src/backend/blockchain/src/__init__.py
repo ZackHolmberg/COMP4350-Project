@@ -12,4 +12,4 @@ if is_master:
 from src import routes
 
 if is_master:
-    routes.query_peer(peers[0])
+    routes.query_peer(peers)

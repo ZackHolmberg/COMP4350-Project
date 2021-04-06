@@ -20,11 +20,13 @@ request_handlers = {
     "POST": send_post_request
 }
 
-def query_peer(peer):
+def query_peer(peers):
     try:
+        backup_node = peers[0]
         # Implement the logic to take the responses and add that to the chain
-        response = send_get_request(peer+"/chain", None)
-        response = send_get_request(peer+"/wallet/all", None)
+        chain_response = send_get_request(backup_node+"/chain", None)
+        wallet_response = send_get_request(backup_node+"/wallet/all", None)
+        blockchain.build_chain_from_peer_response(chain_response, wallet_response)
 
     except Exception as e:
         print("LOG: Peer Replication Failed on startup", str(e))
@@ -65,7 +67,7 @@ def add_peer():
 def get_wallets():
     wallets = []
     for wallet, amount in blockchain.wallets.items():
-        wallets.append(json.dumps( {"wallet": wallet, "amount": amount} ))
+        wallets.append(json.dumps( {"umnetId": wallet, "amount": amount} ))
     
     return jsonify(length=len(wallets), wallets=wallets), HttpCode.OK.value
 
