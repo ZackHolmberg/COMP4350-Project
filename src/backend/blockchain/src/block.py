@@ -18,7 +18,7 @@ class Block:
     
     def from_json(data):
         transaction_data = data["transaction"]
-        transaction_obj = Transaction.from_json(transaction_obj)
+        transaction_obj = Transaction.from_json(transaction_data)
         return Block(
             data["index"],
             transaction_obj,

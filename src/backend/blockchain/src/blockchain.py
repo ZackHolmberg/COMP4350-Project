@@ -61,8 +61,7 @@ class Blockchain:
     def get_last_block(self):
         return self.chain[-1]
 
-    def build_chain_from_peer_response(self, chain_response, wallet_response):
-        data = chain_response.get_json()
+    def build_chain_from_peer_response(self, data):
         try:
             new_chain = []
             chain = data["chain"]
@@ -73,15 +72,27 @@ class Blockchain:
             if new_chain:
                 self.chain = new_chain
         
-            data = wallet_response.get_json()
-            wallets = data["wallets"]
-            self.wallets.clear()
+        except KeyError as e:
+            print("LOG: Incorrect Request, Keyerror:", str(e))
+            
+        except Exception as e:
+            print("LOG: chain replication failed", str(e))
 
+    def build_wallets_from_peer_response(self, data):
+        try:
+            wallets = data["wallets"]
+            new_wallets = {}
             for wallet in wallets:
                 wallet = json.loads(wallet)
-                self.wallets[wallet["umnetId"]] = wallet["amount"]
+                new_wallets[wallet["umnetId"]] = wallet["amount"]
+            
+            if new_wallets:
+                self.wallets = new_wallets
+        
+        except KeyError as e:
+            print("LOG: Incorrect Request, Keyerror:", str(e))
 
         except Exception as e:
-            print ("LOG: replication failed", str(e))
+            print("LOG: wallet replication failed", str(e))
 
 blockchain = Blockchain()
