@@ -29,16 +29,16 @@ def query_peers(peers):
 
         wallet_response = send_get_request(backup_node+"/wallet/all", None)
         blockchain.build_wallets_from_peer_response(wallet_response.json())
-    except Exception:
-        pass
+    except Exception as error:
+        print("LOG: Peer replication failed", str(error))
 
-def replicate(route, request_type, request):
+def try_replicate(route, request_type, request):
     for peer in peers:
         full_route = peer+route
         try:
             response = request_handlers[request_type](full_route,request)
-        except Exception:
-            pass
+        except Exception as error:
+            print("LOG: Request replication failed", route, request_type, request, str(error))
 
 @app.route("/")
 def index():
@@ -108,7 +108,7 @@ def proof():
 
     blockchain.add_to_wallet(miner_id, Blockchain.COINBASE_AMOUNT)
 
-    replicate('/addBlock', 'POST', data)
+    try_replicate('/addBlock', 'POST', data)
     return jsonify(success=True), HttpCode.CREATED.value
 
 
@@ -131,7 +131,7 @@ def add_wallet():
         wallet_id = data["umnetId"].upper()
         success = blockchain.add_wallet(wallet_id)
         
-        replicate('/wallet/addWallet', 'POST', data)
+        try_replicate('/wallet/addWallet', 'POST', data)
         return jsonify(success=success), HttpCode.CREATED.value
 
     except KeyError as e:
@@ -156,7 +156,7 @@ def create_transaction():
     blockchain.subtract_from_wallet(wallet_id, amount)
     blockchain.add_to_wallet(receiver, amount)
 
-    replicate('/wallet/createTransaction', 'POST', data)
+    try_replicate('/wallet/createTransaction', 'POST', data)
     return jsonify(valid=valid), HttpCode.OK.value
 
 
