@@ -82,10 +82,7 @@ export default class CreateAccountPage extends Vue {
 
 .create-account {
   text-align: center;
-  padding: $create-account-padding;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .create-account-button {
@@ -97,7 +94,9 @@ export default class CreateAccountPage extends Vue {
 }
 
 .create-account-image {
-  margin-bottom: $create-account-image-size;
-  margin-top: $create-account-image-size;
+  margin-bottom: $create-account-logo-margin;
+  margin-top: $create-account-logo-margin;
+  width: $create-account-logo-size;
+  height: $create-account-logo-size;
 }
 </style>
