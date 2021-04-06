@@ -3,7 +3,8 @@
 // GENERAL
 $background-color: rgb(106, 109, 110);
 
-$link-color: #3391ff;
+$link-color: rgb(82, 169, 201);
+$link-font-size: 18px;
 
 $hover-transition: 0.2s linear;
 
@@ -33,14 +34,16 @@ $big-button-height: 100px;
 $button-width: 100px;
 $button-height: 50px;
 
-$long-button-width: 85%;
+$long-button-width: 700px;
 
 $loading-spinner-margin: 25%;
 
 // TEXT INPUT
 $text-input-background: #131516;
+$text-input-edit-background: #dddddd;
 
 $text-input-color: lightgray;
+$text-input-edit-color: black;
 $text-input-font-size: 16px;
 
 $hover-transform-text-input: scale(1.05);
@@ -130,7 +133,13 @@ $account-wrapper-top: 120px;
 
 $account-text-font-size: 20px;
 $account-text-left: 80px;
-$account-text-padding-top: 20px;
+
+$account-input-width: 1000px;
+$account-input-right: 125px;
+
+$account-label-left: 90px;
+$account-label-padding-top: 20px;
+$account-label-font-size: 20px;
 
 // TRANSACTION HISTORY
 $received-color: rgba(235, 255, 204, 0.75);

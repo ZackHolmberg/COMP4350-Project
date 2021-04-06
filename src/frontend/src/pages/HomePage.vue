@@ -83,8 +83,10 @@ export default class HomePage extends Vue {
 }
 
 .transaction-history-component {
-  position: absolute;
-  width: 100%;
   top: $home-page-history-top;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: $long-button-width;
 }
 </style>

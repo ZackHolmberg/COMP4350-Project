@@ -5,7 +5,7 @@
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
-    <TextInput id="umnetId" label="umnetId" ref="umnetId" :disable="loading" />
+    <TextInput id="umnetId" label="UMNetId" ref="umnetId" :disable="loading" />
     <TextInput
       id="password"
       label="Password"
@@ -72,6 +72,9 @@ export default class LoginPage extends Vue {
 .login-button {
   margin-top: $login-button-margin-top;
   margin-bottom: $login-button-margin-bottom;
+  width: $button-width;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .login-logo {
@@ -83,5 +86,7 @@ export default class LoginPage extends Vue {
 
 .create-account-link {
   color: $link-color;
+  font-size: $link-font-size;
+  font-weight: bold;
 }
 </style>
