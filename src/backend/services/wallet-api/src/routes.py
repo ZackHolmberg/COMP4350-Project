@@ -23,7 +23,7 @@ blockchain_url = BisonCoinUrls.blockchain_url
 def authenticate_user(umnetId, password):
     req_body = {"umnetId": umnetId, "password": password}
     response = send_post_request(user_api_url.format("authUser"), req_body)
-    if "success" not in response.json():
+    if "success" not in response.json() or not response.json()["success"]:
         raise BisonCoinException(
             json_message=response.json(), return_code=response.status_code)
 
