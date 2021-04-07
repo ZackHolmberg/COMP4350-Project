@@ -37,22 +37,20 @@ def test_validate_signature_non_encoded(public_key):
     id_ = "Something that was signed"
     try:
         validate_signature(id_, signature, public_key)
-        assert False
-    except Exception as e:
+        assert False #should raise an exception
+    except Exception:
         assert True
 
 def test_validate_signature_correct(public_key, signature):
     try:
-        validate_signature("Test", signature, public_key)
-        assert True
-    except Exception as e:
+        assert validate_signature("Test", signature, public_key)
+    except Exception:
         assert False
 
 def test_validate_signature_incorrect(public_key, signature):
     try:
-        validate_signature("TestIncorrect", signature, public_key)
-        assert True
-    except Exception as e:
+        assert not validate_signature("TestIncorrect", signature, public_key)
+    except Exception:
         assert False
 
 def test_validate_signature_wrong_public_key(signature):
@@ -60,6 +58,6 @@ def test_validate_signature_wrong_public_key(signature):
     public_key = key.public_key().exportKey()
     try:
         validate_signature("Test", signature, public_key)
-        assert False
-    except Exception as e:
+        assert False #should raise an exception
+    except Exception:
         assert True

@@ -9,14 +9,10 @@ from Crypto.PublicKey import RSA
 import codecs
 from Crypto.Random import get_random_bytes
 
-
-if os.environ.get('SERVICE_IN_DOCKER', False):
-    sys.path.append(os.path.abspath(os.path.join('..', '')))
-else:
-    sys.path.append(os.path.abspath(os.path.join('../..', '')))
+sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
 from shared import HttpCode, FailureReturnString
-
+from shared.utils import BisonCoinUrls
 
 @pytest.fixture(scope='module')
 def key():
@@ -63,7 +59,6 @@ def test_client():
 
 @pytest.fixture(scope='module')
 def json_header():
-
     mimetype = 'application/json'
     headers = {
         'Content-Type': mimetype,
@@ -72,24 +67,54 @@ def json_header():
 
     return headers
 
+@pytest.fixture(scope='function')
+def requests_mock_transaction(requests_mock, public_key):
+
+    requests_mock.post(BisonCoinUrls.blockchain_wallet_url.format("checkWallet"),
+                       json={"valid": True}, status_code=HttpCode.OK.value)
+
+    requests_mock.get(BisonCoinUrls.user_api_url.format("umnetId/USER1"),
+                       json={"success": True, "data": {"public_key": public_key}}, status_code=HttpCode.OK.value)
+    
+    requests_mock.post(BisonCoinUrls.blockchain_wallet_url.format("createTransaction"),
+                       json={"valid": True}, status_code=HttpCode.OK.value)
+
+    requests_mock.post(BisonCoinUrls.mining_url.format("queue"),
+                       json={"success": True}, status_code=HttpCode.CREATED.value)
+    
+    return requests_mock
+
+@pytest.fixture(scope='function')
+def correct_payload(signature):
+    data = {
+        'id' : "Test",
+        'from' : 'user1',
+        'timestamp': 0,
+        'to' : 'user2',
+        'amount' : 99,
+        'signature' : signature
+    }
+
+    return data
 
 def test_home_page(test_client):
     # test GET query on '/' route
     url = '/'
-
     response = test_client.get(url)
 
     assert response.status_code == HttpCode.OK.value
     assert b"Hello Transactions" in response.data
 
 
-def test_create_transaction_incorrect_payload(test_client, json_header):
+def test_create_transaction_incorrect_payload(test_client, json_header, requests_mock_transaction):
+    requests_mock_transaction.post(BisonCoinUrls.blockchain_wallet_url.format("createTransaction"),
+                       json={"valid": False}, status_code=400)
+
     data = {
         'from': 'user1',
         'to': 'user2',
     }
     url = '/create'
-
     response = test_client.post(
         url, data=json.dumps(data), headers=json_header)
 
@@ -98,176 +123,61 @@ def test_create_transaction_incorrect_payload(test_client, json_header):
     assert FailureReturnString.INCORRECT_PAYLOAD.value.encode() in response.data
 
 
-def test_create_transaction_wrong_wallet_amount(test_client, json_header, requests_mock, public_key, signature):
+def test_create_transaction_wrong_wallet_amount(test_client, json_header, requests_mock_transaction, correct_payload):
 
-    data = {
-        'id' : "Test",
-        'from' : 'user1',
-        'to' : 'user2',
-        'timestamp': 0,
-        'amount' : 99,
-        'signature' : signature
-    }
+    requests_mock_transaction.post(BisonCoinUrls.blockchain_wallet_url.format("createTransaction"),
+                       json={"valid": False}, status_code=HttpCode.BAD_REQUEST.value)
+
     url = '/create'
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
-                       json={"valid": False}, status_code=400)
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/checkWallet",
-                       json={"valid": True}, status_code=200)
-
-    requests_mock.get("http://users:5000/umnetId/USER1",
-                       json={"success": True, "data": {"public_key": public_key}}, status_code=200)
-    
-    response = test_client.post(url, data=json.dumps(data), headers=json_header)
+    response = test_client.post(url, data=json.dumps(correct_payload), headers=json_header)
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert b"err" in response.data
-    assert b"Unable" in response.data
+    assert FailureReturnString.TRANSACTION_CREATION_FAILURE.value.encode() in response.data
 
 
-def test_create_transaction_mining_fail(test_client, json_header, requests_mock, public_key, signature):
+def test_create_transaction_mining_fail(test_client, json_header, requests_mock_transaction, correct_payload):
 
-    data = {
-        'id' : "Test",
-        'from' : 'user1',
-        'timestamp': 0,
-        'to' : 'user2',
-        'amount' : 99,
-        'signature' : signature
-    }
+    requests_mock_transaction.post(BisonCoinUrls.mining_url.format("queue"),
+                       json={"err": "something went wrong"}, status_code=HttpCode.INTERNAL_SERVER_ERROR.value)
 
     url = '/create'
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
-                       json={"valid": True}, status_code=200)
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/checkWallet",
-                       json={"valid": True}, status_code=200)
-
-    requests_mock.post("http://mining:5000/queue",
-                       json={"err": "something went wrong"}, status_code=500)
-
-    requests_mock.get("http://users:5000/umnetId/USER1",
-                       json={"success": True, "data": {"public_key": public_key}}, status_code=200)
-    
-    response = test_client.post(url, data=json.dumps(data), headers=json_header)
+    response = test_client.post(url, data=json.dumps(correct_payload), headers=json_header)
 
     assert response.status_code == HttpCode.INTERNAL_SERVER_ERROR.value
     assert b"err" in response.data
     assert b"something went wrong" in response.data
 
 
-def test_create_transaction_correct_payload(test_client, json_header, requests_mock, signature, public_key):
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
-                       json={"valid": True}, status_code=200)
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/checkWallet",
-                       json={"valid": True}, status_code=200)
-
-    requests_mock.post("http://mining:5000/queue",
-                       json={"success": True}, status_code=201)
-    
-    requests_mock.get("http://users:5000/umnetId/USER1",
-                       json={"success": True, "data": {"public_key": public_key}}, status_code=200)
-    
-    data = {
-        'id' : "Test",
-        'from' : 'user1',
-        'timestamp': 0,
-        'to' : 'user2',
-        'amount' : 99,
-        'signature' : signature
-    }
+def test_create_transaction_correct_payload(test_client, json_header, requests_mock_transaction, correct_payload):
 
     url = '/create'
-
     response = test_client.post(
-        url, data=json.dumps(data), headers=json_header)
+        url, data=json.dumps(correct_payload), headers=json_header)
 
     assert response.status_code == HttpCode.CREATED.value
     assert b"success" in response.data
     assert b"true" in response.data
 
 
-def test_create_transaction_incorrect_verification(test_client, json_header, requests_mock, signature, public_key):
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
-                       json={"valid": True}, status_code=200)
-
-    requests_mock.post("http://mining:5000/queue",
-                       json={"success": True}, status_code=201)
-    
-    requests_mock.get("http://users:5000/umnetId/USER1",
-                       json={"success": True, "data": {"public_key": public_key}}, status_code=200)
-    
-    data = {
-        'id' : "TestSomethingElse",
-        'from' : 'user1',
-        'timestamp': 0,
-        'to' : 'user2',
-        'amount' : 99,
-        'signature' : signature
-    }
-
+def test_create_transaction_incorrect_verification(test_client, json_header, requests_mock_transaction, correct_payload):
+    correct_payload["id"] = "TestShouldFail"
     url = '/create'
 
     response = test_client.post(
-        url, data=json.dumps(data), headers=json_header)
+        url, data=json.dumps(correct_payload), headers=json_header)
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
     assert b"err" in response.data
-    assert b"verification" in response.data
+    assert FailureReturnString.SIGNATURE_VERFICATION_FAILURE.value.encode() in response.data
 
-
-def test_create_transaction_receiver_verification_failure(test_client, json_header, requests_mock, signature, public_key):
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
-                       json={"valid": True}, status_code=200)
-
-    requests_mock.post("http://api-gateway/blockchain/wallet/checkWallet",
-                       json={"valid": True}, status_code=500)
-
-    requests_mock.post("http://mining:5000/queue",
-                       json={"success": True}, status_code=201)
+def test_create_transaction_public_key_failure(test_client, json_header, requests_mock_transaction, correct_payload):
     
-    requests_mock.get("http://users:5000/umnetId/USER1",
-                       json={"success": True, "data": {"public_key": public_key}}, status_code=201)
+    requests_mock_transaction.get(BisonCoinUrls.user_api_url.format("umnetId/USER1"),
+                       json={"success": True, "data": {}}, status_code=HttpCode.BAD_REQUEST.value)
     
-    data = {
-        'id' : "TestSomethingElse",
-        'from' : 'user1',
-        'to' : 'user2',
-        'timestamp': 0,
-        'amount' : 99,
-        'signature' : signature
-    }
-
     url = '/create'
-
-    response = test_client.post(
-        url, data=json.dumps(data), headers=json_header)
+    response = test_client.post(url, data=json.dumps(correct_payload), headers=json_header)
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert b"err" in response.data
-
-def test_create_transaction_public_key_failure(test_client, json_header, requests_mock, signature, public_key):
-    
-    requests_mock.get("http://users:5000/umnetId/USER1",
-                       json={"success": True, "data": {}}, status_code=400)
-    
-    data = {
-        'id' : "TestSomethingElse",
-        'from' : 'user1',
-        'to' : 'user2',
-        'amount' : 99,
-        'timestamp': 0,
-        'signature' : signature
-    }
-
-    url = '/create'
-    response = test_client.post(url, data=json.dumps(data), headers=json_header)
-
-    assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert b"Public key for the provided umnetId not found" in response.data
+    assert FailureReturnString.PUBLIC_KEY_NF.value.encode() in response.data

@@ -31,5 +31,5 @@ def test_authenticate_user_exception(requests_mock):
         assert False
     except BisonCoinException as b:
         assert "AUTH FAILURE" in b.json_message["error"]
-    except Exception as e:
+    except Exception:
         assert False 
