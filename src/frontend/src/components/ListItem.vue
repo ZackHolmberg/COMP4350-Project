@@ -9,7 +9,13 @@
         }}
       </p>
       <p class="type-text">
-        {{ this.type.charAt(0).toUpperCase() + this.type.slice(1) }}
+        {{
+          this.type == "send"
+            ? "Sent"
+            : this.type == "receive"
+            ? "Received"
+            : "Reward"
+        }}
         {{ " | " + convertDate(this.transaction.timestamp) }}
       </p>
     </div>
