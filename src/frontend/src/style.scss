@@ -8,7 +8,7 @@ $link-font-size: 18px;
 
 $hover-transition: .2s linear;
 
-$default-text-color: #ffffff;
+$default-text-color: #fff;
 $default-font: "Montserrat", sans-serif;
 $default-header-font-size: 50px;
 
@@ -43,7 +43,7 @@ $text-input-background: rgb(19, 21, 22);
 $text-input-edit-background: rgb(221, 221, 221);
 
 $text-input-color: #d3d3d3;
-$text-input-edit-color: #000000;
+$text-input-edit-color: #000;
 $text-input-font-size: 16px;
 
 $hover-transform-text-input: scale(1.05);
@@ -88,7 +88,7 @@ $home-page-wrapper-min-width: 800px;
 
 $home-page-background-color: rgba(0, 0, 0, .75);
 
-$home-page-border: 1px solid #000000;
+$home-page-border: 1px solid #000;
 
 $home-page-button-position: 12%;
 $home-page-button-bottom: 40%;
@@ -153,7 +153,7 @@ $reward-color:rgb(255, 255, 202);
 $no-transactions-text-color: #808080;
 
 $content-padding: 20px;
-$content-background-color: #000000;
+$content-background-color: #000;
 $content-border-radius: 20px;
 $content-height: 650px;
 
@@ -166,9 +166,9 @@ $row-amount-border-radius: 10px;
 $row-amount-padding: 5px;
 $row-amount-margin-top: 5%;
 
-$list-row-border-bottom: 1px solid #ffffff;
-$list-row-color: #ffffff;
-$list-row-background-color: #000000;
+$list-row-border-bottom: 1px solid #fff;
+$list-row-color: #fff;
+$list-row-background-color: #000;
 $list-row-padding: 20px;
 
 $transaction-history-back-button-margin-top: 25px;
