@@ -1,11 +1,11 @@
 <template>
   <div class="create-account">
     <img
-      class="login-logo"
+      class="create-account-image"
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
-    <TextInput id="umnetId" label="umnetId" ref="umnetId" :disable="loading" />
+    <TextInput id="umnetId" label="UMNetId" ref="umnetId" :disable="loading" />
     <TextInput
       id="password"
       label="Password"
@@ -82,19 +82,20 @@ export default class CreateAccountPage extends Vue {
 
 .create-account {
   text-align: center;
-  padding: $create-account-padding;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 .create-account-button {
   margin-top: $create-account-button-margin-top;
-  margin-bottom: $create-account-button-margin-bottom;
+  width: $button-width;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.create-accounnt-image {
-  margin-bottom: $create-account-image-size;
-  margin-top: $create-account-image-size;
+.create-account-image {
+  margin-bottom: $create-account-logo-margin;
+  margin-top: $create-account-logo-margin;
+  width: $create-account-logo-size;
+  height: $create-account-logo-size;
 }
 </style>

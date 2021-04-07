@@ -2,6 +2,7 @@
   <div>
     <Button
       id="transaction-history-button"
+      class="transaction-history-button"
       label="Transaction History"
       size="long"
       type="other"
@@ -25,3 +26,12 @@ export default class TransactionHistory extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+@import "../style.scss";
+
+.transaction-history-button {
+  width: $long-button-width;
+  margin: auto;
+}
+</style>
