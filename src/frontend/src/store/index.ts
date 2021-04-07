@@ -103,42 +103,42 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    MUTATION_SET_LOADING (state, loading) {
+    MUTATION_SET_LOADING(state, loading) {
       state.loading = loading
     },
-    MUTATION_SET_WALLET_AMOUNT (state, walletAmount) {
+    MUTATION_SET_WALLET_AMOUNT(state, walletAmount) {
       state.walletAmount = walletAmount
     },
-    MUTATION_SET_ (state, mining) {
+    MUTATION_SET_(state, mining) {
       state.mining = mining
     },
-    MUTATION_SET_FIRST_NAME (state, firstName) {
+    MUTATION_SET_FIRST_NAME(state, firstName) {
       state.firstName = firstName
     },
-    MUTATION_SET_LAST_NAME (state, lastName) {
+    MUTATION_SET_LAST_NAME(state, lastName) {
       state.lastName = lastName
     },
-    MUTATION_SET_PASSWORD (state, password) {
+    MUTATION_SET_PASSWORD(state, password) {
       state.password = password
     },
-    MUTATION_SET_UMNETID (state, umnetId) {
+    MUTATION_SET_UMNETID(state, umnetId) {
       state.umnetId = umnetId
     },
-    MUTATION_SET_PRIVATE_KEY (state, privateKey) {
+    MUTATION_SET_PRIVATE_KEY(state, privateKey) {
       state.privateKey = privateKey
     },
-    MUTATION_SET_MINING (state, mining) {
+    MUTATION_SET_MINING(state, mining) {
       state.mining = mining
     },
-    MUTATION_SET_FIND_PROOF (state, findProof) {
+    MUTATION_SET_FIND_PROOF(state, findProof) {
       state.findProof = findProof
     },
-    MUTATION_SET_TRANSACTION_HISTORY (state, transactions) {
+    MUTATION_SET_TRANSACTION_HISTORY(state, transactions) {
       state.transactions = transactions
     }
   },
   actions: {
-    ACTION_UPDATE_USER ({ commit, getters, dispatch }, values) {
+    ACTION_UPDATE_USER({ commit, getters, dispatch }, values) {
       commit('MUTATION_SET_LOADING', true)
 
       const password = values.password ? values.password : getters.password
@@ -171,7 +171,7 @@ export default new Vuex.Store({
         )
     },
 
-    ACTION_FETCH_WALLET_AMOUNT ({ commit, getters, dispatch }) {
+    ACTION_FETCH_WALLET_AMOUNT({ commit, getters, dispatch }) {
       commit('MUTATION_SET_LOADING', true)
       axios
         .post('http://localhost/wallet/amount', {
@@ -192,7 +192,7 @@ export default new Vuex.Store({
           }
         )
     },
-    ACTION_SEND_TRANSACTION ({ getters, commit, dispatch }, values) {
+    ACTION_SEND_TRANSACTION({ getters, commit, dispatch }, values) {
       const recipient = values.recipient
       const amount = values.amount
       const now = new Date()
@@ -228,22 +228,22 @@ export default new Vuex.Store({
           commit('MUTATION_SET_LOADING', false)
           commit('MUTATION_SET_WALLET_AMOUNT', response.data.remaining_amount)
         },
-        (err) => {
-          commit('MUTATION_SET_LOADING', false)
+          (err) => {
+            commit('MUTATION_SET_LOADING', false)
 
-          const message = err.response && err.response.data.error
-            ? err.response.data.error
-            : ERROR_STRING
-          dispatch('ACTION_DISPLAY_TOAST', { message: message, type: 'error' })
-        })
+            const message = err.response && err.response.data.error
+              ? err.response.data.error
+              : ERROR_STRING
+            dispatch('ACTION_DISPLAY_TOAST', { message: message, type: 'error' })
+          })
     },
 
-    ACTION_LOGIN ({ commit, dispatch }, values) {
+    ACTION_LOGIN({ commit, dispatch }, values) {
       const umnetId = values.umnetId
       const password = values.password
 
       // Do some validation first, ensure both fields were filled out
-      if (umnetId == '' || password == '') {
+      if (umnetId === '' || password === '') {
         // If not, return and inform user
         commit('MUTATION_SET_LOADING', false)
         dispatch('ACTION_DISPLAY_TOAST', { message: EMPTY_TEXT_FIELD_ERROR, type: 'warning' })
@@ -267,7 +267,8 @@ export default new Vuex.Store({
             commit('MUTATION_SET_UMNETID', umnetId)
             commit('MUTATION_SET_PASSWORD', password)
 
-            const privateKey = localStorage.getItem(umnetId)
+            const privateKey = typeof window !== 'undefined' ? localStorage.getItem(umnetId) : null
+
             commit('MUTATION_SET_PRIVATE_KEY', privateKey)
 
             const message = 'Login successful!'
@@ -287,7 +288,7 @@ export default new Vuex.Store({
         )
     },
 
-    ACTION_CREATE_ACCOUNT ({ commit, dispatch }, values) {
+    ACTION_CREATE_ACCOUNT({ commit, dispatch }, values) {
       commit('MUTATION_SET_LOADING', true)
 
       const umnetId = values.umnetId
@@ -298,11 +299,11 @@ export default new Vuex.Store({
 
       // Do some validation first, ensure both fields were filled out
       if (
-        umnetId == '' ||
-        password == '' ||
-        password2 == '' ||
-        firstName == '' ||
-        lastName == ''
+        umnetId === '' ||
+        password === '' ||
+        password2 === '' ||
+        firstName === '' ||
+        lastName === ''
       ) {
         // If not, return and inform user
         commit('MUTATION_SET_LOADING', false)
@@ -315,7 +316,9 @@ export default new Vuex.Store({
       const privateKey = keyPair[0]
       const publicKey = keyPair[1]
 
-      localStorage.setItem(umnetId, privateKey)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(umnetId, privateKey)
+      }
 
       axios
         .post('http://localhost/users/create', {
@@ -344,7 +347,7 @@ export default new Vuex.Store({
         )
     },
 
-    ACTION_DISPLAY_TOAST ({ getters }, values) {
+    ACTION_DISPLAY_TOAST({ getters }, values) {
       const message: string = values.message.toString()
       const type: string = values.type
 
@@ -358,7 +361,7 @@ export default new Vuex.Store({
       })
     },
 
-    ACTION_FETCH_TRANSACTION_HISTORY ({ commit, getters, dispatch }) {
+    ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
       axios
         .get('http://localhost/wallet/history/' + getters.umnetId)
         .then(
@@ -374,7 +377,7 @@ export default new Vuex.Store({
         )
     },
 
-    ACTION_LOGOUT ({ commit, dispatch }) {
+    ACTION_LOGOUT({ commit, dispatch }) {
       commit('MUTATION_SET_FIRST_NAME', '')
       commit('MUTATION_SET_LAST_NAME', '')
       commit('MUTATION_SET_UMNETID', '')

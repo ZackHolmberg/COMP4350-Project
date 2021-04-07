@@ -6,16 +6,16 @@ $background-color: rgb(106, 109, 110);
 $link-color: rgb(208, 231, 241);
 $link-font-size: 18px;
 
-$hover-transition: 0.2s linear;
+$hover-transition: .2s linear;
 
-$default-text-color: white;
+$default-text-color: #ffffff;
 $default-font: "Montserrat", sans-serif;
 $default-header-font-size: 50px;
 
 // BUTTON
-$button-background-color: rgba(0, 117, 160, 0.582);
-$cancel-button-background-color: rgba(160, 5, 0, 0.555);
-$other-button-background-color: rgba(173, 2, 59, 0.521);
+$button-background-color: rgba(0, 117, 160, .582);
+$cancel-button-background-color: rgba(160, 5, 0, .555);
+$other-button-background-color: rgba(173, 2, 59, .521);
 
 $button-text: rgb(232, 230, 227);
 $button-font-size: 16px;
@@ -42,8 +42,8 @@ $loading-spinner-margin: 40%;
 $text-input-background: rgb(19, 21, 22);
 $text-input-edit-background: rgb(221, 221, 221);
 
-$text-input-color: lightgray;
-$text-input-edit-color: black;
+$text-input-color: #d3d3d3;
+$text-input-edit-color: #000000;
 $text-input-font-size: 16px;
 
 $hover-transform-text-input: scale(1.05);
@@ -55,8 +55,8 @@ $text-input-padding: 10px;
 $text-input-margin: 25px;
 
 // BOX
-$box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-$box-shadow-hover: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+$box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
+$box-shadow-hover: 0 8px 16px 0 rgba(0, 0, 0, .2);
 
 $box-border-radius: 10px;
 
@@ -86,9 +86,9 @@ $home-page-wrapper-max-height: 600px;
 $home-page-wrapper-max-width: 1000px;
 $home-page-wrapper-min-width: 800px;
 
-$home-page-background-color: rgba(0, 0, 0, 0.75);
+$home-page-background-color: rgba(0, 0, 0, .75);
 
-$home-page-border: 1px solid black;
+$home-page-border: 1px solid #000000;
 
 $home-page-button-position: 12%;
 $home-page-button-bottom: 40%;
@@ -141,19 +141,19 @@ $account-label-padding-top: 20px;
 $account-label-font-size: 20px;
 
 // TRANSACTION HISTORY
-$receive-background-color: rgba(0, 128, 0, 0.356);
+$receive-background-color: rgba(0, 128, 0, .356);
 $receive-color:rgb(197, 255, 197);
 
-$send-background-color: rgba(255, 0, 0, 0.294);
+$send-background-color: rgba(255, 0, 0, .294);
 $send-color:rgb(255, 198, 198);
 
-$reward-background-color: rgba(255, 255, 0, 0.336);
+$reward-background-color: rgba(255, 255, 0, .336);
 $reward-color:rgb(255, 255, 202);
 
-$no-transactions-text-color: gray;
+$no-transactions-text-color: #808080;
 
 $content-padding: 20px;
-$content-background-color: black;
+$content-background-color: #000000;
 $content-border-radius: 20px;
 $content-height: 650px;
 
@@ -166,9 +166,9 @@ $row-amount-border-radius: 10px;
 $row-amount-padding: 5px;
 $row-amount-margin-top: 5%;
 
-$list-row-border-bottom: 1px solid white;
-$list-row-color: white;
-$list-row-background-color: black;
+$list-row-border-bottom: 1px solid #ffffff;
+$list-row-color: #ffffff;
+$list-row-background-color: #000000;
 $list-row-padding: 20px;
 
 $transaction-history-back-button-margin-top: 25px;
