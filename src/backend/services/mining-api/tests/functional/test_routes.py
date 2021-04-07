@@ -1,8 +1,7 @@
 import pytest
 from src import app, socketio
 import json
-from src.routes import send_to_connected_clients, difficulty
-from src import routes
+from src.routes import send_to_connected_clients
 from hashlib import sha256
 import sys
 import os
@@ -94,7 +93,7 @@ def test_emit_events(test_client):
     assert received[0]['args'][0]['a'] == 'b'
 
 
-def test_emit_events(test_client, json_header):
+def test_emit_events_two(test_client, json_header):
     socketio_test_client = socketio.test_client(
         app, flask_test_client=test_client)
     send_to_connected_clients({'id': 'test'})
@@ -109,7 +108,7 @@ def test_wrong_payload(test_client, json_header):
     try:
         send_to_connected_clients({'not_id': 'test'})
         assert False
-    except:
+    except Exception:
         received = socketio_test_client.get_received()
         assert received == []
 
