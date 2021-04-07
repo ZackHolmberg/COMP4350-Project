@@ -8,6 +8,9 @@ DEFAULT_BRANCH: staging # Usually master or main
 DISABLE_LINTERS: 
   - JAVASCRIPT_STANDARD
   - CSS_STYLELINT
+  - TYPESCRIPT_STANDARD
+  - BASH_SHELLCHECK
+  - BASH_EXEC
 DISABLE:
   - COPYPASTE # Comment to disable checks of abusive copy-pastes
   - SPELL # Comment to disable checks of spelling mistakes # - SPELL # Uncomment to disable checks of spelling mistakes

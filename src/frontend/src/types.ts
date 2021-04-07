@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 export type Transaction = {
     to_address: string;
     from_address: string;
