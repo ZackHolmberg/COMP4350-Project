@@ -157,7 +157,7 @@ def create_transaction():
     blockchain.add_to_wallet(receiver, amount)
 
     try_replicate('/wallet/createTransaction', 'POST', data)
-    return jsonify(valid=valid), HttpCode.OK.value
+    return jsonify(success=True), HttpCode.CREATED.value
 
 
 @app.route('/wallet/balance', methods=['GET'])

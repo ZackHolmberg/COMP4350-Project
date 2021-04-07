@@ -155,8 +155,8 @@ def test_verify_amount(test_client):
 
     response = test_client.post(url, data=json.dumps(data1), headers=headers)
 
-    assert response.status_code == 200
-    assert response.json['valid'] == True
+    assert response.status_code == 201
+    assert response.json['success'] == True
 
     response = test_client.post(url, data=json.dumps(data2), headers=headers)
 
@@ -183,8 +183,8 @@ def test_valid_transaction(test_client):
 
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
-    assert response.status_code == 200
-    assert response.json['valid'] == True
+    assert response.status_code == 201
+    assert response.json['success'] == True
 
     data1 = {'umnetId': "user1"}
     data2 = {'umnetId': "user2"}

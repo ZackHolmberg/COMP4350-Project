@@ -77,11 +77,14 @@ def requests_mock_transaction(requests_mock, public_key):
                        json={"success": True, "data": {"public_key": public_key}}, status_code=HttpCode.OK.value)
     
     requests_mock.post(BisonCoinUrls.blockchain_wallet_url.format("createTransaction"),
-                       json={"valid": True}, status_code=HttpCode.OK.value)
+                       json={"valid": True}, status_code=HttpCode.CREATED.value)
 
     requests_mock.post(BisonCoinUrls.mining_url.format("queue"),
-                       json={"success": True}, status_code=HttpCode.CREATED.value)
+                       json={"success": True}, status_code=HttpCode.OK.value)
     
+    requests_mock.get(BisonCoinUrls.blockchain_wallet_url.format("balance"),
+                       json={"amount": 0}, status_code=HttpCode.OK.value)
+
     return requests_mock
 
 @pytest.fixture(scope='function')
@@ -126,26 +129,25 @@ def test_create_transaction_incorrect_payload(test_client, json_header, requests
 def test_create_transaction_wrong_wallet_amount(test_client, json_header, requests_mock_transaction, correct_payload):
 
     requests_mock_transaction.post(BisonCoinUrls.blockchain_wallet_url.format("createTransaction"),
-                       json={"valid": False}, status_code=HttpCode.BAD_REQUEST.value)
+                       json={"error": False}, status_code=HttpCode.BAD_REQUEST.value)
 
     url = '/create'
     response = test_client.post(url, data=json.dumps(correct_payload), headers=json_header)
 
     assert response.status_code == HttpCode.BAD_REQUEST.value
-    assert b"err" in response.data
-    assert FailureReturnString.TRANSACTION_CREATION_FAILURE.value.encode() in response.data
+    assert b"error" in response.data
 
 
 def test_create_transaction_mining_fail(test_client, json_header, requests_mock_transaction, correct_payload):
 
     requests_mock_transaction.post(BisonCoinUrls.mining_url.format("queue"),
-                       json={"err": "something went wrong"}, status_code=HttpCode.INTERNAL_SERVER_ERROR.value)
+                       json={"error": "something went wrong"}, status_code=HttpCode.INTERNAL_SERVER_ERROR.value)
 
     url = '/create'
     response = test_client.post(url, data=json.dumps(correct_payload), headers=json_header)
 
     assert response.status_code == HttpCode.INTERNAL_SERVER_ERROR.value
-    assert b"err" in response.data
+    assert b"error" in response.data
     assert b"something went wrong" in response.data
 
 
@@ -154,10 +156,11 @@ def test_create_transaction_correct_payload(test_client, json_header, requests_m
     url = '/create'
     response = test_client.post(
         url, data=json.dumps(correct_payload), headers=json_header)
-
-    assert response.status_code == HttpCode.CREATED.value
+    
     assert b"success" in response.data
     assert b"true" in response.data
+    assert response.status_code == HttpCode.CREATED.value
+    assert response.json["remaining_amount"] == 0
 
 
 def test_create_transaction_incorrect_verification(test_client, json_header, requests_mock_transaction, correct_payload):
