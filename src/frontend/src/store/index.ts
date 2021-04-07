@@ -24,7 +24,7 @@ const genKeyPair = (): string[] => {
 
 const getTransactionId = (transaction: Transaction): string => {
   return sha256(
-    transaction.to + transaction.from + transaction.amount + transaction.timestamp
+    transaction.to_address + transaction.from_address + transaction.amount + transaction.timestamp
   ).toString();
 };
 
@@ -207,8 +207,8 @@ export default new Vuex.Store({
       const utcMilllisecondsSinceEpoch = now.getTime() + (now.getTimezoneOffset() * 60 * 1000)
       const utcSecondsSinceEpoch = Math.round(utcMilllisecondsSinceEpoch / 1000)
       const transaction: Transaction = {
-        "to": recipient,
-        "from": getters.umnetId,
+        "to_address": recipient,
+        "from_address": getters.umnetId,
         "amount": parseFloat(amount),
         "id": "",
         "signature": "",
@@ -222,8 +222,8 @@ export default new Vuex.Store({
       commit("MUTATION_SET_LOADING", true);
       axios
         .post("http://localhost/transactions/create", {
-          "from": transaction.from,
-          "to": transaction.to,
+          "from": transaction.from_address,
+          "to": transaction.to_address,
           "amount": transaction.amount,
           "timestamp": transaction.timestamp,
           "id": transaction.id,
