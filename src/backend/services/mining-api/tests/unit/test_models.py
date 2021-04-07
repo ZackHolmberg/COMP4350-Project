@@ -2,8 +2,6 @@ import pytest
 from src.miningpool import MiningPool
 import mock
 import time
-import threading
-import queue
 from src import routes
 from hashlib import sha256
 

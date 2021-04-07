@@ -40,6 +40,15 @@ def send_to_connected_clients(transaction):
 
 transactions = MiningPool(send_to_connected_clients, True)
 
+def valid_proof(hash_, nonce) -> bool:
+    valid = (hash_.startswith('0' * difficulty))
+    toHash = (str(nonce) + str(
+        ongoing_transaction["amount"]) + str(
+        ongoing_transaction["timestamp"]) + ongoing_transaction["id"] + ongoing_transaction["signature"])
+    toHash = toHash.replace("\n", "")
+    toHash = toHash.replace("\r", "")
+    computedHash = sha256(toHash.encode('utf-8')).hexdigest()
+    return valid and hash_ == computedHash
 
 @app.route("/")
 def index():
@@ -56,18 +65,6 @@ def add_data_to_queue():
     transactions.add_to_pool(data)
 
     return jsonify(success=True), HttpCode.OK.value
-
-
-def valid_proof(hash_, nonce) -> bool:
-    valid = (hash_.startswith('0' * difficulty))
-    toHash = (str(nonce) + str(
-        ongoing_transaction["amount"]) + str(
-        ongoing_transaction["timestamp"]) + ongoing_transaction["id"] + ongoing_transaction["signature"])
-    toHash = toHash.replace("\n", "")
-    toHash = toHash.replace("\r", "")
-    computedHash = sha256(toHash.encode('utf-8')).hexdigest()
-    return valid and hash_ == computedHash
-
 
 @socketio.on('connect')
 def client_connect():
