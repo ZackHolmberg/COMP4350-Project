@@ -1,11 +1,12 @@
-import pytest
-from src.miningpool import MiningPool
-import mock
-import time
-import threading
 import queue
-from src import routes
+import threading
+import time
 from hashlib import sha256
+
+import mock
+import pytest
+from src import routes
+from src.miningpool import MiningPool
 
 VALID_NONCE = 734
 VALID_AMOUNT = 3
@@ -15,19 +16,19 @@ VALID_TIMESTAMP = 1616381251
 VALID_PROOF = "0000733069633f9c7ff25d8ff0e260709f87117245d1eaa959eb193507741a5b"
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def test_receiver():
     receiver = mock.MagicMock()
     return receiver
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def test_pool(test_receiver):
     test_pool = MiningPool(test_receiver, True)
     return test_pool
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def test_pool_nm(test_receiver):
     test_pool = MiningPool(test_receiver, False)
     return test_pool
@@ -82,7 +83,13 @@ def test_ready_to_mine(test_pool_nm):
 def setup_test_transaction():
     routes.difficulty = 0
     routes.ongoing_transaction = {
-        "from": "test2", "to": "test1", "amount": VALID_AMOUNT, "timestamp": VALID_TIMESTAMP, "id": VALID_ID, "signature": VALID_SIGNATURE}
+        "from": "test2",
+        "to": "test1",
+        "amount": VALID_AMOUNT,
+        "timestamp": VALID_TIMESTAMP,
+        "id": VALID_ID,
+        "signature": VALID_SIGNATURE,
+    }
 
 
 def teardown_test_transaction():
@@ -92,25 +99,34 @@ def teardown_test_transaction():
 
 def test_valid_proof():
     setup_test_transaction()
-    hash_ = sha256((str(VALID_NONCE) + str(VALID_AMOUNT) + str(VALID_TIMESTAMP) + VALID_ID +
-                    VALID_SIGNATURE).encode('utf-8')).hexdigest()
-    assert(hash_ == VALID_PROOF)
+    hash_ = sha256(
+        (
+            str(VALID_NONCE)
+            + str(VALID_AMOUNT)
+            + str(VALID_TIMESTAMP)
+            + VALID_ID
+            + VALID_SIGNATURE
+        ).encode("utf-8")
+    ).hexdigest()
+    assert hash_ == VALID_PROOF
     assert routes.valid_proof(hash_, VALID_NONCE)
     teardown_test_transaction()
 
 
 def test_invalid_proof():
     setup_test_transaction()
-    hash_ = sha256((str(5) + "test2" + "test3" + str(10) +
-                    "test3" + "test4").encode('utf-8')).hexdigest()
+    hash_ = sha256(
+        (str(5) + "test2" + "test3" + str(10) + "test3" + "test4").encode("utf-8")
+    ).hexdigest()
     assert not routes.valid_proof(hash_, 5)
     teardown_test_transaction()
 
 
 def test_invalid_difficulty():
     setup_test_transaction()
-    hash_ = sha256((str(5) + "test2" + "test3" + str(10) +
-                    "test3" + "test4").encode('utf-8')).hexdigest()
+    hash_ = sha256(
+        (str(5) + "test2" + "test3" + str(10) + "test3" + "test4").encode("utf-8")
+    ).hexdigest()
     routes.difficulty = 100
     assert not routes.valid_proof(hash_, 5)
     teardown_test_transaction()

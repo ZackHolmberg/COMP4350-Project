@@ -1,9 +1,12 @@
-from flask import Flask
-from .blockchain import *
 import os
+
+from flask import Flask
+
+from .blockchain import *
+
 app = Flask(__name__)
 
-is_master = not os.environ.get('BACKUP', False)
+is_master = not os.environ.get("BACKUP", False)
 peers = []
 
 if is_master:
