@@ -110,10 +110,10 @@ def test_create_transaction_wrong_wallet_amount(test_client, json_header, reques
     }
     url = '/create'
 
-    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
+    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
                        json={"valid": False}, status_code=400)
 
-    requests_mock.post("http://blockchain:5000/wallet/checkWallet",
+    requests_mock.post("http://api-gateway/blockchain/wallet/checkWallet",
                        json={"valid": True}, status_code=200)
 
     requests_mock.get("http://users:5000/umnetId/USER1",
@@ -139,10 +139,10 @@ def test_create_transaction_mining_fail(test_client, json_header, requests_mock,
 
     url = '/create'
 
-    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
+    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
                        json={"valid": True}, status_code=200)
 
-    requests_mock.post("http://blockchain:5000/wallet/checkWallet",
+    requests_mock.post("http://api-gateway/blockchain/wallet/checkWallet",
                        json={"valid": True}, status_code=200)
 
     requests_mock.post("http://mining:5000/queue",
@@ -160,10 +160,10 @@ def test_create_transaction_mining_fail(test_client, json_header, requests_mock,
 
 def test_create_transaction_correct_payload(test_client, json_header, requests_mock, signature, public_key):
 
-    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
+    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
                        json={"valid": True}, status_code=200)
 
-    requests_mock.post("http://blockchain:5000/wallet/checkWallet",
+    requests_mock.post("http://api-gateway/blockchain/wallet/checkWallet",
                        json={"valid": True}, status_code=200)
 
     requests_mock.post("http://mining:5000/queue",
@@ -193,7 +193,7 @@ def test_create_transaction_correct_payload(test_client, json_header, requests_m
 
 def test_create_transaction_incorrect_verification(test_client, json_header, requests_mock, signature, public_key):
 
-    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
+    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
                        json={"valid": True}, status_code=200)
 
     requests_mock.post("http://mining:5000/queue",
@@ -223,10 +223,10 @@ def test_create_transaction_incorrect_verification(test_client, json_header, req
 
 def test_create_transaction_receiver_verification_failure(test_client, json_header, requests_mock, signature, public_key):
 
-    requests_mock.post("http://blockchain:5000/wallet/createTransaction",
+    requests_mock.post("http://api-gateway/blockchain/wallet/createTransaction",
                        json={"valid": True}, status_code=200)
 
-    requests_mock.post("http://blockchain:5000/wallet/checkWallet",
+    requests_mock.post("http://api-gateway/blockchain/wallet/checkWallet",
                        json={"valid": True}, status_code=500)
 
     requests_mock.post("http://mining:5000/queue",
