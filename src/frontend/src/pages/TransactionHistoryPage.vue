@@ -57,7 +57,7 @@ export default class TransactionHistoryPage extends Vue {
 }
 
 .no-transaction-history {
-  font-weight: $no-transaction-history-font-weight;
+  font-weight: bold;
   color: $no-transactions-text-color;
   text-align: center;
 }
@@ -65,7 +65,7 @@ export default class TransactionHistoryPage extends Vue {
 .transaction-history-header {
   font-size: $default-header-font-size;
   text-align: center;
-  font-weight: $transaction-history-header-font-weight;
+  font-weight: bold;
   color: $default-text-color;
 }
 

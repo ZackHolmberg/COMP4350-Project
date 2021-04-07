@@ -60,7 +60,7 @@ export default class ListItem extends Vue {
 .row-amount {
   text-align: right;
   margin-top: $row-amount-margin-top;
-  font-weight: $address-text-font-weight;
+  font-weight: bolder;
   font-size: $address-text-font-size;
   border-radius: $row-amount-border-radius;
   float: right;
@@ -68,7 +68,7 @@ export default class ListItem extends Vue {
 }
 
 .address-text {
-  font-weight: $address-text-font-weight;
+  font-weight: bolder;
   font-size: $address-text-font-size;
 }
 
