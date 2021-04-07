@@ -1,3 +1,4 @@
+"""init file for the blockchain api"""
 from flask import Flask
 from .blockchain import *
 

@@ -1,7 +1,8 @@
+"""module containing the block class for the blockchain"""
 import json
 
-
 class Block:
+    """class for the block object"""
     def __init__(self, index, transaction, nonce, hash, prev_hash, miner_id, reward_amount):
 
         self.index = int(index)
@@ -13,5 +14,14 @@ class Block:
         self.reward_amount = int(reward_amount)
 
     def toJSON(self):
+        """
+        creates a json string of the class
+
+        params:
+            N/A
+
+        returns:
+            A json string of class attributes
+        """
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True)

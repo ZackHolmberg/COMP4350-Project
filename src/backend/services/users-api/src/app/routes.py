@@ -260,7 +260,7 @@ def handle_database_error(error):
     """
     method to handle database verification exception
 
-            Parameters: through request:
+            Parameters:
                     error: The error that occured in the endpoint
 
             Returns:
@@ -276,7 +276,7 @@ def handle_userapi_error(error):
     """
     method to handle user not found, incorrect credentials and incorrect payload
 
-            Parameters: through request:
+            Parameters:
                     error: The error that occured in the endpoint
 
             Returns:
