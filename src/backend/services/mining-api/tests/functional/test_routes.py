@@ -13,7 +13,6 @@ VALID_SIGNATURE = "1ff49f1e529c7a21a63bb176220457ecfc000051a56079bfbdc2b4d0a56d2
 VALID_TIMESTAMP = 1616381251
 VALID_PROOF = "0000733069633f9c7ff25d8ff0e260709f87117245d1eaa959eb193507741a5b"
 
-
 @pytest.fixture(scope='module')
 def test_client():
     test_client = app.test_client()
@@ -28,20 +27,17 @@ def test_client():
 
 @pytest.fixture(scope='module')
 def json_header():
-
     mimetype = 'application/json'
     headers = {
         'Content-Type': mimetype,
         'Accept': mimetype
     }
-
     return headers
 
 
 def test_home_page(test_client):
     # test GET query on '/' route
     url = '/'
-
     response = test_client.get(url)
 
     assert response.status_code == 200
@@ -52,8 +48,7 @@ def test_queueing(test_client, json_header):
     global ongoing_proof, ongoing_transaction
     url = '/queue'
     req_data = {"id": "test"}
-    response = test_client.post(
-        url, data=json.dumps(req_data), headers=json_header)
+    response = test_client.post(url, data=json.dumps(req_data), headers=json_header)
     assert response.status_code == 200
     assert b"success" in response.data
 

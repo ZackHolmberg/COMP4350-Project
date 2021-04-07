@@ -7,7 +7,6 @@ sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
 from shared import HttpCode
 from shared.utils import BisonCoinUrls
-from shared import FailureReturnString
 
 balance_url = BisonCoinUrls.blockchain_wallet_url.format("balance")
 auth_url = BisonCoinUrls.user_api_url.format("authUser")

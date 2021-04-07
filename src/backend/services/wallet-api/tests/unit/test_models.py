@@ -1,4 +1,3 @@
-import pytest
 from src.routes import authenticate_user
 import sys
 import os
@@ -25,11 +24,12 @@ def test_authenticate_user_failure(requests_mock):
     except Exception as e:
         assert type(e) == BisonCoinException
 
-def test_authenticate_user_failure(requests_mock):
+def test_authenticate_user_exception(requests_mock):
     requests_mock.post(auth_url, json={"error": "AUTH FAILURE"})
     try:
         authenticate_user("u", "p")
         assert False
+    except BisonCoinException as b:
+        assert "AUTH FAILURE" in b.json_message["error"]
     except Exception as e:
-        assert type(e) == BisonCoinException
-        assert "AUTH FAILURE" in e.json_message["error"] 
+        assert False 
