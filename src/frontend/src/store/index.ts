@@ -68,7 +68,6 @@ export default new Vuex.Store({
     firstName: "",
     lastName: "",
     mining: false,
-    editing: false,
     findProof: false,
     transactions: [],
   },
@@ -97,9 +96,6 @@ export default new Vuex.Store({
     mining: (state) => {
       return state.mining;
     },
-    editing: (state) => {
-      return state.editing;
-    },
     findProof: (state) => {
       return state.findProof;
     },
@@ -116,9 +112,6 @@ export default new Vuex.Store({
     },
     MUTATION_SET_(state, mining) {
       state.mining = mining;
-    },
-    MUTATION_SET_EDITING(state, editing) {
-      state.editing = editing;
     },
     MUTATION_SET_FIRST_NAME(state, firstName) {
       state.firstName = firstName;

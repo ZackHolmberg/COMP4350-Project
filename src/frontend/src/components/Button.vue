@@ -98,6 +98,7 @@ export default class Button extends Vue {
   transition: $hover-transition;
   border: $border-color;
   color: $button-text;
+  font-weight: bold;
 }
 
 .button:hover {
