@@ -2,7 +2,7 @@ import time
 from .block import Block
 from .transaction import Transaction
 from .exceptions import WalletException
-
+import json
 
 class Blockchain:
 
@@ -61,5 +61,24 @@ class Blockchain:
     def get_last_block(self):
         return self.chain[-1]
 
+    def build_chain_from_peer_response(self, data):
+        new_chain = []
+        chain = data["chain"]
+        for block in chain:
+            block = json.loads(block)
+            new_chain.append(Block.from_json(block))
+        
+        if new_chain:
+            self.chain = new_chain
+        
+    def build_wallets_from_peer_response(self, data):
+        wallets = data["wallets"]
+        new_wallets = {}
+        for wallet in wallets:
+            wallet = json.loads(wallet)
+            new_wallets[wallet["umnetId"]] = wallet["amount"]
+        
+        if new_wallets:
+            self.wallets = new_wallets
 
 blockchain = Blockchain()

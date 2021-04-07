@@ -36,7 +36,7 @@ def test_get_wallet_amount_success(test_client, requests_mock):
     url = '/amount'
 
     requests_mock.get(
-        "http://blockchain:5000/wallet/balance", json={"amount": 0})
+        "http://api-gateway/blockchain/wallet/balance", json={"amount": 0})
 
     requests_mock.post(
         "http://users:5000/authUser", json={"success": True})
@@ -51,7 +51,7 @@ def test_get_wallet_amount_success(test_client, requests_mock):
 def test_get_wallet_amount_error(test_client, requests_mock):
     url = '/amount'
 
-    requests_mock.get("http://blockchain:5000/wallet/balance",
+    requests_mock.get("http://api-gateway/blockchain/wallet/balance",
                        json={"error": "no corresponding wallet for id"}, status_code=400)
 
     requests_mock.post(
@@ -71,7 +71,7 @@ def test_get_wallet_amount_incorrect_payload(test_client, requests_mock):
         "http://users:5000/authUser", json={"success": True})
 
     requests_mock.get(
-        "http://blockchain:5000/wallet/balance", json={"amount": 0})
+        "http://api-gateway/blockchain/wallet/balance", json={"amount": 0})
 
     response = test_client.post(url, json={})
 
@@ -82,7 +82,7 @@ def test_get_wallet_amount_incorrect_payload(test_client, requests_mock):
 def test_transaction_history_successfull_response(test_client, requests_mock):
     url = '/history/SHARMAA2'
 
-    requests_mock.get("http://blockchain:5000/chain",
+    requests_mock.get("http://api-gateway/blockchain/chain",
         json={"chain": [
         "{\"hash\": \"0000\", \"index\": 0, \"miner_id\": \"miner_id\", \"nonce\": 0, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": {\"amount\": 0, \"from_address\": \"\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"\"}}",
         "{\"hash\": \"0000813999da5fdc0a61293c8b38a91a0b2a1864c3f7b431ed9684b04c53da45\", \"index\": 1, \"miner_id\": \"SACHDEV1\", \"nonce\": 85269, \"prev_hash\": \"0000\", \"reward_amount\": 10, \"transaction\": {\"amount\": 2, \"from_address\": \"SACHDEV1\", \"id\": \"012d92c16a0841bd4dfd7f8ad071a284e9772ed6f0c755fed4de894f6b0cebf5\", \"signature\": \"8b4edeb9b707b958723acdf982afd94ad7bb85ff9f3729f84a72885da517e24832477579f0a464be0531950c16430c4daaaba954d9d2247cc23ba99c3cd5e52a7778282355fb7659867a637fa15301582d7ef5da53bb1bcd687ccf5c671c18ec2123dcc5a48bd937950015efa87ff40486035ca173bb53a1e7314bed52b89ecd\", \"timestamp\": 1616457752, \"to_address\": \"SHARMAA2\"}}",
@@ -99,7 +99,7 @@ def test_transaction_history_successfull_response(test_client, requests_mock):
 def test_transaction_history_success_empty_response(test_client, requests_mock):
     url = '/history/DoesntExist'
 
-    requests_mock.get("http://blockchain:5000/chain",
+    requests_mock.get("http://api-gateway/blockchain/chain",
         json={"chain": [
         "{\"hash\": \"0000\", \"index\": 0, \"miner_id\": \"miner_id\", \"nonce\": 0, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": {\"amount\": 0, \"from_address\": \"\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"\"}}",
         "{\"hash\": \"0000813999da5fdc0a61293c8b38a91a0b2a1864c3f7b431ed9684b04c53da45\", \"index\": 1, \"miner_id\": \"SACHDEV1\", \"nonce\": 85269, \"prev_hash\": \"0000\", \"reward_amount\": 10, \"transaction\": {\"amount\": 2, \"from_address\": \"SACHDEV1\", \"id\": \"012d92c16a0841bd4dfd7f8ad071a284e9772ed6f0c755fed4de894f6b0cebf5\", \"signature\": \"8b4edeb9b707b958723acdf982afd94ad7bb85ff9f3729f84a72885da517e24832477579f0a464be0531950c16430c4daaaba954d9d2247cc23ba99c3cd5e52a7778282355fb7659867a637fa15301582d7ef5da53bb1bcd687ccf5c671c18ec2123dcc5a48bd937950015efa87ff40486035ca173bb53a1e7314bed52b89ecd\", \"timestamp\": 1616457752, \"to_address\": \"SHARMAA2\"}}",
@@ -120,7 +120,7 @@ def test_get_wallet_amount_auth_failure(test_client, requests_mock):
         "http://users:5000/authUser", json={"error": "Some failure in auth"})
 
     requests_mock.get(
-        "http://blockchain:5000/wallet/balance", json={"amount": 0})
+        "http://api-gateway/blockchain/wallet/balance", json={"amount": 0})
 
     response = test_client.post(url, json={"umnetId" : "um", "password": "wrong_password"})
 

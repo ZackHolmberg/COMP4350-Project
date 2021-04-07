@@ -5,7 +5,7 @@
       <TextInput
         id="contact-input"
         class="new-transaction-input"
-        label="Email"
+        label="UMNetID"
         ref="recipient"
         :disable="false"
       />

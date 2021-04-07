@@ -70,7 +70,7 @@ def test_home_page(test_client, test_db_patch):
 
 
 def test_create_user(test_client, json_header, requests_mock):
-    requests_mock.post("http://blockchain:5000/wallet/addWallet",
+    requests_mock.post("http://api-gateway/blockchain/wallet/addWallet",
                 json={"success": True}, status_code=200)
 
     url = '/create'

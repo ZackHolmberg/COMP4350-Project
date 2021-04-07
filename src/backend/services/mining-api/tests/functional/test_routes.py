@@ -128,7 +128,7 @@ def test_proof_correct_payload(test_client, json_header, requests_mock):
     received = socketio_test_client.get_received()
     assert received[0]['name'] == 'findProof'
 
-    requests_mock.post("http://blockchain:5000/addBlock",
+    requests_mock.post("http://api-gateway/blockchain/addBlock",
                        json={"success": True}, status_code=201)
 
     hash_ = sha256((str(VALID_NONCE) + str(VALID_AMOUNT) + str(VALID_TIMESTAMP) + VALID_ID +
