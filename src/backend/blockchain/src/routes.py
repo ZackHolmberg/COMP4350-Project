@@ -6,11 +6,39 @@ from .exceptions import WalletException
 from flask import request, jsonify
 import sys
 import os
+import json
+from src import peers
 
 sys.path.append(os.path.abspath(os.path.join('..', '')))
 
 from shared.exceptions import IncorrectPayloadException
 from shared import HttpCode
+from shared.utils import send_post_request, send_get_request
+
+request_handlers = {
+    "GET": send_get_request,
+    "POST": send_post_request
+}
+
+def query_peers(peers):
+    try:
+        backup_node = peers[0]
+
+        chain_response = send_get_request(backup_node+"/chain", None)
+        blockchain.build_chain_from_peer_response(chain_response.json())
+
+        wallet_response = send_get_request(backup_node+"/wallet/all", None)
+        blockchain.build_wallets_from_peer_response(wallet_response.json())
+    except Exception as error:
+        print("LOG: Peer replication failed", str(error))
+
+def try_replicate(route, request_type, request):
+    for peer in peers:
+        full_route = peer+route
+        try:
+            response = request_handlers[request_type](full_route,request)
+        except Exception as error:
+            print("LOG: Request replication failed", route, request_type, request, str(error))
 
 @app.route("/")
 def index():
@@ -21,8 +49,28 @@ def index():
 def get_chain():
     chain = []
     for block in blockchain.chain:
-        chain.append(block.toJSON())
+        chain.append(block.to_json())
     return jsonify(length=len(chain), chain=chain), HttpCode.OK.value
+
+@app.route('/addPeer', methods=['POST'])
+def add_peer():
+    data = request.get_json()
+    try:
+        peer = data["peer"]
+        peers.append(peer)
+    except KeyError:
+        IncorrectPayloadException()
+
+    return jsonify(success=True), HttpCode.OK.value
+
+
+@app.route('/wallet/all', methods=['GET'])
+def get_wallets():
+    wallets = []
+    for wallet, amount in blockchain.wallets.items():
+        wallets.append(json.dumps({"umnetId": wallet, "amount": amount}))
+    
+    return jsonify(length=len(wallets), wallets=wallets), HttpCode.OK.value
 
 
 @app.route('/addBlock', methods=['POST'])
@@ -60,6 +108,7 @@ def proof():
 
     blockchain.add_to_wallet(miner_id, Blockchain.COINBASE_AMOUNT)
 
+    try_replicate('/addBlock', 'POST', data)
     return jsonify(success=True), HttpCode.CREATED.value
 
 
@@ -81,6 +130,8 @@ def add_wallet():
         data = request.get_json()
         wallet_id = data["umnetId"].upper()
         success = blockchain.add_wallet(wallet_id)
+        
+        try_replicate('/wallet/addWallet', 'POST', data)
         return jsonify(success=success), HttpCode.CREATED.value
 
     except KeyError as e:
@@ -105,6 +156,7 @@ def create_transaction():
     blockchain.subtract_from_wallet(wallet_id, amount)
     blockchain.add_to_wallet(receiver, amount)
 
+    try_replicate('/wallet/createTransaction', 'POST', data)
     return jsonify(valid=valid), HttpCode.OK.value
 
 
@@ -119,11 +171,9 @@ def get_wallet_amount():
     except KeyError as e:
         raise IncorrectPayloadException()
 
-
 @app.errorhandler(WalletException)
 def handle_wallet_exception(e):
     return jsonify(error=e.message), HttpCode.BAD_REQUEST.value
-
 
 @app.errorhandler(IncorrectPayloadException)
 def handle_wallet_exception(e):

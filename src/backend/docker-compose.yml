@@ -110,3 +110,18 @@ services:
       - ./shared:/src/shared
     expose:
       - 5000
+  blockchain-backup:
+    build:
+      context: ./
+      dockerfile: ./Dockerfiles/BlockchainDockerfile
+    container_name: blockchain-backup
+    restart: always
+    environment:
+      - APP_NAME=Blockchain
+      - PYTHONUNBUFFERED=1
+      - BACKUP=TRUE
+    volumes:
+      - ./blockchain:/src/blockchain
+      - ./shared:/src/shared
+    expose:
+      - 5000
