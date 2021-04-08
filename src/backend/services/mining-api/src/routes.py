@@ -104,7 +104,7 @@ def valid_proof(hash_, nonce) -> bool:
     valid = (hash_.startswith('0' * difficulty))
     to_hash = (str(nonce) + str(
         ongoing_transaction["amount"]) + str(
-        ongoing_transaction["timestamp"]) + ongoing_transaction["id"] +\
+        ongoing_transaction["timestamp"]) + ongoing_transaction["id"] +
             ongoing_transaction["signature"])
     to_hash = to_hash.replace("\n", "")
     to_hash = to_hash.replace("\r", "")

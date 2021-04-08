@@ -38,9 +38,13 @@ def test_db_patch():
     mongo.db.create_collection("users")
 
     mongo.db.users.insert_one({"first_name": "Akshay", "last_name": "Sharma",
-                               "umnetId": "SHARMAA2", "password": generate_password_hash("akshay123", method="sha256"), "public_key": "akshay_pk"})
+                               "umnetId": "SHARMAA2",
+                               "password": generate_password_hash("akshay123", method="sha256"),
+                               "public_key": "akshay_pk"})
     mongo.db.users.insert_one({"first_name": "Abhi", "last_name": "Sachdev",
-                               "umnetId": "SACHDEV1", "password": generate_password_hash("abhi123", method="sha256"), "public_key": "abhi_pk"})
+                               "umnetId": "SACHDEV1",
+                               "password": generate_password_hash("abhi123", method="sha256"),
+                               "public_key": "abhi_pk"})
     mongo.db.users.create_index("umnetId", unique=True)
     mongo.db.users.create_index("public_key", unique=True)
 
@@ -71,7 +75,7 @@ def test_home_page(test_client, test_db_patch):
 
 def test_create_user(test_client, json_header, requests_mock):
     requests_mock.post("http://blockchain:5000/wallet/addWallet",
-                json={"success": True}, status_code=200)
+                       json={"success": True}, status_code=200)
 
     url = '/create'
 
@@ -85,7 +89,7 @@ def test_create_user(test_client, json_header, requests_mock):
 
     response = test_client.post(
         url, data=json.dumps(payload), headers=json_header)
-    assert response.json['success'] == True
+    assert response.json['success']
     user = mongo.db.users.find_one({"umnetId": "FINESM1"})
     assert user is not None
 
@@ -138,6 +142,7 @@ def test_login_user_not_in_db(test_client, json_header):
         url, data=json.dumps(payload), headers=json_header)
     assert response.json['error'] == FailureReturnString.INCORRECT_CREDENTIALS.value
 
+
 def test_login_incorrect_payload(test_client, json_header):
     mongo.db.users.delete_one({"umnetId": "FINESM1"})
 
@@ -150,6 +155,7 @@ def test_login_incorrect_payload(test_client, json_header):
     response = test_client.post(
         url, data=json.dumps(payload), headers=json_header)
     assert response.json['error'] == FailureReturnString.INCORRECT_PAYLOAD.value
+
 
 def test_get_all_users(test_client, test_db_patch):
 
@@ -242,7 +248,7 @@ def test_success_update_user(test_client, test_db_patch, json_header):
         url, data=json.dumps(payload), headers=json_header)
 
     # Check the response to see if its correct
-    assert response.json['success'] == True
+    assert response.json['success']
 
     # Check the db to see if the updates were successful
     db_user = mongo.db.users.find_one({"umnetId": "SHARMAA2"})
@@ -250,7 +256,7 @@ def test_success_update_user(test_client, test_db_patch, json_header):
 
     # Try changing it back with wrong password
     # Check the response to see if it's correct
-    assert response.json['success'] == True
+    assert response.json['success']
 
     # change the password back to original (bonus test lol)
     payload = {
@@ -263,13 +269,12 @@ def test_success_update_user(test_client, test_db_patch, json_header):
 
     response = test_client.post(
         url, data=json.dumps(payload), headers=json_header)
-    
+
     # Check if the pw in database is still correct
     db_user = mongo.db.users.find_one({"umnetId": "SHARMAA2"})
     assert check_password_hash(db_user["password"], "akshay234")
     # Check if the response is correct
     assert b'"Incorrect umnetId or password"' in response.data
-    
 
     # change the password back to original (bonus test lol)
     payload = {
@@ -285,7 +290,7 @@ def test_success_update_user(test_client, test_db_patch, json_header):
         url, data=json.dumps(payload), headers=json_header)
 
     # Check if the response is correct
-    assert response.json['success'] == True
+    assert response.json['success']
 
     # Check if the database was updated successfully
     db_user = mongo.db.users.find_one({"umnetId": "SHARMAA2"})
@@ -309,6 +314,7 @@ def test_failure_update_user_user_not_found(test_client, test_db_patch, json_hea
 
     assert b"Incorrect umnetId or password" in response.data
 
+
 def test_failure_update_user_incomplete_payload(test_client, test_db_patch, json_header):
     url = '/update'
 
@@ -325,6 +331,7 @@ def test_failure_update_user_incomplete_payload(test_client, test_db_patch, json
 
     assert b'Please send correct json payload' in response.data
 
+
 def test_auth_user(test_client, json_header, requests_mock):
 
     url = '/authUser'
@@ -338,6 +345,7 @@ def test_auth_user(test_client, json_header, requests_mock):
         url, data=json.dumps(payload), headers=json_header)
     assert b'"success"' in response.data
 
+
 def test_auth_user_password_incorrect(test_client, json_header, requests_mock):
 
     url = '/authUser'
@@ -350,6 +358,7 @@ def test_auth_user_password_incorrect(test_client, json_header, requests_mock):
     response = test_client.post(
         url, data=json.dumps(payload), headers=json_header)
     assert b'"Incorrect umnetId or password"' in response.data
+
 
 def test_auth_user_umnetid_incorrect(test_client, json_header, requests_mock):
 

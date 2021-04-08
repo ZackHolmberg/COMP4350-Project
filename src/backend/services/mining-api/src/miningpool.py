@@ -3,6 +3,7 @@ import threading
 import time
 import queue
 
+
 class MiningPool:
     """
     A class that implements a queue of transactions that are to be mined and two threads.
@@ -11,10 +12,12 @@ class MiningPool:
     """
     DEQUEUE_TIME = 2
 
-    def __init__ (self, receiver, ready_to_mine):
+    def __init__(self, receiver, ready_to_mine):
         self._pool = queue.Queue()
-        self._mining_thread = threading.Thread(target=self.send_to_mine,\
-            kwargs={'self': self, 'receiver': receiver})
+        self._mining_thread = threading.Thread(target=self.send_to_mine,
+                                               kwargs={'self': self,
+                                                       'receiver': receiver
+                                                       })
         self._mining_thread.daemon = True
 
         self._send = threading.Condition()
@@ -41,7 +44,6 @@ class MiningPool:
             N/A
         """
         self._mining_thread.start()
-
 
     def send_to_mine(*args, **kwargs):
         """

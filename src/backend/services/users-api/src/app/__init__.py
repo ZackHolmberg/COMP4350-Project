@@ -2,8 +2,7 @@
 import sys
 import os
 from flask import Flask
-from flask_cors import CORS, cross_origin
-from flask_pymongo import PyMongo
+from flask_cors import CORS
 from src.databases.UserSchema import userSchema
 from src.databases.database_init import create_users_db
 
@@ -12,7 +11,7 @@ if os.environ.get('SERVICE_IN_DOCKER', False):
 else:
     sys.path.append(os.path.abspath(os.path.join('../..', '')))
 
-from shared import config, HttpCode
+from shared import config
 
 
 app = Flask(__name__)

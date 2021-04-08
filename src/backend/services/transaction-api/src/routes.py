@@ -6,7 +6,8 @@ from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from flask import request, jsonify
-from src import app, cross_origin
+from flask_cors import cross_origin
+from src import app
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -25,6 +26,7 @@ user_api_url = BisonCoinUrls.user_api_url
 ###########################################
 # TRANSACTION SIGN VERIFICATION
 ###########################################
+
 
 def validate_signature(id, signature, address):
     """
@@ -54,6 +56,7 @@ def validate_signature(id, signature, address):
 ##########################################
 # SERVICE REQUESTS
 #########################################
+
 
 def create_wallet_transaction(address, amount, receiver, timestamp):
     """
@@ -138,29 +141,31 @@ def verify_receiver(address):
         raise BisonCoinException(json_message=response.json(), return_code=response.status_code)\
             from error
 
-def retrieve_public_key (umnetId):
+
+def retrieve_public_key(umnetId):
     """
     Method to get the public key associated to a particular umnetId
 
             Parameters: through request:
-                    umnetId (string): The id associated to the public key
+                    umnetId(string): The id associated to the public key
 
             Returns:
                     public_key(string): the pblic key for the supplied id
                     raises error on transaction verification failure
     """
-    response = send_get_request( user_api_url.format("umnetId/"+ umnetId.upper()), None)
+    response = send_get_request(user_api_url.format("umnetId/" + umnetId.upper()), None)
     try:
         data = response.json()
         public_key = data["data"]["public_key"]
         return public_key
     except KeyError as error:
-        raise TransactionVerificationException(json_message=FailureReturnString.PUBLIC_KEY_NF.value\
-        )from error
+        raise TransactionVerificationException(
+            json_message=FailureReturnString.PUBLIC_KEY_NF.value) from error
 
 ########################################
 # ROUTES
 ########################################
+
 
 @cross_origin()
 @app.route("/")
@@ -202,7 +207,7 @@ def create_transaction():
 
     except KeyError as error:
         raise IncorrectPayloadException() from error
-    from_address_pk = retrieve_public_key (from_address)
+    from_address_pk = retrieve_public_key(from_address)
 
     is_verified = validate_signature(transaction_id, signature, from_address_pk)
     if not is_verified:

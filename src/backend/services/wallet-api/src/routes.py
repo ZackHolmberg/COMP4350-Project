@@ -5,7 +5,8 @@ import os
 import json
 import requests
 from flask import request, jsonify
-from src import app, cross_origin
+from flask_cors import cross_origin
+from src import app
 
 if os.environ.get('SERVICE_IN_DOCKER', False):
     sys.path.append(os.path.abspath(os.path.join('..', '')))
@@ -109,10 +110,13 @@ def get_wallet_history(umnetId):
 
         # if user was the miner
         if umnetId == block["miner_id"].upper():
-            result.append({"transaction": {"timestamp": time_stamp, "amount": block["reward_amount"]
-                    ,"from_address": "BLOCKCHAIN", "to_adderss": block["miner_id"],
-                    "id": block["transaction"]["id"], "signature": block["transaction"]
-                    ["signature"]}, "type": "reward"})
+            result.append({"transaction": {"timestamp": time_stamp,
+                                           "amount": block["reward_amount"],
+                                           "from_address": "BLOCKCHAIN",
+                                           "to_adderss": block["miner_id"],
+                                           "id": block["transaction"]["id"],
+                                           "signature": block["transaction"]["signature"]},
+                           "type": "reward"})
 
         # if user was the sender
         if umnetId == block["transaction"]['from_address'].upper():

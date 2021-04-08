@@ -3,8 +3,10 @@ from flask import request, jsonify
 from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException,\
      UserNotFoundException, DatabaseVerificationException
 from shared.utils import BisonCoinUrls, send_post_request
+from shared.httpcodes import HttpCode
 from werkzeug.security import generate_password_hash, check_password_hash
-from src.app import app, mongo, HttpCode
+from src.app import app, mongo
+
 
 def get_user_from_db(umnetId, password):
     """
@@ -22,6 +24,7 @@ def get_user_from_db(umnetId, password):
     if not user or not check_password_hash(user["password"], password):
         raise IncorrectCredentialsException()
     return user
+
 
 @app.route("/")
 def index():
@@ -134,7 +137,7 @@ def get_all_users():
 @app.route('/authUser', methods=['POST'])
 def authenticate_user():
     """
-    Authentication endpoint for services 
+    Authentication endpoint for services
 
             Parameters: through request:
                     umnetId (string): A string umnetId that is to be retrieved
@@ -196,7 +199,7 @@ def create_user():
         mongo.db.users.insert_one(user)
         response = send_post_request(BisonCoinUrls.blockchain_wallet_url.format(
             "addWallet"), {"umnetId": umnetId.strip()})
-        if not "success" in response.json():
+        if "success" not in response.json():
             raise Exception(response.json())
 
     except Exception as error:
@@ -248,7 +251,7 @@ def update_user():
             {"umnetId": umnetId}, {"$set": updated_user})
 
     except Exception as error:
-        raise DatabaseVerificationException(str(error)) from error 
+        raise DatabaseVerificationException(str(error)) from error
 
     return jsonify(
         success=True

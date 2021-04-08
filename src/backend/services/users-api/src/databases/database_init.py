@@ -1,6 +1,7 @@
 """database initialization module that contains the user schema"""
 from flask_pymongo import PyMongo
 
+
 def create_users_db(app, schema):
     """
         Creates the user db with the necessary setups and validators
@@ -16,7 +17,7 @@ def create_users_db(app, schema):
     db = mongo.db
 
     # Create the users collection if it's not already there
-    if "users" not in db.list_collection_names() :
+    if "users" not in db.list_collection_names():
         db.create_collection("users")
 
     # Make the username and public_key into unique indexes
