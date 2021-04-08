@@ -68,7 +68,7 @@ def test_check_wallet_exists_doesnt_exist(test_client):
     response = test_client.post(url, data =json.dumps(data), headers=headers)
 
     assert response.status_code == 200
-    assert b'{"valid":false}' in response.data
+    assert not response.json['valid']
 
 
 def test_check_wallet_exists_does_exist(test_client, mocker):
@@ -79,7 +79,7 @@ def test_check_wallet_exists_does_exist(test_client, mocker):
     response = test_client.post(url, data =json.dumps(data), headers=headers)
 
     assert response.status_code == 200
-    assert b'{"valid":true}' in response.data
+    assert response.json['valid']
 
 
 def test_add_block_incorrect_payload(test_client):
@@ -100,7 +100,7 @@ def test_add_block_success(test_client, mocker, test_block_payload):
     response = test_client.post(url, headers = headers, data = json.dumps(test_block_payload))
 
     assert response.status_code == 201
-    assert b'"success":true' in response.data
+    assert response.json['success']
 
 def test_get_chain(test_client, initial_chain, mocker):
     mocker.patch.object(src.routes.blockchain, "chain", initial_chain)

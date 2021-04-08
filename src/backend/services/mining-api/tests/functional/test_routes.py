@@ -58,7 +58,7 @@ def test_queueing(test_client, json_header):
     req_data = {"id": "test"}
     response = test_client.post(url, data=json.dumps(req_data), headers=json_header)
     assert response.status_code == 200
-    assert b"success" in response.data
+    assert response.json['success']
 
 
 def test_queueing_incorrect_payload(test_client, json_header):

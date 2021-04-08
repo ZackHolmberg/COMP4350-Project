@@ -157,8 +157,7 @@ def test_create_transaction_correct_payload(test_client, json_header, requests_m
     response = test_client.post(
         url, data=json.dumps(correct_payload), headers=json_header)
     
-    assert b"success" in response.data
-    assert b"true" in response.data
+    assert response.json['success']
     assert response.status_code == HttpCode.CREATED.value
     assert response.json["remaining_amount"] == 0
 

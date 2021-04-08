@@ -96,7 +96,7 @@ def test_get_wallet_amount_auth_failure(test_client, requests_mock_wallet):
     requests_mock_wallet.post(auth_url, json={"success": False})
 
     response = test_client.post(url, json={"umnetId" : "um", "password": "wrong_password"})
-    assert b'"success":false' in response.data
+    assert not response.json['success']
 
 def test_get_wallet_amount_auth_exception(test_client, requests_mock_wallet):
     url = '/amount'

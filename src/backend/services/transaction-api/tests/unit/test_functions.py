@@ -126,7 +126,7 @@ def test_send_to_mine_error(requests_mock):
     try:
         send_to_mine({})
         assert False
-    except BisonCoinException as b:
+    except BisonCoinException:
         assert True
     except Exception:
         assert False
