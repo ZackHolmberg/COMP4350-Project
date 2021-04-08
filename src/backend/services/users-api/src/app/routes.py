@@ -1,8 +1,13 @@
-from src.app import app, mongo, HttpCode
-from flask import request, jsonify
-from shared.exceptions import IncorrectCredentialsException, IncorrectPayloadException, UserNotFoundException, DatabaseVerificationException
+from flask import jsonify, request
+from shared.exceptions import (
+    DatabaseVerificationException,
+    IncorrectCredentialsException,
+    IncorrectPayloadException,
+    UserNotFoundException,
+)
 from shared.utils import BisonCoinUrls, send_post_request
-from werkzeug.security import generate_password_hash, check_password_hash
+from src.app import HttpCode, app, mongo
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 def get_user_from_db(umnetId, password):
@@ -14,52 +19,46 @@ def get_user_from_db(umnetId, password):
 
 @app.route("/")
 def index():
-    return jsonify(
-        success=True,
-        message="Hello Users of " + mongo.db.name
-    )
+    return jsonify(success=True, message="Hello Users of " + mongo.db.name)
 
 
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
     try:
-        umnetId = data['umnetId'].upper()
-        password = data['password']
+        umnetId = data["umnetId"].upper()
+        password = data["password"]
     except KeyError as e:
         raise IncorrectPayloadException()
 
     user = get_user_from_db(umnetId, password)
     data = {
-        'first_name': user['first_name'],
-        'last_name': user['last_name'],
-        'public_key': user['public_key']
+        "first_name": user["first_name"],
+        "last_name": user["last_name"],
+        "public_key": user["public_key"],
     }
 
     return jsonify(user=data)
 
 
-@app.route("/umnetId/<umnetId>", methods=['GET'])
+@app.route("/umnetId/<umnetId>", methods=["GET"])
 def get_user(umnetId):
-    user = mongo.db.users.find_one({'umnetId': umnetId.upper()})
+    user = mongo.db.users.find_one({"umnetId": umnetId.upper()})
 
     try:
         data = {
-            'first_name': user['first_name'],
-            'last_name': user['last_name'],
-            'umnetId': user['umnetId'],
-            'public_key': user['public_key']
+            "first_name": user["first_name"],
+            "last_name": user["last_name"],
+            "umnetId": user["umnetId"],
+            "public_key": user["public_key"],
         }
     except Exception as e:
         raise UserNotFoundException()
 
-    return jsonify(
-        success=True,
-        data=data
-    )
+    return jsonify(success=True, data=data)
 
 
-@app.route("/list", methods=['GET'])
+@app.route("/list", methods=["GET"])
 def get_all_users():
     userList = mongo.db.users.find()
 
@@ -68,20 +67,17 @@ def get_all_users():
 
     for usr in userList:
         user = {
-            'first_name': usr['first_name'],
-            'last_name': usr['last_name'],
-            'umnetId': usr['umnetId'],
-            'public_key': usr['public_key']
+            "first_name": usr["first_name"],
+            "last_name": usr["last_name"],
+            "umnetId": usr["umnetId"],
+            "public_key": usr["public_key"],
         }
         data.append(user)
 
-    return jsonify(
-        success=True,
-        data=data
-    )
+    return jsonify(success=True, data=data)
 
 
-@app.route('/authUser', methods=['POST'])
+@app.route("/authUser", methods=["POST"])
 def authenticate_user():
     data = request.get_json()
     try:
@@ -96,7 +92,7 @@ def authenticate_user():
     return jsonify(success=True), HttpCode.OK.value
 
 
-@app.route('/create', methods=['POST'])
+@app.route("/create", methods=["POST"])
 def create_user():
     data = request.get_json()
     try:
@@ -113,26 +109,31 @@ def create_user():
         "first_name": first_name,
         "last_name": last_name,
         "umnetId": umnetId,
-        "password": generate_password_hash(password, method='sha256'),
-        "public_key": public_key
+        "password": generate_password_hash(password, method="sha256"),
+        "public_key": public_key,
     }
 
     try:
         mongo.db.users.insert_one(user)
-        response = send_post_request(BisonCoinUrls.blockchain_wallet_url.format(
-            "addWallet"), {"umnetId": umnetId.strip()})
+        response = send_post_request(
+            BisonCoinUrls.blockchain_wallet_url.format("addWallet"),
+            {"umnetId": umnetId.strip()},
+        )
         if not "success" in response.json():
             raise Exception(response.json())
 
     except Exception as e:
         raise DatabaseVerificationException(str(e))
 
-    return jsonify(
-        success=True,
-    ), HttpCode.CREATED.value
+    return (
+        jsonify(
+            success=True,
+        ),
+        HttpCode.CREATED.value,
+    )
 
 
-@app.route('/update', methods=['POST'])
+@app.route("/update", methods=["POST"])
 def update_user():
     data = request.get_json()
     try:
@@ -146,24 +147,21 @@ def update_user():
 
     user = get_user_from_db(umnetId, curr_password)
 
-    new_password_hash = generate_password_hash(new_password, method='sha256')
+    new_password_hash = generate_password_hash(new_password, method="sha256")
     updated_user = {
         "first_name": first_name,
         "last_name": last_name,
         "password": new_password_hash,
-        "public_key": user["public_key"]
+        "public_key": user["public_key"],
     }
 
     try:
-        res = mongo.db.users.update_one(
-            {"umnetId": umnetId}, {"$set": updated_user})
+        res = mongo.db.users.update_one({"umnetId": umnetId}, {"$set": updated_user})
 
     except Exception as e:
         raise DatabaseVerificationException(str(e))
 
-    return jsonify(
-        success=True
-    ), HttpCode.OK.value
+    return jsonify(success=True), HttpCode.OK.value
 
 
 @app.errorhandler(DatabaseVerificationException)

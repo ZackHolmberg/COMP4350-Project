@@ -1,12 +1,15 @@
-from src.routes import authenticate_user
-import sys
 import os
-sys.path.append(os.path.abspath(os.path.join('../..', '')))
+import sys
+
+from src.routes import authenticate_user
+
+sys.path.append(os.path.abspath(os.path.join("../..", "")))
 
 from shared.exceptions import BisonCoinException
 from shared.utils import BisonCoinUrls
 
 auth_url = BisonCoinUrls.user_api_url.format("authUser")
+
 
 def test_authenticate_user_success(requests_mock):
     requests_mock.post(auth_url, json={"success": True})
@@ -16,6 +19,7 @@ def test_authenticate_user_success(requests_mock):
     except Exception:
         assert False
 
+
 def test_authenticate_user_failure(requests_mock):
     requests_mock.post(auth_url, json={"success": False})
     try:
@@ -23,6 +27,7 @@ def test_authenticate_user_failure(requests_mock):
         assert False
     except Exception as e:
         assert type(e) == BisonCoinException
+
 
 def test_authenticate_user_exception(requests_mock):
     requests_mock.post(auth_url, json={"error": "AUTH FAILURE"})
@@ -32,4 +37,4 @@ def test_authenticate_user_exception(requests_mock):
     except BisonCoinException as b:
         assert "AUTH FAILURE" in b.json_message["error"]
     except Exception:
-        assert False 
+        assert False

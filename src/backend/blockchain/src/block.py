@@ -1,8 +1,12 @@
 import json
+
 from .transaction import Transaction
 
+
 class Block:
-    def __init__(self, index, transaction, nonce, hash, prev_hash, miner_id, reward_amount):
+    def __init__(
+        self, index, transaction, nonce, hash, prev_hash, miner_id, reward_amount
+    ):
 
         self.index = int(index)
         self.transaction = transaction
@@ -13,9 +17,8 @@ class Block:
         self.reward_amount = int(reward_amount)
 
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-                          sort_keys=True)
-    
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True)
+
     def from_json(data):
         transaction_data = data["transaction"]
         transaction_obj = Transaction.from_json(transaction_data)
@@ -26,7 +29,5 @@ class Block:
             data["hash"],
             data["prev_hash"],
             data["miner_id"],
-            data["reward_amount"]
+            data["reward_amount"],
         )
-
-
