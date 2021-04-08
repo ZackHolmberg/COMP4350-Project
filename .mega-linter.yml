@@ -14,5 +14,7 @@ DISABLE_LINTERS:
 DISABLE:
   - COPYPASTE # Comment to disable checks of abusive copy-pastes
   - SPELL # Comment to disable checks of spelling mistakes # - SPELL # Uncomment to disable checks of spelling mistakes
+  
+PYTHON_FLAKE8_DISABLE_ERRORS: true
 SHOW_ELAPSED_TIME: true
 FILEIO_REPORTER: true
