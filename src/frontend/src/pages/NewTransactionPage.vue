@@ -49,7 +49,9 @@ import Button from "../components/Button.vue";
     Button,
   },
 })
+// NewTransactionPage is where users enter the UMNetID of their intended recipient and an amount to send in order to create a new transaction
 export default class NewTransactionPage extends Vue {
+  // Grabs the input entered into the two text inputs on the page and dispatches the send transaction action with the data passed as an object
   newTransaction() {
     const recipient = this.$refs.recipient.inputData();
     const amount = this.$refs.amount.inputData();

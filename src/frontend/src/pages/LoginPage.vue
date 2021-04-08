@@ -22,6 +22,7 @@
       type="default"
       @click.native="login"
     />
+
     <router-link
       class="create-account-link"
       to="/createAccount"
@@ -43,15 +44,15 @@ import Button from "../components/Button.vue";
     Button,
   },
 })
+
+// LoginPage is where users enter their credentials in order to log in to the application
 export default class LoginPage extends Vue {
+  // Retrieves the state's loading value from the store
   get loading() {
     return this.$store.getters.loading;
   }
 
-  get userError() {
-    return this.$store.getters.userError;
-  }
-
+  // Grabs the input entered into the two text inputs on the page and dispatches the login action with the data passed as an object
   login() {
     const umnetId = this.$refs.umnetId.inputData();
     const password = this.$refs.password.inputData();
@@ -61,6 +62,7 @@ export default class LoginPage extends Vue {
 }
 </script>
 
+// STYLING
 <style lang="scss">
 @import "../style.scss";
 
