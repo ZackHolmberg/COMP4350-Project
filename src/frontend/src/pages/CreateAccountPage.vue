@@ -61,7 +61,8 @@ import Button from "../components/Button.vue";
 
 // CreateAccountPage is where users enter information into in order to create an account
 export default class CreateAccountPage extends Vue {
-  // Grabs the input entered into the five text input's on the page and dispatches the create account action with the data passed as an object
+  // Grabs the input entered into the five text inputs on the page 
+  // and dispatches the create account action with the data passed as an object
   createAccount() {
     const umnetId = this.$refs.umnetId.inputData();
     const password = this.$refs.password.inputData();
