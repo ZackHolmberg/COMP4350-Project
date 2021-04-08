@@ -1,1 +1,1 @@
-(npm run serve&) && ./node_modules/.bin/cypress run
+(npm run serve &) && ./node_modules/.bin/cypress run

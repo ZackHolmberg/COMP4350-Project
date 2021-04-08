@@ -3,6 +3,7 @@
 Repo containing documents and code for our COMP 4350 Group Project.
 
 ![Github workflow](https://github.com/ZackHolmberg/COMP4350-Project/actions/workflows/python-app.yml/badge.svg)
+[![Mega-Linter](https://github.com/ZackHolmberg/COMP4350-Project/workflows/Mega-Linter/badge.svg?branch=master)](https://github.com/ZackHolmberg/COMP4350-Project/actions?query=workflow%3AMega-Linter+branch%3Amaster)
 
 ## Members
 

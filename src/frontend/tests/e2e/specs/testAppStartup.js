@@ -9,9 +9,7 @@ describe('App Startup', () => {
     it('Visits the app root url', () => {
       cy.visit('http://localhost:8080/')
       cy.get('[alt="BisonCoin logo"]')
-      .should('be.visible')    })
+        .should('be.visible')
+    })
   })
-  
 })
-
-

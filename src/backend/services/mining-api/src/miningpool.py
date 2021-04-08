@@ -1,24 +1,26 @@
+import queue
 import threading
 import time
-import queue
+
 
 class MiningPool:
     DEQUEUE_TIME = 2
 
-    def __init__ (self, receiver, ready_to_mine):
+    def __init__(self, receiver, ready_to_mine):
         self._pool = queue.Queue()
-        self._mining_thread = threading.Thread(target=self.send_to_mine, kwargs={'self': self, 'receiver': receiver})
+        self._mining_thread = threading.Thread(
+            target=self.send_to_mine, kwargs={"self": self, "receiver": receiver}
+        )
         self._mining_thread.daemon = True
 
         self._send = threading.Condition()
-        self._ready_to_mine = ready_to_mine     
+        self._ready_to_mine = ready_to_mine
 
     def add_to_pool(self, data):
         self._pool.put(data)
 
     def start_thread(self):
         self._mining_thread.start()
-
 
     def send_to_mine(*args, **kwargs):
         self = kwargs["self"]

@@ -2,6 +2,7 @@
   <div>
     <NavBar />
     <div class="wrapper">
+      <!-- The four components for the four core features of the application -->
       <Wallet class="wallet-component" />
       <CreateTransaction class="transaction-component" />
       <Mining class="mining-component" />
@@ -27,11 +28,16 @@ import TransactionHistory from "../components/TransactionHistory.vue";
     TransactionHistory,
   },
 })
+
+// The HomePage component is composed of the four core feature components and the navigation bar
 export default class HomePage extends Vue {
+  // Retrieves the user's umnetId from the store
   get umnetId() {
     return this.$store.getters.umnetId;
   }
 
+  // When the component is mounted, this method executes every 10 seconds. It dispatches an action which
+  // fetches the user's transaction history to see if a new transaction has been received
   mounted() {
     window.setInterval(() => {
       if (this.umnetId != "") {
@@ -83,8 +89,10 @@ export default class HomePage extends Vue {
 }
 
 .transaction-history-component {
-  position: absolute;
-  width: 100%;
   top: $home-page-history-top;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: $long-button-width;
 }
 </style>

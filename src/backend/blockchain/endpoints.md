@@ -2,7 +2,7 @@
 
 ## Get the current chain contents
 
-> GET http://localhost/blockchain/chain
+> GET <http://localhost/blockchain/chain>
 
 Required JSON:
 
@@ -39,7 +39,7 @@ Example return:
 
 ## Create a new wallet
 
-> POST http://localhost/blockchain/wallet/addWallet
+> POST <http://localhost/blockchain/wallet/addWallet>
 
 Required JSON:
 
@@ -119,10 +119,10 @@ Required JSON:
 Example return:
 
 ```json
-200
+201
 
 {
-  "valid": true
+  "success": true
 }
 ```
 

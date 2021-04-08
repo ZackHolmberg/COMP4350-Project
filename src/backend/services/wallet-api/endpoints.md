@@ -35,7 +35,7 @@ or
 
 ## Get the user's transaction history
 
-> `GET` <http://localhost/wallet/history/<umnetId>>
+> `GET` <<http://localhost/wallet/history/><umnetId>>
 
 Returns the transaction history of the umnetId passed in the query.
 
