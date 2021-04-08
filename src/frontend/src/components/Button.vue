@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link :to="dest" v-bind:class="getClass()" tag="button">
+    <router-link :to="dest" :class="getClass()" tag="button">
       <Circle2 class="loading" v-if="loading" />
       <span v-else>{{ label }}</span></router-link
     >
@@ -17,11 +17,19 @@ import Circle2 from "vue-loading-spinner/src/components/Circle2.vue";
   },
 })
 export default class Button extends Vue {
+  // Description on button
   @Prop() private label!: string;
+
+  // Destination of on-click
   @Prop({ default: "" }) private dest!: string;
+
+  // Size of button
   @Prop() private size!: string;
+
+  // Colour/type of button
   @Prop() private type!: string;
 
+  // Chooses button class based on props
   getClass() {
     if (this.size == "big" && this.type == "default") {
       return "big-button default";
@@ -44,6 +52,7 @@ export default class Button extends Vue {
     }
   }
 
+  // Checks if button should have loading symbol
   get loading() {
     return this.$store.getters.loading;
   }
@@ -52,6 +61,8 @@ export default class Button extends Vue {
 
 <style lang="scss">
 @import "../style.scss";
+
+// COLOUR
 .cancel {
   background-color: $cancel-button-background-color;
 }
@@ -63,7 +74,9 @@ export default class Button extends Vue {
 .other {
   background-color: $other-button-background-color;
 }
+// END -- COLOUR
 
+// SIZE
 .big-button {
   width: $big-button-width;
   height: $big-button-height;
@@ -118,6 +131,7 @@ export default class Button extends Vue {
   transform: $hover-transform-long-button;
   box-shadow: $box-shadow-hover;
 }
+// END -- SIZE
 
 .loading {
   margin-left: $loading-spinner-margin;

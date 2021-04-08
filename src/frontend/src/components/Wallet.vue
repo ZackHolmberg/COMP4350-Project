@@ -9,13 +9,19 @@ import { Component, Vue } from "vue-property-decorator";
 import { mapState } from "vuex";
 
 @Component({
+  // Watches number of transactions
   computed: mapState(["transactions"]),
+
+  // Checks if number of transactions has changed to determine if
+  // new transaction was received
   created() {
     this.unwatch = this.$store.watch(
       (state: any, getters: { transactions: any }) => getters.transactions,
       (newValue: any, oldValue: any) => {
         if (newValue.length > oldValue.length) {
           this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
+
+          // Displays toast if transaction was recieved
           const message = "New transaction received!";
           this.$store.dispatch("ACTION_DISPLAY_TOAST", {
             message: message,
@@ -25,11 +31,14 @@ import { mapState } from "vuex";
       }
     );
   },
+
+  // Stops watching number of transactions
   beforeDestroy() {
     this.unwatch();
   },
 })
 export default class Wallet extends Vue {
+  // Gets user wallet amount
   get walletAmount() {
     return this.$store.getters.walletAmount;
   }
