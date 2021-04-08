@@ -288,6 +288,7 @@ export default new Vuex.Store({
         )
     },
 
+    // Sends post request with user information to create new account for user
     ACTION_CREATE_ACCOUNT({ commit, dispatch }, values) {
       commit('MUTATION_SET_LOADING', true)
 
@@ -347,7 +348,8 @@ export default new Vuex.Store({
         )
     },
 
-    ACTION_DISPLAY_TOAST({ getters }, values) {
+    // Displays a toast message of any type
+    ACTION_DISPLAY_TOAST({}, values) {
       const message: string = values.message.toString()
       const type: string = values.type
 
@@ -361,6 +363,7 @@ export default new Vuex.Store({
       })
     },
 
+    // Sends a get request to fetch user transaction history 
     ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
       axios
         .get('http://localhost/wallet/history/' + getters.umnetId)
@@ -377,7 +380,9 @@ export default new Vuex.Store({
         )
     },
 
+    // Resets state of store and logs user out of account
     ACTION_LOGOUT({ commit, dispatch }) {
+      // Reset state
       commit('MUTATION_SET_FIRST_NAME', '')
       commit('MUTATION_SET_LAST_NAME', '')
       commit('MUTATION_SET_UMNETID', '')
@@ -388,8 +393,11 @@ export default new Vuex.Store({
       commit('MUTATION_SET_FIND_PROOF', false)
       commit('MUTATION_SET_TRANSACTION_HISTORY', [])
 
+      // Displays toast if logout was successful
       const message = 'Logout successful'
       dispatch('ACTION_DISPLAY_TOAST', { message: message, type: 'success' })
+
+      // Directs user to login page
       router.push('/')
     }
   }
