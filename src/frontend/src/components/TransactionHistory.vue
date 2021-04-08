@@ -21,6 +21,7 @@ import Button from "./Button.vue";
   },
 })
 export default class TransactionHistory extends Vue {
+  // Gets initial state of transaction history
   mounted() {
     this.$store.dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
   }

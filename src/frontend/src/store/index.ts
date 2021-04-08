@@ -14,6 +14,7 @@ import * as Cookies from 'js-cookie'
 //  TRANSACTION SIGNING
 // ---------------------------------------------------------------
 
+// Generates a pair of RSA keys, a private key and public key
 const genKeyPair = (): string[] => {
   const keyPair = rs.KEYUTIL.generateKeypair('RSA', 1024)
   return [
@@ -22,12 +23,14 @@ const genKeyPair = (): string[] => {
   ]
 }
 
+// Genereates a sha256 hash using the passed transaction's properties
 const getTransactionId = (transaction: Transaction): string => {
   return sha256(
     transaction.to_address + transaction.from_address + transaction.amount + transaction.timestamp
   ).toString()
 }
 
+// Genereates a signature using the passed transaction ID and privateKey in order to validate a transaction
 const sign = (transaction: Transaction, privateKey: string): string => {
   const dataToSign = transaction.id
   const sig = new rs.KJUR.crypto.Signature({ alg: 'SHA256withRSA' })
@@ -58,6 +61,9 @@ export default new Vuex.Store({
       setState: (key, state) => Cookies.set(key, state, { expires: 3, secure: true })
     })
   ],
+  // ---------------------------------------------------------------
+  //  STATE
+  // ---------------------------------------------------------------
   state: {
     loading: false,
     walletAmount: 0,
@@ -70,6 +76,9 @@ export default new Vuex.Store({
     findProof: false,
     transactions: []
   },
+  // ---------------------------------------------------------------
+  //  GETTERS
+  // ---------------------------------------------------------------
   getters: {
     loading: (state) => {
       return state.loading
@@ -102,6 +111,9 @@ export default new Vuex.Store({
       return state.transactions
     }
   },
+  // ---------------------------------------------------------------
+  //  MUTATIONS
+  // ---------------------------------------------------------------
   mutations: {
     MUTATION_SET_LOADING(state, loading) {
       state.loading = loading
@@ -137,24 +149,32 @@ export default new Vuex.Store({
       state.transactions = transactions
     }
   },
+  // ---------------------------------------------------------------
+  //  ACTIONS
+  // ---------------------------------------------------------------
   actions: {
+
+    // Sends a POST request with the passed data in order to update the user's account information
     ACTION_UPDATE_USER({ commit, getters, dispatch }, values) {
       commit('MUTATION_SET_LOADING', true)
 
+      // Set the values to the new values only if they are non-empty. They could be empty if the user didn't change the field
       const password = values.password ? values.password : getters.password
       const firstName = values.firstName ? values.firstName : getters.firstName
       const lastName = values.lastName ? values.lastName : getters.lastName
 
+      // Send the update request
       axios
         .post('http://localhost/users/update', {
-          first_name: firstName,
-          last_name: lastName,
-          umnetId: getters.umnetId,
-          curr_password: getters.password,
-          new_password: password
+          "first_name": firstName,
+          "last_name": lastName,
+          "umnetId": getters.umnetId,
+          "curr_password": getters.password,
+          "new_password": password
         })
         .then(
           () => {
+            //Update state variables 
             commit('MUTATION_SET_LOADING', false)
             commit('MUTATION_SET_FIRST_NAME', firstName)
             commit('MUTATION_SET_LAST_NAME', lastName)
@@ -162,7 +182,7 @@ export default new Vuex.Store({
           },
           (err) => {
             commit('MUTATION_SET_LOADING', false)
-
+            // Display an error toast if the request was unsuccessful
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
@@ -171,8 +191,10 @@ export default new Vuex.Store({
         )
     },
 
+    // Send a POST request with the user's credentials in order to retreive the user's current wallet amount
     ACTION_FETCH_WALLET_AMOUNT({ commit, getters, dispatch }) {
       commit('MUTATION_SET_LOADING', true)
+      // Send the request
       axios
         .post('http://localhost/wallet/amount', {
           umnetId: getters.umnetId,
@@ -180,10 +202,12 @@ export default new Vuex.Store({
         })
         .then(
           (response) => {
+            // Update the state's value with the new amount
             commit('MUTATION_SET_WALLET_AMOUNT', response.data.amount)
             commit('MUTATION_SET_LOADING', false)
           },
           (err) => {
+            // Display an error toast if the request was unsuccessful
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
@@ -192,6 +216,8 @@ export default new Vuex.Store({
           }
         )
     },
+
+    // Send a POST request with passed values in order to send a new transaction to the intended recipient
     ACTION_SEND_TRANSACTION({ getters, commit, dispatch }, values) {
       const recipient = values.recipient
       const amount = values.amount
@@ -199,12 +225,12 @@ export default new Vuex.Store({
       const utcMilllisecondsSinceEpoch = now.getTime() + (now.getTimezoneOffset() * 60 * 1000)
       const utcSecondsSinceEpoch = Math.round(utcMilllisecondsSinceEpoch / 1000)
       const transaction: Transaction = {
-        to_address: recipient,
-        from_address: getters.umnetId,
-        amount: parseFloat(amount),
-        id: '',
-        signature: '',
-        timestamp: utcSecondsSinceEpoch
+        "to_address": recipient,
+        "from_address": getters.umnetId,
+        "amount": parseFloat(amount),
+        "id": '',
+        "signature": '',
+        "timestamp": utcSecondsSinceEpoch
       }
 
       transaction.id = getTransactionId(transaction)
@@ -212,16 +238,18 @@ export default new Vuex.Store({
       transaction.signature = sign(transaction, getters.privateKey)
 
       commit('MUTATION_SET_LOADING', true)
+      // Send the request
       axios
         .post('http://localhost/transactions/create', {
-          from: transaction.from_address,
-          to: transaction.to_address,
-          amount: transaction.amount,
-          timestamp: transaction.timestamp,
-          id: transaction.id,
-          signature: transaction.signature
+          "from": transaction.from_address,
+          "to": transaction.to_address,
+          "amount": transaction.amount,
+          "timestamp": transaction.timestamp,
+          "id": transaction.id,
+          "signature": transaction.signature
         })
         .then((response) => {
+          // Navigate to home page
           router.push('/home')
           const message = 'Transaction sent successfully!'
           dispatch('ACTION_DISPLAY_TOAST', { message: message, type: 'success' })
@@ -230,7 +258,7 @@ export default new Vuex.Store({
         },
           (err) => {
             commit('MUTATION_SET_LOADING', false)
-
+            // Display an error toast if the request was unsuccessful
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
@@ -238,6 +266,7 @@ export default new Vuex.Store({
           })
     },
 
+    // Send a POST request with passed values in order to validate the user's entered credentials for a login attempt
     ACTION_LOGIN({ commit, dispatch }, values) {
       const umnetId = values.umnetId
       const password = values.password
@@ -253,6 +282,7 @@ export default new Vuex.Store({
 
       commit('MUTATION_SET_LOADING', true)
 
+      // Send the request
       axios
         .post('http://localhost/users/login', {
           umnetId: umnetId,
@@ -267,6 +297,7 @@ export default new Vuex.Store({
             commit('MUTATION_SET_UMNETID', umnetId)
             commit('MUTATION_SET_PASSWORD', password)
 
+            // Set the user's private key 
             const privateKey = typeof window !== 'undefined' ? localStorage.getItem(umnetId) : null
 
             commit('MUTATION_SET_PRIVATE_KEY', privateKey)
@@ -279,7 +310,7 @@ export default new Vuex.Store({
           },
           (err) => {
             commit('MUTATION_SET_LOADING', false)
-
+            // Display an error toast if the request was unsuccessful
             const message = err.response && err.response.data.error
               ? err.response.data.error
               : ERROR_STRING
@@ -288,6 +319,7 @@ export default new Vuex.Store({
         )
     },
 
+    // Sends post request with user information to create new account for user
     ACTION_CREATE_ACCOUNT({ commit, dispatch }, values) {
       commit('MUTATION_SET_LOADING', true)
 
@@ -322,11 +354,11 @@ export default new Vuex.Store({
 
       axios
         .post('http://localhost/users/create', {
-          first_name: firstName,
-          last_name: lastName,
-          umnetId: umnetId,
-          public_key: publicKey,
-          password: password
+          "first_name": firstName,
+          "last_name": lastName,
+          "umnetId": umnetId,
+          "public_key": publicKey,
+          "password": password
         })
         .then(
           () => {
@@ -347,6 +379,7 @@ export default new Vuex.Store({
         )
     },
 
+    // Displays a toast message of any type
     ACTION_DISPLAY_TOAST({ getters }, values) {
       const message: string = values.message.toString()
       const type: string = values.type
@@ -361,6 +394,7 @@ export default new Vuex.Store({
       })
     },
 
+    // Sends a get request to fetch user transaction history 
     ACTION_FETCH_TRANSACTION_HISTORY({ commit, getters, dispatch }) {
       axios
         .get('http://localhost/wallet/history/' + getters.umnetId)
@@ -377,7 +411,9 @@ export default new Vuex.Store({
         )
     },
 
+    // Resets state of store and logs user out of account
     ACTION_LOGOUT({ commit, dispatch }) {
+      // Reset state
       commit('MUTATION_SET_FIRST_NAME', '')
       commit('MUTATION_SET_LAST_NAME', '')
       commit('MUTATION_SET_UMNETID', '')
@@ -388,8 +424,11 @@ export default new Vuex.Store({
       commit('MUTATION_SET_FIND_PROOF', false)
       commit('MUTATION_SET_TRANSACTION_HISTORY', [])
 
+      // Displays toast if logout was successful
       const message = 'Logout successful'
       dispatch('ACTION_DISPLAY_TOAST', { message: message, type: 'success' })
+
+      // Directs user to login page
       router.push('/')
     }
   }

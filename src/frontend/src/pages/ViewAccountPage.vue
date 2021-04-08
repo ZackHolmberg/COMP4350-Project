@@ -2,6 +2,7 @@
   <div class="view-account">
     <h1 class="account-header">Account</h1>
     <div class="account-wrapper">
+      <!-- Inputs -->
       <p class="label-text">First Name:</p>
       <TextInput
         id="account-first-name"
@@ -37,7 +38,8 @@
         :edit="editing"
         ref="userPassword"
       />
-
+      <!-- End -- Inputs -->
+      <!-- Buttons -->
       <Button
         id="account-cancel"
         class="account-cancel-button"
@@ -66,6 +68,7 @@
         type="default"
         @click.native="saveChanges"
       />
+      <!-- End -- Buttons -->
     </div>
   </div>
 </template>
@@ -81,6 +84,8 @@ import TextInput from "../components/TextInput.vue";
     TextInput,
   },
 })
+// ViewAccountPage displays the user's account information, include their password, UMNetID, and name. 
+// It also enables the user to edit their account information.
 export default class ViewAccountPage extends Vue {
   data() {
     return {
@@ -88,26 +93,31 @@ export default class ViewAccountPage extends Vue {
     }
   }
 
+  // Retrieves the user's password from the store
   get userPassword() {
     return this.$store.getters.password;
   }
-
+  // Retrieves the user's UMNetID from the store
   get userUMnetId() {
     return this.$store.getters.umnetId;
   }
-
+  // Retrieves the user's first name from the store
   get userFirstName() {
     return this.$store.getters.firstName;
   }
 
+  // Retrieves the user's last name from the store
   get userLastName() {
     return this.$store.getters.lastName;
   }
 
+  // Sets the component's editing variable to the passed value
   setEditing(editing: boolean) {
     this.$data.editing = editing;
   }
 
+  // Grabs the input entered into the three text inputs on the page, when the user is editing their information, 
+  // and dispatches the update action with the data passed as an object in order to update the user's information.
   saveChanges() {
     const password = this.$refs.userPassword.inputData();
     const firstName = this.$refs.userFirstName.inputData();

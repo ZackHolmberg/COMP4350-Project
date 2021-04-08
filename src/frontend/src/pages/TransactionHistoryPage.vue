@@ -32,7 +32,9 @@ import Button from "../components/Button.vue";
     Button,
   },
 })
+// TransactionHistoryPage displays a list of the user's transactions, including transactions/rewards they have received as well as transaction they have sent
 export default class TransactionHistoryPage extends Vue {
+  // Retrieves the user's list of transactions from the store
   get transactions() {
     return this.$store.getters.transactions;
   }

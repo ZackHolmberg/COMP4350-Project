@@ -33,7 +33,7 @@ export default class App extends Vue {
       return sha256(toHash);
   }
 
-  proofOfWork(transaction: Transaction): any  {
+  proofOfWork(transaction: Transaction): object  {
       let nonce = -1;
       let hash = "";
       while (!this.validHash(hash) && this.findProof) {
@@ -56,8 +56,8 @@ export default class App extends Vue {
         this.$store.commit('MUTATION_SET_FIND_PROOF', true);
 
         const transaction: Transaction = {
-          "to": args[0].to,
-          "from": args[0].from,
+          "to_address": args[0].to,
+          "from_address": args[0].from,
           "amount": parseFloat(args[0].amount),
           "timestamp": parseInt(args[0].timestamp),
           "id": args[0].id,

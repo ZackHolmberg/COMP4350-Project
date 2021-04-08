@@ -1,11 +1,14 @@
 <template>
   <div class="nav-bar">
+    <!-- Bisoncoin logo -->
     <img
       id="nav-logo"
       class="nav-logo"
       alt="BisonCoin logo"
       src="../assets/BisonCoin.png"
     />
+    <!-- End -- Bisoncoin logo -->
+    <!-- Account -->
     <router-link to="/account">
       <img
         id="nav-account"
@@ -14,6 +17,8 @@
         src="../assets/accountIcon.png"
       />
     </router-link>
+    <!-- End -- Account -->
+    <!-- Logout -->
     <div @click="logout">
       <img
         id="nav-logout"
@@ -22,6 +27,7 @@
         src="../assets/logoutIcon.png"
       />
     </div>
+    <!-- End -- Logout -->
   </div>
 </template>
 
@@ -30,6 +36,7 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class NavBar extends Vue {
+  // Dispatches logout action if user clicks logout symbol
   logout() {
     this.$store.dispatch("ACTION_LOGOUT");
   }
