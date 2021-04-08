@@ -17,7 +17,7 @@ import Circle2 from "vue-loading-spinner/src/components/Circle2.vue";
   },
 })
 export default class Button extends Vue {
-  // Description on button
+  // Label on button
   @Prop() private label!: string;
 
   // Destination of on-click
