@@ -4,14 +4,14 @@ from src.blockchain import Blockchain
 import time
 import sys
 import os
+import pytest
+from src.exceptions import WalletException
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/..")
-
 
 """
 Transaction Tests
 """
-
 
 def test_transaction_constructor():
     test_transaction = Transaction(
@@ -122,51 +122,103 @@ def test_from_block_json():
 """
 Blockchain Tests
 """
+seed = Blockchain.SEED_AMOUNT
 
+@pytest.fixture(scope='module')
+def test_wallet_id():
+    return "umnetId"
+
+@pytest.fixture(scope='function')
+def test_blockchain(test_wallet_id):
+    test_blockchain = Blockchain()
+    test_blockchain.add_wallet(test_wallet_id)
+    return test_blockchain
 
 def test_blockchain_constructor():
     test_temp_blockchain = Blockchain()
     assert len(test_temp_blockchain.chain) == 1
 
-
-test_blockchain = Blockchain()
-
-
-def test_get_last_block():
+def test_get_last_block(test_blockchain):
     assert test_blockchain.get_last_block().index == 0
 
+def test_add_wallet(test_blockchain, test_wallet_id):
+    test_blockchain.add_wallet(test_wallet_id + "test")
+    assert test_blockchain.wallets[test_wallet_id + "test"] == seed
 
-test_wallet_id = "umnetId"
+def test_add_wallet_existing_id(test_blockchain, test_wallet_id):
+    try:
+        test_blockchain.add_wallet(test_wallet_id)
+        assert False
+    except WalletException:
+        assert True
+    except Exception:
+        assert False
 
-
-def test_add_wallet():
-    test_blockchain.add_wallet(test_wallet_id)
-    assert test_blockchain.wallets[test_wallet_id] == 10
-
-
-def test_add_to_wallet():
+def test_add_to_wallet(test_blockchain, test_wallet_id):
     test_blockchain.add_to_wallet(test_wallet_id, 5)
-    assert test_blockchain.wallets[test_wallet_id] == 15
+    assert test_blockchain.wallets[test_wallet_id] == seed + 5
 
+def test_add_to_wallet_failure(test_blockchain, test_wallet_id):
+    try:
+        test_blockchain.add_to_wallet(test_wallet_id, -5)
+        assert False
+    except WalletException:
+        assert True
+    except Exception:
+        assert False
 
-def test_subtract_from_wallet():
+def test_subtract_from_wallet(test_blockchain, test_wallet_id):
     test_blockchain.subtract_from_wallet(test_wallet_id, 4)
-    assert test_blockchain.wallets[test_wallet_id] == 11
+    assert test_blockchain.wallets[test_wallet_id] == seed - 4
 
+def test_subtract_from_wallet_failure(test_blockchain, test_wallet_id):
+    try:
+        test_blockchain.subtract_from_wallet(test_wallet_id, -5)
+        assert False
+    except WalletException:
+        assert True
+    except Exception:
+        assert False
 
-def test_get_wallet_amount():
-    assert test_blockchain.get_wallet_amount(test_wallet_id) == 11
+def test_get_wallet_amount(test_blockchain, test_wallet_id):
+    assert test_blockchain.get_wallet_amount(test_wallet_id) == seed
 
+def test_get_wallet_amount_failure(test_blockchain, test_wallet_id):
+    try:
+        test_blockchain.get_wallet_amount(test_wallet_id + "test")
+        assert False
+    except Exception:
+        assert True
 
-def test_verify_wallet_amount_fail():
+def test_verify_wallet_amount_fail(test_blockchain, test_wallet_id):
     assert not test_blockchain.verify_wallet_amount(test_wallet_id, 10000)
 
 
-def test_verify_wallet_amount_success():
-    assert test_blockchain.verify_wallet_amount(test_wallet_id, 1)
+def test_verify_wallet_amount_success(test_blockchain, test_wallet_id):
+    assert test_blockchain.verify_wallet_amount(test_wallet_id, seed)
 
+def test_check_id_present(test_blockchain, test_wallet_id):
+    try:
+        test_blockchain.check_id_present(test_wallet_id)
+        assert True
+    except Exception:
+        assert False
 
-def test_build_wallet_from_peer_response():
+def test_check_id_present_fail(test_blockchain, test_wallet_id):
+    try:
+        test_blockchain.check_id_present(test_wallet_id + "test")
+        assert False
+    except Exception:
+        assert True
+
+def test_check_id_present_null(test_blockchain, test_wallet_id):
+    try:
+        test_blockchain.check_id_present(None)
+        assert False
+    except Exception:
+        assert True
+
+def test_build_wallet_from_peer_response(test_blockchain):
     peer_response = {
         "length": 2,
         "wallets": [
@@ -180,7 +232,7 @@ def test_build_wallet_from_peer_response():
     assert test_blockchain.verify_wallet_amount("KK2", 10.99)
 
 
-def test_build_wallet_from_peer_response_failure():
+def test_build_wallet_from_peer_response_failure(test_blockchain):
     peer_response = {
         "length": 2,
         "wallets": [
@@ -192,14 +244,13 @@ def test_build_wallet_from_peer_response_failure():
         test_blockchain.build_wallets_from_peer_response(peer_response)
         assert False
     except Exception:
-        assert len(test_blockchain.wallets) == 2
-        assert test_blockchain.verify_wallet_amount("KK1", 10)
-        assert test_blockchain.verify_wallet_amount("KK2", 10.99)
+        assert len(test_blockchain.wallets) == 1
 
-def test_build_chain_from_peer_response_failure():
+def test_build_chain_from_peer_response_failure(test_blockchain):
     peer_response = {
     "chain": [
-        "{\"hash\": \"1234\", \"miner_id\": \"miner_id_new\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}"
+        "{\"hash\": \"1234\", \"miner_id\": \"miner_id_new\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": \
+             {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}"
     ],
     "length": 1
     }
@@ -216,10 +267,11 @@ def test_build_chain_from_peer_response_failure():
         assert test_blockchain.chain[0].transaction.to_address == ""
         
 
-def test_build_chain_from_peer_response():
+def test_build_chain_from_peer_response(test_blockchain):
     peer_response = {
     "chain": [
-        "{\"hash\": \"1234\", \"index\": 0, \"miner_id\": \"miner_id_new\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}"
+        "{\"hash\": \"1234\", \"index\": 0, \"miner_id\": \"miner_id_new\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": \
+            {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}"
     ],
     "length": 1
     }
@@ -231,12 +283,15 @@ def test_build_chain_from_peer_response():
     assert test_blockchain.chain[0].transaction.from_address == "from"
     assert test_blockchain.chain[0].transaction.to_address == "to"
 
-def test_build_chain_multiple_chain():
+def test_build_chain_multiple_chain(test_blockchain):
     peer_response = {
     "chain": [
-        "{\"hash\": \"1234\", \"index\": 0, \"miner_id\": \"miner_id_new\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}",
-        "{\"hash\": \"99\", \"index\": 1, \"miner_id\": \"miner_id_1\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}",
-        "{\"hash\": \"4567\", \"index\": 2, \"miner_id\": \"miner_id_2\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}"
+        "{\"hash\": \"1234\", \"index\": 0, \"miner_id\": \"miner_id_new\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": \
+            {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}",
+        "{\"hash\": \"99\", \"index\": 1, \"miner_id\": \"miner_id_1\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": \
+            {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}",
+        "{\"hash\": \"4567\", \"index\": 2, \"miner_id\": \"miner_id_2\", \"nonce\": 123, \"prev_hash\": \"0\", \"reward_amount\": 0, \"transaction\": \
+            {\"amount\": 0, \"from_address\": \"from\", \"id\": \"\", \"signature\": \"\", \"timestamp\": 0, \"to_address\": \"to\"}}"
     ],
     "length": 1
     }

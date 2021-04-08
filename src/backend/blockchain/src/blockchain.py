@@ -1,4 +1,3 @@
-import time
 from .block import Block
 from .transaction import Transaction
 from .exceptions import WalletException
@@ -8,6 +7,7 @@ class Blockchain:
 
     difficulty = 4
     COINBASE_AMOUNT = 10
+    SEED_AMOUNT = 10
 
     def __init__(self):
         self.chain = []
@@ -22,16 +22,20 @@ class Blockchain:
         if id in self.wallets:
             raise WalletException("wallet ID already exists")
         else:
-            self.wallets[id] = 10
+            self.wallets[id] = self.SEED_AMOUNT
             return True
 
     def add_to_wallet(self, id, amount):
         self.check_id_present(id)
+        if amount < 0:
+            raise WalletException("Cannot add a negative amount")
         self.wallets[id] += amount
         return self.wallets[id]
 
     def subtract_from_wallet(self, id, amount):
         self.check_id_present(id)
+        if amount < 0:
+            raise WalletException("Cannot subtract a negative amount")
         self.wallets[id] -= amount
         return self.wallets[id]
 

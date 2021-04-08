@@ -34,7 +34,7 @@ def query_peers(peers):
 
 def try_replicate(route, request_type, request):
     for peer in peers:
-        full_route = peer+route
+        full_route = peer + route
         try:
             response = request_handlers[request_type](full_route,request)
         except Exception as error:
@@ -89,7 +89,7 @@ def proof():
         proof = data["proof"]
         nonce = data["nonce"]
 
-    except KeyError as e:
+    except KeyError:
         raise IncorrectPayloadException()
 
     new_block = Block(
@@ -120,7 +120,7 @@ def check_wallet_exists():
         exists = wallet_id in blockchain.wallets
         return jsonify(valid=exists), HttpCode.OK.value
 
-    except KeyError as e:
+    except KeyError:
         raise IncorrectPayloadException()
 
 
@@ -134,7 +134,7 @@ def add_wallet():
         try_replicate('/wallet/addWallet', 'POST', data)
         return jsonify(success=success), HttpCode.CREATED.value
 
-    except KeyError as e:
+    except KeyError:
         raise IncorrectPayloadException()
 
 
@@ -146,7 +146,7 @@ def create_transaction():
         amount = data["amount"]
         receiver = data["to"].upper()
 
-    except KeyError as e:
+    except KeyError:
         raise IncorrectPayloadException()
 
     valid = blockchain.verify_wallet_amount(wallet_id, amount)
@@ -168,7 +168,7 @@ def get_wallet_amount():
         amount = blockchain.get_wallet_amount(wallet_id)
         return jsonify(amount=amount), HttpCode.OK.value
 
-    except KeyError as e:
+    except KeyError:
         raise IncorrectPayloadException()
 
 @app.errorhandler(WalletException)
@@ -176,5 +176,5 @@ def handle_wallet_exception(e):
     return jsonify(error=e.message), HttpCode.BAD_REQUEST.value
 
 @app.errorhandler(IncorrectPayloadException)
-def handle_wallet_exception(e):
+def handle_payload_exception(e):
     return jsonify(error=e.json_message), e.return_code
