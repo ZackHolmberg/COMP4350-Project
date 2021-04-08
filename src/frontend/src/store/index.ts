@@ -380,7 +380,7 @@ export default new Vuex.Store({
     },
 
     // Displays a toast message of any type
-    ACTION_DISPLAY_TOAST({}, values) {
+    ACTION_DISPLAY_TOAST({ getters }, values) {
       const message: string = values.message.toString()
       const type: string = values.type
 
