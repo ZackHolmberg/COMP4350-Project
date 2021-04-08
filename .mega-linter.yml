@@ -11,8 +11,12 @@ DISABLE_LINTERS:
   - TYPESCRIPT_STANDARD
   - BASH_SHELLCHECK
   - BASH_EXEC
+  - MARKDOWN_MARKDOWN_LINK_CHECK
 DISABLE:
   - COPYPASTE # Comment to disable checks of abusive copy-pastes
   - SPELL # Comment to disable checks of spelling mistakes # - SPELL # Uncomment to disable checks of spelling mistakes
+  
+PYTHON_FLAKE8_DISABLE_ERRORS: true
+PYTHON_PYLINT_DISABLE_ERRORS: true
 SHOW_ELAPSED_TIME: true
 FILEIO_REPORTER: true
