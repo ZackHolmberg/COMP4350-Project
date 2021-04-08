@@ -15,6 +15,10 @@ headers = {
     'Accept': mimetype
 }
 
+NO_WALLET = "no corresponding wallet for id"
+NOT_ENOUGH_COINS = "Not Enough Coins to create the transaction"
+WALLET_EXISTS = "wallet ID already exists"
+
 @pytest.fixture(scope='module')
 def test_client():
     test_client = app.test_client()
@@ -144,7 +148,7 @@ def test_add_wallet(test_client):
     response = test_client.post(url, data=json.dumps(data), headers=headers)
 
     assert response.status_code == 400
-    assert response.json['error'] == "wallet ID already exists"
+    assert response.json['error'] == WALLET_EXISTS
 
 def test_add_wallet_incorrect_payload(test_client):
     url = '/wallet/addWallet'
@@ -162,7 +166,7 @@ def test_sender_notpresent(test_client, test_transaction_payload):
     response = test_client.post(url, data=json.dumps(test_transaction_payload), headers=headers)
 
     assert response.status_code == 400
-    assert b'no corresponding wallet for id' in response.data
+    assert NO_WALLET.encode() in response.data
 
 def test_receiver_notpresent(test_client, test_transaction_payload, mocker):
     mocker.patch('src.routes.blockchain.subtract_from_wallet', return_value=True)
@@ -171,7 +175,7 @@ def test_receiver_notpresent(test_client, test_transaction_payload, mocker):
     response = test_client.post(url, data=json.dumps(test_transaction_payload), headers=headers)
 
     assert response.status_code == 400
-    assert b'no corresponding wallet for id' in response.data
+    assert NO_WALLET.encode() in response.data
 
 
 def test_verify_amount(test_client, mocker):
@@ -195,7 +199,7 @@ def test_verify_amount(test_client, mocker):
     response = test_client.post(url, data=json.dumps(data2), headers=headers)
 
     assert response.status_code == 400
-    assert b"Not Enough Coins to create the transaction" in response.data
+    assert NOT_ENOUGH_COINS.encode() in response.data
 
 
 def test_valid_transaction_flow(test_client):
@@ -248,7 +252,7 @@ def test_get_wallet_amount(test_client):
     response = test_client.get(url, data=json.dumps(data2), headers=headers)
 
     assert response.status_code == 400
-    assert response.json['error'] == "no corresponding wallet for id"
+    assert response.json['error'] == NO_WALLET
 
 def test_wallet_all(test_client, mocker):
     test_wallets = {"FAKE": 10, "ANOTHER": 20.5}
