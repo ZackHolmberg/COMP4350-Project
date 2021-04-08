@@ -28,21 +28,20 @@ import { ToggleButton } from "vue-js-toggle-button";
 export default class Mining extends Vue {
   data() {
     return {
+      // State of mining for user
       miningValue: false,
     };
   }
 
+  // Sets initial state of mining
   mounted() {
     this.$data.miningValue = this.$store.getters.mining;
   }
 
+  // If user toggles mining, changes mining state in store
   onChange() {
     this.$store.commit("MUTATION_SET_MINING", this.$data.miningValue);
     this.$store.commit("MUTATION_SET_FIND_PROOF", this.$data.miningValue);
   }
 }
 </script>
-
-<style lang="scss">
-@import "../style.scss";
-</style>
