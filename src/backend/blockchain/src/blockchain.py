@@ -1,7 +1,9 @@
-from .block import Block
-from .transaction import Transaction
-from .exceptions import WalletException
 import json
+
+from .block import Block
+from .exceptions import WalletException
+from .transaction import Transaction
+
 
 class Blockchain:
 
@@ -56,8 +58,9 @@ class Blockchain:
         empty_transaction = Transaction("", "", 0, 0, "", "")
 
         # create the genesis block
-        genesis_block = Block(0, empty_transaction, 0,
-                              "0"*self.difficulty, "0", "miner_id", 0)
+        genesis_block = Block(
+            0, empty_transaction, 0, "0" * self.difficulty, "0", "miner_id", 0
+        )
 
         # append it to the chain
         self.chain.append(genesis_block)
@@ -71,18 +74,19 @@ class Blockchain:
         for block in chain:
             block = json.loads(block)
             new_chain.append(Block.from_json(block))
-        
+
         if new_chain:
             self.chain = new_chain
-        
+
     def build_wallets_from_peer_response(self, data):
         wallets = data["wallets"]
         new_wallets = {}
         for wallet in wallets:
             wallet = json.loads(wallet)
             new_wallets[wallet["umnetId"]] = wallet["amount"]
-        
+
         if new_wallets:
             self.wallets = new_wallets
+
 
 blockchain = Blockchain()

@@ -13,7 +13,7 @@ Transaction Object = {
 
 ## Queue a new transaction for mining
 
-> GET http://localhost/mining/queue
+> GET <http://localhost/mining/queue>
 
 Required JSON:
 
