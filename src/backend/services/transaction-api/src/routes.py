@@ -50,21 +50,15 @@ def create_wallet_transaction(address, amount, receiver, timestamp):
     response = send_post_request(
         blockchain_wallet_url.format("createTransaction"), req_body)
 
-    if response.status_code is not HttpCode.OK.value:
-        if "error" not in response.json():
-            raise BisonCoinException(
-                FailureReturnString.TRANSACTION_CREATION_FAILURE.value, response.status_code)
-        else:
-            raise BisonCoinException(
-                response.json()["error"], response.status_code)
+    if response.status_code is not HttpCode.CREATED.value:        
+        raise BisonCoinException(response.json(), response.status_code)
 
 
 def send_to_mine(body):
     response = send_post_request(mining_url.format("queue"), body)
 
     if response.status_code is not HttpCode.OK.value:
-        raise BisonCoinException(
-            json_message=response.json(), return_code=response.status_code)
+        raise BisonCoinException(response.json(), response.status_code)
 
 
 def get_remaining_wallet_amount(address, amount):
@@ -84,8 +78,8 @@ def verify_receiver(address):
         valid = response.json()["valid"]
         if not valid:
             raise ReceiverException()
-    except KeyError as e:
-        raise BisonCoinException(json_message=response.json(), return_code=response.status_code)
+    except KeyError:
+        raise BisonCoinException(response.json(), response.status_code)
 
 def retrieve_public_key (umnetId):
     response = send_get_request( user_api_url.format("umnetId/"+ umnetId.upper()), None)
@@ -93,7 +87,7 @@ def retrieve_public_key (umnetId):
         data = response.json()
         public_key = data["data"]["public_key"]
         return public_key
-    except KeyError as e:
+    except KeyError:
         raise TransactionVerificationException(json_message=FailureReturnString.PUBLIC_KEY_NF.value)
 
 ########################################
@@ -119,7 +113,7 @@ def createTransaction():
         transaction_id = data["id"]
         signature = data["signature"]
 
-    except KeyError as e:
+    except KeyError:
         raise IncorrectPayloadException()
 
     from_address_pk = retrieve_public_key (from_address) 
@@ -139,12 +133,14 @@ def createTransaction():
 
 @app.errorhandler(IncorrectPayloadException)
 @app.errorhandler(TransactionVerificationException)
-@app.errorhandler(BisonCoinException)
 @app.errorhandler(ReceiverException)
 def handle_transactions_error(e):
     return jsonify(error=e.json_message), e.return_code
 
-
 @app.errorhandler(Exception)
 def handle_request_error(e):
     return jsonify(error=str(e)), BisonCoinException.client_error
+
+@app.errorhandler(BisonCoinException)
+def handle_bisoncoin_error(e):
+    return jsonify(e.json_message), e.return_code

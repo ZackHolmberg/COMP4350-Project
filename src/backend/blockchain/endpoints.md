@@ -119,10 +119,10 @@ Required JSON:
 Example return:
 
 ```json
-200
+201
 
 {
-  "valid": true
+  "success": true
 }
 ```
 
