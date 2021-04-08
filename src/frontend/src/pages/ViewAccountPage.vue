@@ -2,6 +2,7 @@
   <div class="view-account">
     <h1 class="account-header">Account</h1>
     <div class="account-wrapper">
+      <!-- Inputs -->
       <p class="label-text">First Name:</p>
       <TextInput
         id="account-first-name"
@@ -37,7 +38,8 @@
         :edit="editing"
         ref="userPassword"
       />
-
+      <!-- End -- Inputs -->
+      <!-- Buttons -->
       <Button
         id="account-cancel"
         class="account-cancel-button"
@@ -66,6 +68,7 @@
         type="default"
         @click.native="saveChanges"
       />
+      <!-- End -- Buttons -->
     </div>
   </div>
 </template>
@@ -81,7 +84,8 @@ import TextInput from "../components/TextInput.vue";
     TextInput,
   },
 })
-// ViewAccountPage displays the user's account information, includer their password, UMNetID, and name. It also enables the user to edit their account information.
+// ViewAccountPage displays the user's account information, include their password, UMNetID, and name. 
+// It also enables the user to edit their account information.
 export default class ViewAccountPage extends Vue {
   data() {
     return {
@@ -112,8 +116,8 @@ export default class ViewAccountPage extends Vue {
     this.$data.editing = editing;
   }
 
-  // Grabs the input entered into the three text inputs on the page, when the user is editing their information, and dispatches the update action with the data passed as an object in order
-  // to update the user's information
+  // Grabs the input entered into the three text inputs on the page, when the user is editing their information, 
+  // and dispatches the update action with the data passed as an object in order to update the user's information.
   saveChanges() {
     const password = this.$refs.userPassword.inputData();
     const firstName = this.$refs.userFirstName.inputData();
