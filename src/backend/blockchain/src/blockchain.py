@@ -71,6 +71,7 @@ class Blockchain:
     def build_chain_from_peer_response(self, data):
         new_chain = []
         chain = data["chain"]
+
         for block in chain:
             block = json.loads(block)
             new_chain.append(Block.from_json(block))
@@ -81,6 +82,7 @@ class Blockchain:
     def build_wallets_from_peer_response(self, data):
         wallets = data["wallets"]
         new_wallets = {}
+
         for wallet in wallets:
             wallet = json.loads(wallet)
             new_wallets[wallet["umnetId"]] = wallet["amount"]

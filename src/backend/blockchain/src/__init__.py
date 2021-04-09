@@ -16,3 +16,5 @@ from src import routes
 
 if is_master:
     routes.query_peers(peers)
+else:
+    routes.query_peers(["http://blockchain:5000"])

@@ -31,19 +31,16 @@ import TransactionHistory from "../components/TransactionHistory.vue";
 
 // The HomePage component is composed of the four core feature components and the navigation bar
 export default class HomePage extends Vue {
-  // Retrieves the user's umnetId from the store
-  get umnetId() {
-    return this.$store.getters.umnetId;
+  // Retrieves the historyInterval from the store
+  get historyInterval() {
+    return this.$store.getters.historyInterval;
   }
-
   // When the component is mounted, this method executes every 10 seconds. It dispatches an action which
   // fetches the user's transaction history to see if a new transaction has been received
   mounted() {
-    window.setInterval(() => {
-      if (this.umnetId != "") {
-        this.$store.dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
-      }
-    }, 10000);
+    if (typeof this.historyInterval == "undefined") {
+      this.$store.dispatch("ACTION_START_HISTORY_INTERVAL");
+    }
   }
 }
 </script>
