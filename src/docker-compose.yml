@@ -8,8 +8,8 @@ services:
     container_name: transaction-api
     restart: always
     volumes:
-      - ./services/transaction-api:/src/transactions-api
-      - ./shared:/src/shared
+      - ./backend/services/transaction-api:/src/transactions-api
+      - ./backend/shared:/src/shared
     environment:
       - APP_NAME=TransactionService
       - PYTHONUNBUFFERED=1
@@ -34,8 +34,8 @@ services:
       - APP_NAME=MiningService
       - PYTHONUNBUFFERED=1
     volumes:
-      - ./services/mining-api:/src/mining-api
-      - ./shared:/src/shared
+      - ./backend/services/mining-api:/src/mining-api
+      - ./backend/shared:/src/shared
     expose:
       - 5000
 
@@ -50,8 +50,8 @@ services:
       - PYTHONUNBUFFERED=1
 
     volumes:
-      - ./services/wallet-api:/src/wallet-api
-      - ./shared:/src/shared
+      - ./backend/services/wallet-api:/src/wallet-api
+      - ./backend/shared:/src/shared
     expose:
       - 5000
 
@@ -62,8 +62,8 @@ services:
     container_name: users
     restart: always
     volumes:
-      - ./services/users-api:/src/users-api
-      - ./shared:/src/shared
+      - ./backend/services/users-api:/src/users-api
+      - ./backend/shared:/src/shared
     environment:
       - APP_NAME=UserService
       - PYTHONUNBUFFERED=1
@@ -113,8 +113,8 @@ services:
       - PYTHONUNBUFFERED=1
 
     volumes:
-      - ./blockchain:/src/blockchain
-      - ./shared:/src/shared
+      - ./backend/blockchain:/src/blockchain
+      - ./backend/shared:/src/shared
     expose:
       - 5000
 
@@ -129,7 +129,7 @@ services:
       - PYTHONUNBUFFERED=1
       - BACKUP=TRUE
     volumes:
-      - ./blockchain:/src/blockchain
-      - ./shared:/src/shared
+      - ./backend/blockchain:/src/blockchain
+      - ./backend/shared:/src/shared
     expose:
       - 5000
