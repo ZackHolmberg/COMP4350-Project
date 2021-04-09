@@ -3,7 +3,7 @@ version: "3.7"
 services:
   transactions:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/TransactionsDockerfile
     container_name: transaction-api
     restart: always
@@ -13,13 +13,20 @@ services:
     environment:
       - APP_NAME=TransactionService
       - PYTHONUNBUFFERED=1
-
     expose:
       - 5000
 
+  vue-ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vue-ui
+    ports:
+      - "8080:8080"
+
   mining:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/MiningDockerfile
     container_name: mining-api
     restart: always
@@ -34,7 +41,7 @@ services:
 
   wallet:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/WalletDockerfile
     container_name: wallet-api
     restart: always
@@ -50,7 +57,7 @@ services:
 
   users:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/UsersDockerfile
     container_name: users
     restart: always
@@ -79,11 +86,11 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./services/data:/data/db
+      - ./backend/services/data:/data/db
 
   nginx:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/NginxDockerfile
     container_name: api-gateway
     restart: always
@@ -97,7 +104,7 @@ services:
 
   blockchain:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/BlockchainDockerfile
     container_name: blockchain
     restart: always
@@ -110,9 +117,10 @@ services:
       - ./shared:/src/shared
     expose:
       - 5000
+
   blockchain-backup:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/BlockchainDockerfile
     container_name: blockchain-backup
     restart: always
