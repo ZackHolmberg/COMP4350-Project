@@ -21,12 +21,12 @@ request_handlers = {"GET": send_get_request, "POST": send_post_request}
 
 def query_peers(peers):
     try:
-        backup_node = peers[0]
+        query_node = peers[0]
 
-        chain_response = send_get_request(backup_node + "/chain", None)
+        chain_response = send_get_request(query_node + "/chain", None)
         blockchain.build_chain_from_peer_response(chain_response.json())
 
-        wallet_response = send_get_request(backup_node + "/wallet/all", None)
+        wallet_response = send_get_request(query_node + "/wallet/all", None)
         blockchain.build_wallets_from_peer_response(wallet_response.json())
     except Exception as error:
         print("LOG: Peer replication failed", str(error))

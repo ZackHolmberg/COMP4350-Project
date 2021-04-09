@@ -74,7 +74,8 @@ export default new Vuex.Store({
     lastName: '',
     mining: false,
     findProof: false,
-    transactions: []
+    transactions: [],
+    historyInterval: undefined
   },
   // ---------------------------------------------------------------
   //  GETTERS
@@ -109,6 +110,9 @@ export default new Vuex.Store({
     },
     transactions: (state) => {
       return state.transactions
+    },
+    historyInterval: (state) => {
+      return state.historyInterval
     }
   },
   // ---------------------------------------------------------------
@@ -147,6 +151,9 @@ export default new Vuex.Store({
     },
     MUTATION_SET_TRANSACTION_HISTORY(state, transactions) {
       state.transactions = transactions
+    },
+    MUTATION_SET_HISTORY_INTERVAL(state, interval) {
+      state.historyInterval = interval
     }
   },
   // ---------------------------------------------------------------
@@ -411,6 +418,21 @@ export default new Vuex.Store({
         )
     },
 
+    ACTION_START_HISTORY_INTERVAL({ commit, getters, dispatch }) {
+      const interval = window.setInterval(() => {
+        if (getters.umnetId.length > 0) { 
+          dispatch("ACTION_FETCH_TRANSACTION_HISTORY");
+        }
+      }, 10000);
+
+      commit('MUTATION_SET_HISTORY_INTERVAL', interval)
+    },
+
+    ACTION_CLEAR_HISTORY_INTERVAL({ commit, getters }) {
+      window.clearInterval( getters.historyInterval )
+      commit('MUTATION_SET_HISTORY_INTERVAL', undefined)
+    },
+
     // Resets state of store and logs user out of account
     ACTION_LOGOUT({ commit, dispatch }) {
       // Reset state
@@ -423,7 +445,8 @@ export default new Vuex.Store({
       commit('MUTATION_SET_MINING', false)
       commit('MUTATION_SET_FIND_PROOF', false)
       commit('MUTATION_SET_TRANSACTION_HISTORY', [])
-
+      
+      dispatch ('ACTION_CLEAR_HISTORY_INTERVAL')
       // Displays toast if logout was successful
       const message = 'Logout successful'
       dispatch('ACTION_DISPLAY_TOAST', { message: message, type: 'success' })
