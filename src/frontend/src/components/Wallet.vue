@@ -20,9 +20,13 @@ import { mapState } from "vuex";
       (newValue: any, oldValue: any) => {
         if (newValue.length > oldValue.length) {
           this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
-
+          const toSearch = []
+          let i: number;
+          for (i = oldValue.length; i < newValue.length; i++) {
+            toSearch[toSearch.length] = newValue[i]
+          }
           // Displays toast if transaction was recieved and the transaction is a non-send
-          const temp = newValue.find(
+          const temp = toSearch.find(
             (x) => x.type === "receive" || x.type === "reward"
           );
           if (temp) {
