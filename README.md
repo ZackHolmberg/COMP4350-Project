@@ -39,4 +39,4 @@ Repo containing documents and code for our COMP 4350 Group Project.
 ## Additional Notes
 
 - Visit the [wiki](https://github.com/ZackHolmberg/COMP4350-Project/wiki) to view meetings information, user stories and design documentation.
-- For detailed steps on how to run the project visit this [page](https://github.com/ZackHolmberg/COMP4350-Project/wiki/How-to-run)
+- For detailed steps on how to run the project visit this [page](https://github.com/ZackHolmberg/COMP4350-Project/wiki/How-to-run).
