@@ -13,6 +13,7 @@ services:
     environment:
       - APP_NAME=TransactionService
       - PYTHONUNBUFFERED=1
+    image: akshaysharma21/bisoncoin:transactions
     expose:
       - 5000
 
@@ -21,6 +22,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: vue-ui
+    image: akshaysharma21/bisoncoin:veu-ui
     ports:
       - "8080:8080"
 
@@ -33,6 +35,7 @@ services:
     environment:
       - APP_NAME=MiningService
       - PYTHONUNBUFFERED=1
+    image: akshaysharma21/bisoncoin:mining
     volumes:
       - ./backend/services/mining-api:/src/mining-api
       - ./backend/shared:/src/shared
@@ -48,7 +51,7 @@ services:
     environment:
       - APP_NAME=WalletService
       - PYTHONUNBUFFERED=1
-
+    image: akshaysharma21/bisoncoin:wallet
     volumes:
       - ./backend/services/wallet-api:/src/wallet-api
       - ./backend/shared:/src/shared
@@ -67,7 +70,7 @@ services:
     environment:
       - APP_NAME=UserService
       - PYTHONUNBUFFERED=1
-
+    image: akshaysharma21/bisoncoin:users
     expose:
       - 5000
     depends_on: [mongodb]
@@ -94,6 +97,7 @@ services:
       dockerfile: ./Dockerfiles/NginxDockerfile
     container_name: api-gateway
     restart: always
+    image: akshaysharma21/bisoncoin:nginx
     ports:
       - "80:80"
     depends_on:
@@ -111,7 +115,7 @@ services:
     environment:
       - APP_NAME=Blockchain
       - PYTHONUNBUFFERED=1
-
+    image: akshaysharma21/bisoncoin:blockchain
     volumes:
       - ./backend/blockchain:/src/blockchain
       - ./backend/shared:/src/shared
@@ -128,6 +132,7 @@ services:
       - APP_NAME=Blockchain
       - PYTHONUNBUFFERED=1
       - BACKUP=TRUE
+    image: akshaysharma21/bisoncoin:blockchain-backup
     volumes:
       - ./backend/blockchain:/src/blockchain
       - ./backend/shared:/src/shared
