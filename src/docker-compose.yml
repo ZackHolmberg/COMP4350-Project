@@ -3,64 +3,74 @@ version: "3.7"
 services:
   transactions:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/TransactionsDockerfile
     container_name: transaction-api
     restart: always
     volumes:
-      - ./services/transaction-api:/src/transactions-api
-      - ./shared:/src/shared
+      - ./backend/services/transaction-api:/src/transactions-api
+      - ./backend/shared:/src/shared
     environment:
       - APP_NAME=TransactionService
       - PYTHONUNBUFFERED=1
-
+    image: akshaysharma21/bisoncoin:transactions
     expose:
       - 5000
 
+  vue-ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vue-ui
+    image: akshaysharma21/bisoncoin:vue-ui
+    ports:
+      - "8080:8080"
+
   mining:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/MiningDockerfile
     container_name: mining-api
     restart: always
     environment:
       - APP_NAME=MiningService
       - PYTHONUNBUFFERED=1
+    image: akshaysharma21/bisoncoin:mining
     volumes:
-      - ./services/mining-api:/src/mining-api
-      - ./shared:/src/shared
+      - ./backend/services/mining-api:/src/mining-api
+      - ./backend/shared:/src/shared
     expose:
       - 5000
 
   wallet:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/WalletDockerfile
     container_name: wallet-api
     restart: always
     environment:
       - APP_NAME=WalletService
       - PYTHONUNBUFFERED=1
-
+    image: akshaysharma21/bisoncoin:wallet
     volumes:
-      - ./services/wallet-api:/src/wallet-api
-      - ./shared:/src/shared
+      - ./backend/services/wallet-api:/src/wallet-api
+      - ./backend/shared:/src/shared
     expose:
       - 5000
 
   users:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/UsersDockerfile
     container_name: users
     restart: always
     volumes:
-      - ./services/users-api:/src/users-api
-      - ./shared:/src/shared
+      - ./backend/services/users-api:/src/users-api
+      - ./backend/shared:/src/shared
     environment:
       - APP_NAME=UserService
       - PYTHONUNBUFFERED=1
-
+    image: akshaysharma21/bisoncoin:users
     expose:
       - 5000
     depends_on: [mongodb]
@@ -79,14 +89,15 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./services/data:/data/db
+      - ./backend/services/data:/data/db
 
   nginx:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/NginxDockerfile
     container_name: api-gateway
     restart: always
+    image: akshaysharma21/bisoncoin:nginx
     ports:
       - "80:80"
     depends_on:
@@ -97,22 +108,23 @@ services:
 
   blockchain:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/BlockchainDockerfile
     container_name: blockchain
     restart: always
     environment:
       - APP_NAME=Blockchain
       - PYTHONUNBUFFERED=1
-
+    image: akshaysharma21/bisoncoin:blockchain
     volumes:
-      - ./blockchain:/src/blockchain
-      - ./shared:/src/shared
+      - ./backend/blockchain:/src/blockchain
+      - ./backend/shared:/src/shared
     expose:
       - 5000
+
   blockchain-backup:
     build:
-      context: ./
+      context: ./backend
       dockerfile: ./Dockerfiles/BlockchainDockerfile
     container_name: blockchain-backup
     restart: always
@@ -120,8 +132,9 @@ services:
       - APP_NAME=Blockchain
       - PYTHONUNBUFFERED=1
       - BACKUP=TRUE
+    image: akshaysharma21/bisoncoin:blockchain-backup
     volumes:
-      - ./blockchain:/src/blockchain
-      - ./shared:/src/shared
+      - ./backend/blockchain:/src/blockchain
+      - ./backend/shared:/src/shared
     expose:
       - 5000
