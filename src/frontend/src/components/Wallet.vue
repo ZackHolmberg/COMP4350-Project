@@ -21,12 +21,18 @@ import { mapState } from "vuex";
         if (newValue.length > oldValue.length) {
           this.$store.dispatch("ACTION_FETCH_WALLET_AMOUNT");
 
-          // Displays toast if transaction was recieved
-          const message = "New transaction received!";
-          this.$store.dispatch("ACTION_DISPLAY_TOAST", {
-            message: message,
-            type: "success",
-          });
+          // Displays toast if transaction was recieved and the transaction is a non-send
+          const temp = newValue.find(
+            (x) => x.type === "receive" || x.type === "reward"
+          );
+          if (temp) {
+            console.log("New transaction received!");
+            const message = "New transaction received!";
+            this.$store.dispatch("ACTION_DISPLAY_TOAST", {
+              message: message,
+              type: "success",
+            });
+          }
         }
       }
     );

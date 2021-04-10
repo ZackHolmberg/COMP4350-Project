@@ -1,0 +1,13 @@
+{
+  "history": [
+    {
+      "transaction": {
+        "id": 2,
+        "timestamp": 1431660137,
+        "to_address": "toPerson",
+        "amount": 200
+      },
+      "type": "send"
+    }
+  ]
+}
