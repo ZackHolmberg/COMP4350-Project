@@ -22,7 +22,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: vue-ui
-    image: akshaysharma21/bisoncoin:veu-ui
+    image: akshaysharma21/bisoncoin:vue-ui
     ports:
       - "8080:8080"
 
