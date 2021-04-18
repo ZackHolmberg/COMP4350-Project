@@ -10,7 +10,7 @@ Repo containing documents and code for our COMP 4350 Group Project.
 - Abhi Sachdev ([GitHub](https://github.com/abhisachdev17))
 - Madison Fines ([GitHub](https://github.com/madisonfines))
 - Akshay Sharma ([GitHub](https://github.com/akshaysharma21))
-- Zack Holmberg ([GitHub](https://github.com/ZackHolmberg))
+- **Zack Holmberg (Team Lead)** ([GitHub](https://github.com/ZackHolmberg))
 
 ## Project Description
 
